@@ -1,13 +1,44 @@
 <template>
   <div>
-    <p>
-      Hello from Presentation Request
-    </p>
+    <h1>Request online presentation</h1>
+
+    <v-progress-linear color="#D4AF37" height="60" value="78" striped>
+      <strong>$156 / $200 Goal</strong>
+    </v-progress-linear>
+    <br />
+    <v-btn color="#D4AF37">Add me ($1)</v-btn>
+
+      <GChart
+    type="ColumnChart"
+    :data="chartData"
+    :options="chartOptions"
+  />
+
+
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data () {
+    return {
+      // Array will be automatically processed with visualization.arrayToDataTable function
+      chartData: [
+        ['Year', 'Sales', 'Expenses', 'Profit'],
+        ['2014', 1000, 400, 200],
+        ['2015', 1170, 460, 250],
+        ['2016', 660, 1120, 300],
+        ['2017', 1030, 540, 350]
+      ],
+      chartOptions: {
+        chart: {
+          title: 'Company Performance',
+          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+        }
+      }
+    }
+  }
+}
 </script>
 
 <style scoped></style>
