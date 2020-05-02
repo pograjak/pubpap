@@ -1,8 +1,6 @@
 <template>
   <div>
-    Forum here
-    <br />
-    <button @click="btnClick()">Click</button>
+    <h1>Questions</h1>
 
     <v-list two-line>
       <v-list-item>
@@ -14,7 +12,8 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-phone</v-icon>
+          491
+          <v-icon color="indigo">mdi-account-alert</v-icon>
         </v-list-item-icon>
       </v-list-item>
 
@@ -25,7 +24,8 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-phone</v-icon>
+          18
+          <v-icon color="indigo">mdi-account-outline</v-icon>
         </v-list-item-icon>
       </v-list-item>
     </v-list>
