@@ -9,6 +9,7 @@ export const getters = {
 };
 
 export const mutations = {
+  ...vuexfireMutations,
   onAuthStateChangedMutation: (ctx, { authUser }) => {
     if (!authUser) {
       ctx.user = null;

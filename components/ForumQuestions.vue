@@ -29,18 +29,30 @@
         </v-list-item-icon>
       </v-list-item>
     </v-list>
+
+    <div v-for="(comment, index) in comments" :key="index">
+      {{ comment }}
+    </div>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   data: function() {
     return {
       text: "Hello first"
     };
   },
-
-  computed: {},
+  created() {
+    this.$store.dispatch("comments/bindComments");
+  },
+  computed: {
+    ...mapGetters({
+      comments: "comments/comments"
+    })
+  },
 
   methods: {
     btnClick() {
