@@ -38,13 +38,6 @@ export default {
 </script>
 
 <style scoped>
-.question {
-  background-color: lightyellow;
-}
-.icons {
-  max-width: 45px;
-  text-align: center;
-}
 .name {
   font-size: 10pt;
   max-height: 20px;

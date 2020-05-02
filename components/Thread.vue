@@ -76,7 +76,7 @@
                   <v-row no-gutters justify="center">
                     <v-col cols="10" align="right">
                       <v-card-title>Comment</v-card-title>
-                      <v-textarea filled></v-textarea>
+                      <v-textarea filled v-model="reply"></v-textarea>
                       <v-btn class="white--text button_right" color="blue accent-4" @click="addComment">Submit</v-btn>
                     </v-col>
                   </v-row>
@@ -100,7 +100,8 @@ export default {
 
   data() {
     return {
-      dialog: false
+      dialog: false,
+      reply: ''
     };
   },
   components: {
@@ -113,6 +114,14 @@ export default {
     },
     downvote(){
       this.$store.dispatch('threads/downvote', this.thread.id)    
+    },
+    addComment(){
+      this.$store.dispatch('threads/addComment', 
+        {
+          threadId: this.thread.id,
+          text: this.reply
+        }
+      )
     }
   },
 };
