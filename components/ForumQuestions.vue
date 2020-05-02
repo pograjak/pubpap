@@ -8,8 +8,7 @@
     <v-list two-line>
       <div v-for="(thread, index) in threads" :key="index">
         <Thread 
-         :title="thread.title"
-         :text="thread.text"
+         :thread="thread"
         />  
       </div>
       

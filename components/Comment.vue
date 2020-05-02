@@ -2,13 +2,8 @@
   <v-card v-bind:class="{question: isQuestion}">
     <v-container fluid>
       <v-row dense>
-        <v-col cols="1" class="text-center icons">
-          <v-icon>mdi-arrow-up-thick</v-icon>24
-          <v-icon>mdi-arrow-down-thick</v-icon>
-        </v-col>
-
         <v-col>
-          <v-card-title v-if="isQuestion">{{ title }}</v-card-title>
+          <v-card-title>{{ title }}</v-card-title>
           <v-card-text>{{ text }}</v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
@@ -36,10 +31,9 @@
 <script>
 export default {
   props: {
-    isQuestion: Boolean,
     text: String,
     title: String
-  }
+  },
 };
 </script>
 
@@ -48,7 +42,7 @@ export default {
   background-color: lightyellow;
 }
 .icons {
-  max-width: 35px;
+  max-width: 45px;
   text-align: center;
 }
 .name {

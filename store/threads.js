@@ -35,5 +35,22 @@ export const actions = {
       .collection("threads")
       .doc()
       .set(thread)
-  }
+  },
+  upvote: async function(context, id) {
+    await this.$fireStore
+      .collection("papers")
+      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .collection("threads")
+      .doc(id)
+      .update({upvotes : this.$fireStoreObj.FieldValue.increment(1)});
+  },
+  downvote: async function(context, id) {
+    await this.$fireStore
+      .collection("papers")
+      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .collection("threads")
+      .doc(id)
+      .update({upvotes : this.$fireStoreObj.FieldValue.increment(-1)});
+  },
+
 };
