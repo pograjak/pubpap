@@ -1,12 +1,33 @@
 <template>
   <div>
     <div class="headline">Questions</div>
-    <v-btn @click="addThread()">
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
+
+    <!-- Adding questions dialog -->
+    <v-dialog v-model="dialog" persistent max-width="800">
+      <template v-slot:activator="{ on }">
+        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
+      </template>
+      <v-card>
+        <v-card-title>Create New Thread</v-card-title>
+        <v-container fluid>
+          <v-row no-gutters justify="center">
+            <v-col cols="11" align="right">
+              <v-text-field filled label="Title" v-model="newthread_title"></v-text-field>
+              <v-textarea filled label="Decription" v-model="newthread_question"></v-textarea>
+            </v-col>
+          </v-row>
+        </v-container>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" text @click="dialog = false">Cancel</v-btn>
+          <v-btn color="green darken-1" text @click="addThread()">Submit</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <v-list two-line>
-      <div v-for="(thread, index) in threads" :key="index">
+      <div v-for="(thread) in threads" :key="thread.id">
         <Thread :thread="thread" />
       </div>
 
@@ -20,7 +41,7 @@
           18
           <v-icon color="indigo">mdi-account-outline</v-icon>
         </v-list-item-icon>
-      </v-list-item> -->
+      </v-list-item>-->
     </v-list>
   </div>
 </template>
@@ -34,7 +55,10 @@ import Comment from "~/components/Comment.vue";
 export default {
   data: function() {
     return {
-      text: "Hello first"
+      text: "Hello first",
+      dialog: false,
+      newthread_title: '',
+      newthread_question: ''
     };
   },
   created() {
@@ -52,9 +76,10 @@ export default {
     },
     addThread() {
       this.$store.dispatch("threads/addThread", {
-        text: "Ahoj",
-        title: "Titulek 1"
+        title: this.newthread_title,
+        text: this.newthread_question
       });
+      this.dialog = false;
     }
   },
 

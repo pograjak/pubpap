@@ -1,5 +1,5 @@
 <template>
-  <v-list-item @click.stop="dialog = true">
+  <v-list-item @click.stop="openDiag">
     <v-list-item-content>
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
       <v-list-item-subtitle>Jiri Matas</v-list-item-subtitle>
@@ -23,7 +23,6 @@
         <v-container fluid>
           <v-row no-gutters justify="center" align="center">
             <v-col cols="8" no-gutters>
-
               <v-card-title>Question</v-card-title>
               <v-card class="question">
                 <v-container fluid>
@@ -63,13 +62,15 @@
                 </v-container>
               </v-card>
 
-
               <v-spacer />
               <v-card-title>Answers</v-card-title>
 
-              <Comment />
-              <Comment />
-              <Comment />
+              <div v-for="(r) in replies" :key="r.id">
+                <Comment :text="r.text" />
+              </div>
+
+              <!-- <Comment :text="thread.id" /> -->
+              <!-- <Comment :text="replies" /> -->
 
               <v-card>
                 <v-container fluid>
@@ -77,7 +78,11 @@
                     <v-col cols="10" align="right">
                       <v-card-title>Comment</v-card-title>
                       <v-textarea filled v-model="reply"></v-textarea>
-                      <v-btn class="white--text button_right" color="blue accent-4" @click="addComment">Submit</v-btn>
+                      <v-btn
+                        class="white--text button_right"
+                        color="blue accent-4"
+                        @click="addComment"
+                      >Submit</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -92,6 +97,7 @@
 
 <script>
 import Comment from "~/components/Comment.vue";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -101,29 +107,60 @@ export default {
   data() {
     return {
       dialog: false,
-      reply: ''
+      reply: ""
     };
   },
   components: {
     Comment
   },
 
-  methods: {
-    upvote(){
-      this.$store.dispatch('threads/upvote', this.thread.id)    
-    },
-    downvote(){
-      this.$store.dispatch('threads/downvote', this.thread.id)    
-    },
-    addComment(){
-      this.$store.dispatch('threads/addComment', 
-        {
-          threadId: this.thread.id,
-          text: this.reply
-        }
-      )
-    }
+  computed: {
+    ...mapGetters({
+      replies: "threads/replies"
+    })
   },
+
+  created() {
+    console.log(this.thread);
+    
+    
+    // this.$fireStore
+    //     .collection("papers")
+    //     .doc("bVypOMp1sZ9I4R0ib5hV")
+    //     .collection("threads").doc(this.thread.id).collection("replies").get().then(
+    //       r => {
+
+    //         this.replies = r.docs.map(doc =>
+    //         {return {
+    //           createdAt: doc.data().createdAt,
+    //           text: doc.data().text
+    //         }}
+    //         );
+    //       console.log(this.replies);
+    //       }
+
+    //     )
+  },
+
+  methods: {
+    upvote() {
+      this.$store.dispatch("threads/upvote", this.thread.id);
+    },
+    downvote() {
+      this.$store.dispatch("threads/downvote", this.thread.id);
+    },
+    addComment() {
+      this.$store.dispatch("threads/addComment", {
+        threadId: this.thread.id,
+        text: this.reply
+      });
+      this.reply = "";
+    },
+    openDiag(){
+      this.dialog = true;
+      this.$store.dispatch("threads/bindReplies", this.thread.id);
+    }
+  }
 };
 </script>
 
