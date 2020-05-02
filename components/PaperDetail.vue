@@ -2,9 +2,7 @@
   <v-card class="mx-auto" min-width="500" max-width="1800" outlined>
     <v-list-item three-line>
       <v-list-item-content>
-        <v-card-title
-          class="headline mb-1"
-        >Automatic Detection of Coronavirus Disease (COVID-19) Using X-ray Images and Deep Convolutional Neural Networks</v-card-title>
+        <v-card-title>Automatic Detection of Coronavirus Disease (COVID-19) Using X-ray Images and Deep Convolutional Neural Networks</v-card-title>
         <v-card-subtitle>Ali Narin, Ceren Kaya, Ziynet Pamuk</v-card-subtitle>
         <v-card-text
           class="justify-center"

@@ -77,7 +77,7 @@
                     <v-col cols="10" align="right">
                       <v-card-title>Comment</v-card-title>
                       <v-textarea filled></v-textarea>
-                      <v-btn class="white--text button_right" color="blue accent-4">Submit</v-btn>
+                      <v-btn class="white--text button_right" color="blue accent-4" @click="addComment">Submit</v-btn>
                     </v-col>
                   </v-row>
                 </v-container>
