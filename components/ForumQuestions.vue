@@ -3,19 +3,9 @@
     <h1>Questions</h1>
 
     <v-list two-line>
-      <v-list-item>
-        <v-list-item-content>
-          <v-list-item-title
-            >Full cross-validation results available?</v-list-item-title
-          >
-          <v-list-item-subtitle>Tim Cook</v-list-item-subtitle>
-        </v-list-item-content>
+      <Discussion />
+      <Comment />
 
-        <v-list-item-icon>
-          491
-          <v-icon color="indigo">mdi-account-alert</v-icon>
-        </v-list-item-icon>
-      </v-list-item>
 
       <v-list-item>
         <v-list-item-content>
@@ -30,14 +20,15 @@
       </v-list-item>
     </v-list>
 
-    <div v-for="(comment, index) in comments" :key="index">
-      {{ comment }}
-    </div>
+    <div v-for="(comment, index) in comments" :key="index">{{ comment }}</div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+
+import Discussion from '~/components/Discussion.vue'
+import Comment from '~/components/Comment.vue'
 
 export default {
   data: function() {
@@ -58,7 +49,12 @@ export default {
     btnClick() {
       this.text = "Hello second";
     }
-  }
+  },
+
+  components:{
+    Discussion,
+    Comment
+}
 };
 </script>
 
