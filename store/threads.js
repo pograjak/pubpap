@@ -52,5 +52,21 @@ export const actions = {
       .doc(id)
       .update({upvotes : this.$fireStoreObj.FieldValue.increment(-1)});
   },
+  addComment: async function(context, obj) {
+    const comment={
+      text: obj.text,
+      userId: -1,
+      createdAt: Date.now()
+    }
+
+    await this.$fireStore
+      .collection("papers")
+      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .collection("threads")
+      .doc(obj.threadId)
+      .collection("replies")
+      .doc()
+      .set(comment);
+  },
 
 };
