@@ -1,11 +1,13 @@
 import { firestoreAction } from "vuexfire";
 
 export const state = () => ({
-  threads: []
+  threads: [],
+  replies: []
 });
 
 export const getters = {
-  threads: state => state.threads
+  threads: state => state.threads,
+  replies: state => state.replies
 };
 
 export const mutations = {};
@@ -18,9 +20,21 @@ export const actions = {
         .collection("papers")
         .doc("bVypOMp1sZ9I4R0ib5hV")
         .collection("threads")
+        .orderBy('upvotes', 'desc')
     );
-  })
-  ,
+  }),
+  bindReplies: firestoreAction(async function({ bindFirestoreRef }, herethreadId) {
+    await bindFirestoreRef(
+      "replies",
+      this.$fireStore
+        .collection("papers")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .collection("threads")
+        .doc(herethreadId)
+        .collection('replies')
+        .orderBy('createdAt')
+    );
+  }),
   addThread: async function(context, payload) {
     const thread={
       text: payload.text,

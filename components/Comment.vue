@@ -1,9 +1,8 @@
 <template>
-  <v-card v-bind:class="{question: isQuestion}">
+  <v-card>
     <v-container fluid>
       <v-row dense>
         <v-col>
-          <v-card-title>{{ title }}</v-card-title>
           <v-card-text>{{ text }}</v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
@@ -32,7 +31,6 @@
 export default {
   props: {
     text: String,
-    title: String
   },
 };
 </script>
