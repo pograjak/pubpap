@@ -8,7 +8,7 @@
 
     <v-row>
       <v-col>
-        <PresentationRequest />
+        <RequestPresentation />
       </v-col>
 
       <v-col>
@@ -20,7 +20,7 @@
 
 <script>
 import PaperDetail from "~/components/PaperDetail.vue";
-import PresentationRequest from "~/components/PresentationRequest.vue";
+import RequestPresentation from "~/components/RequestPresentation.vue";
 import ForumQuestions from "~/components/ForumQuestions.vue";
 import Vue from "vue";
 import VueGoogleCharts from "vue-google-charts";
@@ -30,9 +30,11 @@ Vue.use(VueGoogleCharts);
 export default {
   components: {
     PaperDetail,
-    PresentationRequest,
+    RequestPresentation,
     ForumQuestions
-  }
+  },
+
+  computed: {}
 };
 </script>
 

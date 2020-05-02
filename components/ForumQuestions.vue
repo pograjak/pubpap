@@ -1,18 +1,14 @@
 <template>
   <div>
-    <h1>Questions</h1>
+    <div class="headline">Questions</div>
     <v-btn @click="addThread()">
       <v-icon>mdi-plus</v-icon>
     </v-btn>
 
     <v-list two-line>
       <div v-for="(thread, index) in threads" :key="index">
-        <Thread 
-         :thread="thread"
-        />  
+        <Thread :thread="thread" />
       </div>
-      
-      
 
       <!-- <v-list-item>
         <v-list-item-content>
@@ -32,8 +28,8 @@
 <script>
 import { mapGetters } from "vuex";
 
-import Thread from '~/components/Thread.vue'
-import Comment from '~/components/Comment.vue'
+import Thread from "~/components/Thread.vue";
+import Comment from "~/components/Comment.vue";
 
 export default {
   data: function() {
@@ -54,20 +50,18 @@ export default {
     btnClick() {
       this.text = "Hello second";
     },
-    addThread(){
-      this.$store.dispatch('threads/addThread',
-      {
-        text: 'Ahoj',
-        title: 'Titulek 1'
-      }
-      )
+    addThread() {
+      this.$store.dispatch("threads/addThread", {
+        text: "Ahoj",
+        title: "Titulek 1"
+      });
     }
   },
 
-  components:{
+  components: {
     Thread,
     Comment
-}
+  }
 };
 </script>
 

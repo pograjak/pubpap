@@ -1,12 +1,18 @@
 <template>
   <div>
-    <h1>Request online presentation</h1>
-
-    <v-progress-linear color="#D4AF37" height="60" value="78" striped>
-      <strong>$156 / $200 Goal</strong>
+    <div class="headline">Request online presentation</div>
+    <v-progress-linear
+      color="#D4AF37"
+      height="60"
+      :value="(request.requestCurrent / request.requestGoal) * 100"
+      striped
+    >
+      <strong>
+        ${{ request.requestCurrent }} / ${{ request.requestGoal }} Goal
+      </strong>
     </v-progress-linear>
     <br />
-    <v-btn color="#D4AF37">Add me ($1)</v-btn>
+    <v-btn color="#D4AF37" @click="addCoin">Add me ($1)</v-btn>
 
     <GChart type="PieChart" :data="chartData" :options="chartOptions" />
     <div>
@@ -17,6 +23,7 @@
 
 <script>
 import { loadStripe } from "@stripe/stripe-js";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -38,19 +45,23 @@ export default {
     };
   },
 
-  computed: {},
+  created() {
+    this.$store.dispatch("requestPresentation/bindRequest");
+  },
+
+  computed: {
+    ...mapGetters({
+      request: "requestPresentation/request"
+    })
+  },
 
   methods: {
     async payment() {
-      console.log("Peyment starts");
-
       const session = await fetch(
         "https://europe-west1-pubpap-redcute.cloudfunctions.net/payment"
       );
 
       const sessionIdc = await session.json();
-
-      console.log(`Session: ${sessionIdc}`);
 
       const stripe = await loadStripe(
         "pk_test_WNZA8yZsjGbAEFC0pDAb1UrF00BJUKByPR"
@@ -59,6 +70,10 @@ export default {
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionIdc.id
       });
+    },
+
+    addCoin() {
+      this.$store.dispatch("requestPresentation/addCoin");
     }
   }
 };

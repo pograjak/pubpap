@@ -1,5 +1,5 @@
 <template>
-  <v-app dark>
+  <v-app dark class="app">
     <v-app-bar fixed app>
       <v-toolbar-title v-text="title" />
       <v-spacer />
@@ -137,3 +137,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.app {
+  font-family: "Inconsolata", monospace;
+}
+</style>
