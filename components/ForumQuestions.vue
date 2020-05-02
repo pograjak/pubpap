@@ -13,7 +13,7 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-phone</v-icon>
+          491<v-icon color="indigo">mdi-account-alert</v-icon>
         </v-list-item-icon>
       </v-list-item>
 
@@ -24,7 +24,7 @@
         </v-list-item-content>
 
         <v-list-item-icon>
-          <v-icon color="indigo">mdi-phone</v-icon>
+          18<v-icon color="indigo">mdi-account-outline</v-icon>
         </v-list-item-icon>
       </v-list-item>
     </v-list>
