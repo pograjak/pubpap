@@ -8,11 +8,11 @@
 
     <v-row>
       <v-col>
-        <ForumQuestions />
+        <PresentationRequest />
       </v-col>
 
       <v-col>
-        <PresentationRequest />
+        <ForumQuestions />
       </v-col>
     </v-row>
   </v-container>
@@ -36,5 +36,4 @@ export default {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

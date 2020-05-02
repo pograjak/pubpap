@@ -6,7 +6,7 @@
       <v-btn
         color="red lighten-2"
         dark
-        v-show="!userLoggedIn.email"
+        v-show="userLoggedIn.email == ''"
         @click="$store.dispatch('login/openModal')"
       >
         Login
@@ -61,7 +61,12 @@
         </v-dialog>
       </div>
 
-      <v-btn color="primary" v-show="userLoggedIn.email" text @click="logout">
+      <v-btn
+        color="primary"
+        v-show="userLoggedIn.email != ''"
+        text
+        @click="logout"
+      >
         Logout
       </v-btn>
     </v-app-bar>

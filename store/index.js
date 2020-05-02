@@ -1,7 +1,9 @@
 import { vuexfireMutations } from "vuexfire";
 
 export const state = () => ({
-  user: {}
+  user: {
+    email: ""
+  }
 });
 
 export const getters = {
@@ -15,7 +17,6 @@ export const mutations = {
 
     if (!authUser) {
       state.user.email = "";
-      state.user = {};
     } else {
       state.user.email = authUser.email;
     }
