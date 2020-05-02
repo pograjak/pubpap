@@ -1,29 +1,77 @@
 const functions = require("firebase-functions");
 const stripe = require("stripe")("sk_test_QHUsLKmLDRAJbMTNtnhcmNV900HPnjSqdA");
+const admin = require("firebase-admin");
 
-exports.payment = functions
-  .region("europe-west1")
-  .https.onRequest(async (request, response) => {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+admin.initializeApp(functions.config().firebase);
 
-      customer_email: "test@test.unihack",
+const app = require("express")();
 
-      line_items: [
-        {
-          name: "presentation request",
-          description: "request for XXX presentation",
-          amount: 1000,
-          currency: "czk",
-          quantity: 1
-        }
-      ],
+// Find your endpoint's secret in your Dashboard's webhook settings
+const endpointSecret = "whsec_JkLqtUMl51RHJXQgOvZSksKQ6eI8F110";
 
-      success_url:
-        "https://pubpap-redcute.web.app/?session_id={CHECKOUT_SESSION_ID}",
-      cancel_url: "https://pubpap-redcute.web.app/"
-    });
+// Use body-parser to retrieve the raw body as a buffer
+const bodyParser = require("body-parser");
 
-    response.set("Access-Control-Allow-Origin", "*");
-    response.send(session);
+// Match the raw body to content type application/json
+app.post(
+  "/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  (request, response) => {
+    response.send("works");
+    const sig = request.headers["stripe-signature"];
+
+    let event;
+
+    try {
+      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+    } catch (err) {
+      return response.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Handle the checkout.session.completed event
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+
+      const amount = session.payment_intent.amount;
+
+      // Fulfill the purchase...
+      admin
+        .firestore()
+        .collection("papers")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .update({
+          requestCurrent: admin.firestore.FieldValue.increment(amount)
+        });
+    }
+
+    // Return a response to acknowledge receipt of the event
+    response.json({ received: true });
+  }
+);
+
+app.get("/", async (request, response) => {
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+
+    customer_email: "test@test.unihack",
+
+    line_items: [
+      {
+        name: "presentation request",
+        description: "request for XXX presentation",
+        amount: 1000,
+        currency: "czk",
+        quantity: 1
+      }
+    ],
+
+    success_url:
+      "https://pubpap-redcute.web.app/?session_id={CHECKOUT_SESSION_ID}",
+    cancel_url: "https://pubpap-redcute.web.app/"
   });
+
+  response.set("Access-Control-Allow-Origin", "*");
+  response.send(session);
+});
+
+exports.payment = functions.region("europe-west1").https.onRequest(app);
