@@ -1,13 +1,21 @@
 <template>
   <div>
     <h1>Questions</h1>
+    <v-btn @click="addThread()">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
 
     <v-list two-line>
-      <Discussion />
-      <Comment />
+      <div v-for="(thread, index) in threads" :key="index">
+        <Thread 
+         :title="thread.title"
+         :text="thread.text"
+        />  
+      </div>
+      
+      
 
-
-      <v-list-item>
+      <!-- <v-list-item>
         <v-list-item-content>
           <v-list-item-title>Repeatability issues</v-list-item-title>
           <v-list-item-subtitle>Jiri Matas</v-list-item-subtitle>
@@ -17,17 +25,15 @@
           18
           <v-icon color="indigo">mdi-account-outline</v-icon>
         </v-list-item-icon>
-      </v-list-item>
+      </v-list-item> -->
     </v-list>
-
-    <div v-for="(comment, index) in comments" :key="index">{{ comment }}</div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
-import Discussion from '~/components/Discussion.vue'
+import Thread from '~/components/Thread.vue'
 import Comment from '~/components/Comment.vue'
 
 export default {
@@ -37,22 +43,30 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("comments/bindComments");
+    this.$store.dispatch("threads/bindThreads");
   },
   computed: {
     ...mapGetters({
-      comments: "comments/comments"
+      threads: "threads/threads"
     })
   },
 
   methods: {
     btnClick() {
       this.text = "Hello second";
+    },
+    addThread(){
+      this.$store.dispatch('threads/addThread',
+      {
+        text: 'Ahoj',
+        title: 'Titulek 1'
+      }
+      )
     }
   },
 
   components:{
-    Discussion,
+    Thread,
     Comment
 }
 };

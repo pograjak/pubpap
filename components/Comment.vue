@@ -1,5 +1,5 @@
 <template>
-  <v-card class="question">
+  <v-card v-bind:class="{question: isQuestion}">
     <v-container fluid>
       <v-row dense>
         <v-col cols="1" class="text-center icons">
@@ -8,8 +8,8 @@
         </v-col>
 
         <v-col>
-          <v-card-title>I see you are a freshman</v-card-title>
-          <v-card-text>Human operators are generally not involved in separation, that's controlled by on-board computers according to the plan programmed into them. 2 way radio lets human controllers see what is going on and send commands if necessary.</v-card-text>
+          <v-card-title v-if="isQuestion">{{ title }}</v-card-title>
+          <v-card-text>{{ text }}</v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
             <v-col cols="auto">
@@ -33,11 +33,19 @@
   </v-card>
 </template>
 
-<script></script>
+<script>
+export default {
+  props: {
+    isQuestion: Boolean,
+    text: String,
+    title: String
+  }
+};
+</script>
 
 <style scoped>
 .question {
-    background-color: lightyellow;
+  background-color: lightyellow;
 }
 .icons {
   max-width: 35px;

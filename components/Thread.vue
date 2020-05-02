@@ -1,7 +1,7 @@
 <template>
   <v-list-item @click.stop="dialog = true">
     <v-list-item-content>
-      <v-list-item-title>Repeatability issues</v-list-item-title>
+      <v-list-item-title>{{ title }}</v-list-item-title>
       <v-list-item-subtitle>Jiri Matas</v-list-item-subtitle>
     </v-list-item-content>
 
@@ -24,9 +24,14 @@
           <v-row no-gutters justify="center" align="center">
             <v-col cols="8" no-gutters>
               <v-card-title>Question</v-card-title>
-              <Comment />
+              <Comment 
+                :title="title"
+                :text="text"
+                :is-question="true"
+              />
               <v-spacer />
               <v-card-title>Answers</v-card-title>
+              
               <Comment />
               <Comment />
               <Comment />
@@ -55,6 +60,11 @@
 import Comment from "~/components/Comment.vue";
 
 export default {
+props:{
+  text: String,
+  title: String,
+},
+
   data() {
     return {
       dialog: false
