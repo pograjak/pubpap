@@ -1,7 +1,7 @@
 import { vuexfireMutations } from "vuexfire";
 
 export const state = () => ({
-  user: "null"
+  user: {}
 });
 
 export const getters = {
@@ -10,11 +10,14 @@ export const getters = {
 
 export const mutations = {
   ...vuexfireMutations,
-  onAuthStateChangedMutation: (ctx, { authUser }) => {
+  onAuthStateChangedMutation: (state, { authUser }) => {
+    console.log(authUser);
+
     if (!authUser) {
-      ctx.user = null;
+      state.user.email = "";
+      state.user = {};
     } else {
-      ctx.state.user.email = authUser.email;
+      state.user.email = authUser.email;
     }
   }
 };
