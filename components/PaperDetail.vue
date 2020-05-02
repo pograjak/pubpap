@@ -13,7 +13,9 @@
         <v-card-actions>
           <v-btn color="red">arXiv</v-btn>
           <v-btn color="red">arXiv PDF</v-btn>
-          <v-btn color="white-black">GitHub</v-btn>
+          <v-btn color="white-black">
+            <v-icon>mdi-github</v-icon>
+          </v-btn>
         </v-card-actions>
       </v-list-item-content>
 
