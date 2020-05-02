@@ -8,8 +8,8 @@
     <br />
     <v-btn color="#D4AF37">Add me ($1)</v-btn>
 
-      <GChart
-    type="ColumnChart"
+    <GChart
+    type="PieChart"
     :data="chartData"
     :options="chartOptions"
   />
@@ -24,16 +24,16 @@ export default {
     return {
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
-        ['Year', 'Sales', 'Expenses', 'Profit'],
-        ['2014', 1000, 400, 200],
-        ['2015', 1170, 460, 250],
-        ['2016', 660, 1120, 300],
-        ['2017', 1030, 540, 350]
+        ['User type', 'Votes'],
+        ['PhD', 76],
+        ['Profs', 5],
+        ['Postdoc', 17],
+        ['Other', 58]
       ],
       chartOptions: {
         chart: {
-          title: 'Company Performance',
-          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+          title: 'Votes',
+          subtitle: '-',
         }
       }
     }
