@@ -1,32 +1,42 @@
 <template>
   <div>
-    <div class="headline">Questions</div>
-
-    <!-- Adding questions dialog -->
-    <v-dialog v-model="dialog" persistent max-width="800">
-      <template v-slot:activator="{ on }">
-        <v-btn color="primary" dark v-on="on">Open Dialog</v-btn>
-      </template>
-      <v-card>
-        <v-card-title>Create New Thread</v-card-title>
-        <v-container fluid>
-          <v-row no-gutters justify="center">
-            <v-col cols="11" align="right">
-              <v-text-field filled label="Title" v-model="newthread_title"></v-text-field>
-              <v-textarea filled label="Decription" v-model="newthread_question"></v-textarea>
-            </v-col>
-          </v-row>
-        </v-container>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialog = false">Cancel</v-btn>
-          <v-btn color="green darken-1" text @click="addThread()">Submit</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
     <v-list two-line>
+      <v-list-item>
+        <v-list-item-content>
+          <h1>Threads</h1>
+        </v-list-item-content>
+
+        <v-list-item-icon>
+          <!-- New Thread dialog -->
+          <v-dialog v-model="dialog" persistent max-width="800">
+            <template v-slot:activator="{ on }">
+              <v-btn color="secondary" tile large v-on="on">
+                <!-- <v-icon>mdi-plus</v-icon> -->
+                New Thread
+              </v-btn>
+              <!-- <v-btn icon v-on="on" style="min-height: 60px"><v-icon>mdi-plus</v-icon></v-btn> -->
+            </template>
+            <v-card>
+              <v-card-title>Create New Thread</v-card-title>
+              <v-container fluid>
+                <v-row no-gutters justify="center">
+                  <v-col cols="11" align="right">
+                    <v-text-field filled label="Title" v-model="newthread_title"></v-text-field>
+                    <v-textarea filled label="Decription" v-model="newthread_question"></v-textarea>
+                  </v-col>
+                </v-row>
+              </v-container>
+
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn text @click="dialog = false">Cancel</v-btn>
+                <v-btn text @click="addThread()">Submit</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-list-item-icon>
+      </v-list-item>
+
       <div v-for="(thread) in threads" :key="thread.id">
         <Thread :thread="thread" />
       </div>
@@ -57,8 +67,8 @@ export default {
     return {
       text: "Hello first",
       dialog: false,
-      newthread_title: '',
-      newthread_question: ''
+      newthread_title: "",
+      newthread_question: ""
     };
   },
   created() {
