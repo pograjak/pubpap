@@ -1,8 +1,9 @@
 <template>
-  <v-list-item @click.stop="openDiag">
+  <v-list-item three-line @click.stop="openDiag">
     <v-list-item-content>
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
-      <v-list-item-subtitle>Jiri Matas</v-list-item-subtitle>
+      <v-list-item-subtitle>Jiri Matas, prof.</v-list-item-subtitle>
+      <v-list-item-subtitle class="date">Created {{ format_timestamp(thread.createdAt) }}</v-list-item-subtitle>
     </v-list-item-content>
 
     <v-list-item-icon>
@@ -41,21 +42,9 @@
                       <v-card-title>{{ thread.title }}</v-card-title>
                       <v-card-text>{{ thread.text }}</v-card-text>
                       <v-row no-gutters>
-                        <v-col></v-col>
-                        <v-col cols="auto">
-                          <v-row dense>
-                            <v-col cols="1">
-                              <v-icon>mdi-account</v-icon>
-                            </v-col>
-                            <v-col>
-                              <p class="name">
-                                prof. Jiri Matas
-                                <br />
-                                <small>Prof</small>
-                              </p>
-                            </v-col>
-                          </v-row>
-                        </v-col>
+                        <v-col></v-col><User
+                        :date="thread.createdAt"
+                        />
                       </v-row>
                     </v-col>
                   </v-row>
@@ -97,6 +86,7 @@
 
 <script>
 import Comment from "~/components/Comment.vue";
+import User from "~/components/User.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -111,35 +101,14 @@ export default {
     };
   },
   components: {
-    Comment
+    Comment,
+    User
   },
 
   computed: {
     ...mapGetters({
       replies: "threads/replies"
     })
-  },
-
-  created() {
-    console.log(this.thread);
-    
-    
-    // this.$fireStore
-    //     .collection("papers")
-    //     .doc("bVypOMp1sZ9I4R0ib5hV")
-    //     .collection("threads").doc(this.thread.id).collection("replies").get().then(
-    //       r => {
-
-    //         this.replies = r.docs.map(doc =>
-    //         {return {
-    //           createdAt: doc.data().createdAt,
-    //           text: doc.data().text
-    //         }}
-    //         );
-    //       console.log(this.replies);
-    //       }
-
-    //     )
   },
 
   methods: {
@@ -156,9 +125,33 @@ export default {
       });
       this.reply = "";
     },
-    openDiag(){
+    openDiag() {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
+    },
+    format_timestamp(stamp) {
+      const d = new Date(stamp);
+      const dtf = new Intl.DateTimeFormat("en", {
+        year: "2-digit",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+      const [
+        { value: mo },
+        ,
+        { value: da },
+        ,
+        { value: ye },
+        ,
+        { value: hou },
+        ,
+        { value: min },
+
+        ,
+      ] = dtf.formatToParts(d);
+      return `${mo} ${da}'${ye} at ${hou}:${min}`;
     }
   }
 };
@@ -180,5 +173,8 @@ export default {
   line-height: 100%;
   margin: 0;
   margin-bottom: 3px;
+}
+.date {
+  font-size: 10pt;
 }
 </style>

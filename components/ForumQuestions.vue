@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list two-line>
+    <v-list>
       <v-list-item>
         <v-list-item-content>
           <h1>Threads</h1>
@@ -36,9 +36,11 @@
           </v-dialog>
         </v-list-item-icon>
       </v-list-item>
+      <v-divider></v-divider>
 
       <div v-for="(thread) in threads" :key="thread.id">
         <Thread :thread="thread" />
+        <v-divider></v-divider>
       </div>
 
       <!-- <v-list-item>
