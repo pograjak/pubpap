@@ -21,10 +21,15 @@
       Are you interested? Let me know, show the interest or buy a ticket to a
       conf call.
     </p>
-    <v-btn color="#D4AF37" @click="addCoin">
+    <v-btn
+      color="#D4AF37"
+      @click="payment()"
+      :loading="loading"
+      :disable="loading"
+    >
       Buy a ticket ($10)
     </v-btn>
-    <v-btn text @click="payment()">
+    <v-btn text>
       This is interesting
     </v-btn>
     <GChart type="PieChart" :data="chartData" :options="chartOptions" />
@@ -39,6 +44,7 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
+      loading: false,
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
         ["User type", "Votes"],
@@ -68,6 +74,7 @@ export default {
 
   methods: {
     async payment() {
+      this.loading = true;
       const session = await fetch(
         "https://europe-west1-pubpap-redcute.cloudfunctions.net/payment"
       );

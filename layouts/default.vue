@@ -92,7 +92,7 @@ export default {
   data() {
     return {
       position: ["master", "PhD", "postdoc", "prof", "other"],
-      title: "pubpap",
+      title: "pubpap: where asking is gaining",
       email: "",
       password: "",
       select: ""
