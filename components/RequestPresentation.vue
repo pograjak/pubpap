@@ -1,37 +1,45 @@
 <template>
   <div>
-    <div class="headline">Request online presentation</div>
-    <v-progress-linear
-      rounded
-      color="#D4AF37"
-      height="60"
-      :value="(request.requestCurrent / request.requestGoal) * 100"
-      striped
-    >
-      <strong>
-        ${{ request.requestCurrent }} / ${{ request.requestGoal }} Goal
-      </strong>
-    </v-progress-linear>
-    <br />
-    <p>
-      I offer a public presentation of my paper. In a case of interest it will
-      be organised as a call meetup with possibility to discuss the topic and
-      your question.
-      <br />
-      Are you interested? Let me know, show the interest or buy a ticket to a
-      conf call.
-    </p>
-    <v-btn
-      color="#D4AF37"
-      @click="payment()"
-      :loading="loading"
-      :disable="loading"
-    >
-      Buy a ticket ($10)
-    </v-btn>
-    <v-btn text>
-      This is interesting
-    </v-btn>
+    <v-list>
+      <v-list-item style="min-height:80px">
+        <v-list-item-content>
+          <h1>Request online presentation</h1>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+
+      <v-list-item>
+        <v-progress-linear
+          rounded
+          color="#D4AF37"
+          height="30"
+          :value="(request.requestCurrent / request.requestGoal) * 100"
+          striped
+        >
+          <strong>{{ request.requestCurrent }} / {{ request.requestGoal }} Kč Goal</strong>
+        </v-progress-linear>
+      </v-list-item>
+
+      <v-list-item>
+        <v-list-item-title class="justify-center">
+          Let's chat over this paper online!
+          <br />
+          To show you're for real, chip in a few coins for a beer to the author.
+        </v-list-item-title>
+      </v-list-item>
+
+      <v-list-item>
+        <v-spacer></v-spacer>
+        <v-btn
+          color="#D4AF37"
+          align-center
+          @click="payment()"
+          :loading="loading"
+          :disable="loading"
+        >Buy a ticket (10 Kč)</v-btn>
+        <!-- <v-btn text>This is interesting</v-btn> -->
+      </v-list-item>
+    </v-list>
     <GChart type="PieChart" :data="chartData" :options="chartOptions" />
     <div></div>
   </div>
@@ -97,4 +105,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.justify-center {
+  text-align: justify;
+}
+</style>
