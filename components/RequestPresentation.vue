@@ -2,6 +2,7 @@
   <div>
     <div class="headline">Request online presentation</div>
     <v-progress-linear
+      rounded
       color="#D4AF37"
       height="60"
       :value="(request.requestCurrent / request.requestGoal) * 100"

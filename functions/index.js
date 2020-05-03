@@ -16,14 +16,18 @@ const bodyParser = require("body-parser");
 app.post(
   "/webhook",
   bodyParser.raw({ type: "application/json" }),
-  (request, response) => {
-    response.send("works");
+  async (request, response) => {
     const sig = request.headers["stripe-signature"];
 
     let event;
 
     try {
-      event = stripe.webhooks.constructEvent(request.body, sig, endpointSecret);
+      event = stripe.webhooks.constructEvent(
+        request.rawBody,
+        sig,
+        endpointSecret,
+        { expand: ["payment_intent"] }
+      );
     } catch (err) {
       return response.status(400).send(`Webhook Error: ${err.message}`);
     }
@@ -31,11 +35,9 @@ app.post(
     // Handle the checkout.session.completed event
     if (event.type === "checkout.session.completed") {
       const session = event.data.object;
+      const amount = session.display_items[0].amount / 100;
 
-      const amount = session.payment_intent.amount;
-
-      // Fulfill the purchase...
-      admin
+      await admin
         .firestore()
         .collection("papers")
         .doc("bVypOMp1sZ9I4R0ib5hV")
@@ -43,7 +45,6 @@ app.post(
           requestCurrent: admin.firestore.FieldValue.increment(amount)
         });
     }
-
     // Return a response to acknowledge receipt of the event
     response.json({ received: true });
   }
