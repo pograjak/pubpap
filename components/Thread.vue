@@ -57,8 +57,7 @@
               <v-card-title>Answers</v-card-title>
 
               <div v-for="(r) in replies" :key="r.id">
-                <Comment :text="r.text" 
-                :date="r.createdAt" :name="r.userName"/>
+                <Comment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
 
               <!-- <Comment :text="thread.id" /> -->
@@ -69,14 +68,20 @@
                   <v-row no-gutters justify="center">
                     <v-col cols="10" align="right">
                       <div>
-                      <v-card-title>Comment</v-card-title>
-                      <v-card-subtitle>Submitting as {{ this.user.email }}</v-card-subtitle>
-                      <v-textarea filled v-model="reply"></v-textarea>
-                      <v-btn
-                        class="white--text button_right"
-                        color="blue accent-4"
-                        @click="addComment"
-                      >Submit</v-btn>
+                        <v-row no-gutters>
+                          <v-col align="left">
+                            <v-card-title>Comment</v-card-title>
+                          </v-col>
+                          <v-col align="end" justify="end">
+                            <v-card-subtitle>{{ get_deco_username() }}</v-card-subtitle>
+                          </v-col>
+                        </v-row>
+                        <v-textarea :disabled="this.user.email == ''" filled v-model="reply"></v-textarea>
+                        <v-btn :disabled="this.user.email == ''" 
+                          class="white--text button_right"
+                          color="blue accent-4"
+                          @click="addComment"
+                        >Submit</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -119,6 +124,13 @@ export default {
   },
 
   methods: {
+    get_deco_username(){
+      if(this.user.email == ""){
+        return 'Not logged in'
+      }else{
+        return `Logged in as ${this.user.email}`
+      }
+    },
     upvote() {
       this.$store.dispatch("threads/upvote", this.thread.id);
     },

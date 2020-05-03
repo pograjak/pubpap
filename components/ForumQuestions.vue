@@ -17,21 +17,36 @@
               <!-- <v-btn icon v-on="on" style="min-height: 60px"><v-icon>mdi-plus</v-icon></v-btn> -->
             </template>
             <v-card>
-              <v-card-title>Create New Thread</v-card-title>
-              <v-card-subtitle>Submitting as {{ this.user.email }}</v-card-subtitle>
-              <v-container fluid>
-                <v-row no-gutters justify="center">
-                  <v-col cols="11" align="right">
-                    <v-text-field filled label="Title" v-model="newthread_title"></v-text-field>
-                    <v-textarea filled label="Decription" v-model="newthread_question"></v-textarea>
-                  </v-col>
-                </v-row>
-              </v-container>
+              <div v-if="this.user.email == ''">
+                <v-card-title>Log in to create a new thread.</v-card-title>
+              </div>
+              <div v-if="this.user.email != ''">
+                <v-card-title>Create New Thread</v-card-title>
+                <v-card-subtitle>{{ get_deco_username() }}</v-card-subtitle>
+                <v-container fluid>
+                  <v-row no-gutters justify="center">
+                    <v-col cols="11" align="right">
+                      <v-text-field
+                        :disabled="this.user.email == ''"
+                        filled
+                        label="Title"
+                        v-model="newthread_title"
+                      ></v-text-field>
+                      <v-textarea
+                        :disabled="this.user.email == ''"
+                        filled
+                        label="Decription"
+                        v-model="newthread_question"
+                      ></v-textarea>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </div>
 
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = false">Cancel</v-btn>
-                <v-btn text @click="addThread()">Submit</v-btn>
+                <v-btn :hidden="this.user.email == ''" text @click="addThread()">Submit</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -85,6 +100,13 @@ export default {
   },
 
   methods: {
+    get_deco_username() {
+      if (this.user.email == "") {
+        return "Not logged in";
+      } else {
+        return `Logged in as ${this.user.email}`;
+      }
+    },
     btnClick() {
       this.text = "Hello second";
     },
