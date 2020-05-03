@@ -42,7 +42,6 @@
           :disable="loading"
           >Buy a ticket (10 Kč)</v-btn
         >
-        <!-- <v-btn text>This is interesting</v-btn> -->
       </v-list-item>
 
       <v-list-item>
@@ -50,12 +49,10 @@
           See the video summary:
         </v-list-item-title>
       </v-list-item>
-
       <v-list-item class="mt-2">
-        <div>
+        <div class="video-container">
           <iframe
-            width="560"
-            height="315"
+            class="video-video"
             src="https://www.youtube.com/embed/MPdj8KGZHa0"
             frameborder="0"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -130,5 +127,20 @@ export default {
 <style scoped>
 .justify-center {
   text-align: justify;
+}
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+}
+
+.video-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
