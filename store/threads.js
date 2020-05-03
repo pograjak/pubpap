@@ -40,7 +40,8 @@ export const actions = {
       text: payload.text,
       title: payload.title,
       upvotes: 0,
-      userId: -1,
+      userId: payload.userId,
+      userName: payload.userName,
       createdAt: Date.now()
     }
 
@@ -71,7 +72,8 @@ export const actions = {
     const comment={
       text: obj.text,
       userId: -1,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      userName: obj.userName
     }
 
     await this.$fireStore

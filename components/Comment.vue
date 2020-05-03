@@ -8,7 +8,7 @@
             <v-col></v-col>
             <v-col cols="auto">
               <v-row dense>
-                <User :date="date" />
+                <User :date="date" :name="name" />
               </v-row>
             </v-col>
           </v-row>
@@ -24,7 +24,8 @@ import User from "~/components/User.vue";
 export default {
   props: {
     text: String,
-    date: Number
+    date: Number,
+    name: String
   },
   components: {
     User
