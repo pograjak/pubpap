@@ -16,13 +16,17 @@
           :value="(request.requestCurrent / request.requestGoal) * 100"
           striped
         >
-          <strong>{{ request.requestCurrent }} / {{ request.requestGoal }} Kč Goal</strong>
+          <strong
+            >{{ request.requestCurrent }} /
+            {{ request.requestGoal }} Goal</strong
+          >
         </v-progress-linear>
       </v-list-item>
 
       <v-list-item>
         <v-list-item-title class="justify-center">
           Let's chat over this paper online!
+          <br />Author will organize an online conference in case of interest.
           <br />
           To show you're for real, chip in a few coins for a beer to the author.
         </v-list-item-title>
@@ -36,12 +40,30 @@
           @click="payment()"
           :loading="loading"
           :disable="loading"
-        >Buy a ticket (10 Kč)</v-btn>
+          >Buy a ticket (10 Kč)</v-btn
+        >
         <!-- <v-btn text>This is interesting</v-btn> -->
       </v-list-item>
+
+      <v-list-item>
+        <v-list-item-title class="justify-center">
+          See the video summary:
+        </v-list-item-title>
+      </v-list-item>
+
+      <v-list-item class="mt-2">
+        <div>
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/MPdj8KGZHa0"
+            frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          ></iframe>
+        </div>
+      </v-list-item>
     </v-list>
-    <GChart type="PieChart" :data="chartData" :options="chartOptions" />
-    <div></div>
   </div>
 </template>
 
