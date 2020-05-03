@@ -75,10 +75,13 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-toolbar flat app>
+    <v-toolbar flat app class="rcf">
       <span>
-        pubpap: Made with <v-icon>mdi-coffee-outline</v-icon> at Unihack by
-        <a class="rc" href="https://redcute.cz"> RedCute</a> &copy;
+        pubpap: Made with <v-icon>mdi-coffee-outline</v-icon> at
+        <a href="https://www.unihack.cz/" class="rc">Unihack</a>
+
+        by
+        <a class="rc underline" href="https://redcute.cz"> RedCute</a> &copy;
         {{ new Date().getFullYear() }}</span
       >
     </v-toolbar>
@@ -147,8 +150,17 @@ export default {
   font-family: "Nunito", sans-serif;
 }
 
-.rc {
-  color: black;
-  text-decoration-line: underline;
+a.rc {
+  color: grey;
+  text-decoration: none;
+}
+
+.underline {
+  border-bottom: 2px solid grey;
+}
+
+.rcf {
+  font-size: 14px;
+  color: grey;
 }
 </style>
