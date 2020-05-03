@@ -1,6 +1,6 @@
 <template>
   <v-app dark class="app">
-    <v-app-bar fixed app>
+    <v-toolbar flat app>
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <v-btn
@@ -69,15 +69,19 @@
       >
         Logout
       </v-btn>
-    </v-app-bar>
+    </v-toolbar>
     <v-content>
       <v-container>
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
-    </v-footer>
+    <v-toolbar flat app>
+      <span>
+        pubpap: Made with <v-icon>mdi-coffee-outline</v-icon> at Unihack by
+        <a class="rc" href="https://redcute.cz"> RedCute</a> &copy;
+        {{ new Date().getFullYear() }}</span
+      >
+    </v-toolbar>
   </v-app>
 </template>
 
@@ -141,5 +145,10 @@ export default {
 <style scoped>
 .app {
   font-family: "Inconsolata", monospace;
+}
+
+.rc {
+  color: black;
+  text-decoration-line: underline;
 }
 </style>

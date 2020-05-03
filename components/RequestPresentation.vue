@@ -13,12 +13,22 @@
       </strong>
     </v-progress-linear>
     <br />
-    <v-btn color="#D4AF37" @click="addCoin">Add me ($1)</v-btn>
-
+    <p>
+      I offer a public presentation of my paper. In a case of interest it will
+      be organised as a call meetup with possibility to discuss the topic and
+      your question.
+      <br />
+      Are you interested? Let me know, show the interest or buy a ticket to a
+      conf call.
+    </p>
+    <v-btn color="#D4AF37" @click="addCoin">
+      Buy a ticket ($10)
+    </v-btn>
+    <v-btn text @click="payment()">
+      This is interesting
+    </v-btn>
     <GChart type="PieChart" :data="chartData" :options="chartOptions" />
-    <div>
-      <v-btn color="success" @click="payment()">Donate me coffe</v-btn>
-    </div>
+    <div></div>
   </div>
 </template>
 
