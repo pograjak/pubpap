@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-list>
-      <v-list-item>
+      <v-list-item style="min-height:80px">
         <v-list-item-content>
           <h1>Threads</h1>
         </v-list-item-content>
