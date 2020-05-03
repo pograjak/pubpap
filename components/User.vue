@@ -6,9 +6,9 @@
       <!-- </v-col> -->
       <v-col>
         <p class="name">
-          Jiri Matas, prof.
+          {{ name }}
           <br />
-          <small>Created at {{ format_timestamp(date) }}</small>
+          <small>Created {{ format_timestamp(date) }}</small>
         </p>
       </v-col>
     </v-row>
@@ -18,7 +18,8 @@
 <script>
 export default {
   props: {
-    date: Number
+    date: Number,
+    name: String
   },
   methods: {
 format_timestamp(stamp) {

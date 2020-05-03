@@ -2,7 +2,8 @@ import { vuexfireMutations } from "vuexfire";
 
 export const state = () => ({
   user: {
-    email: ""
+    email: "",
+    id: ""
   }
 });
 
@@ -13,12 +14,13 @@ export const getters = {
 export const mutations = {
   ...vuexfireMutations,
   onAuthStateChangedMutation: (state, { authUser }) => {
-    console.log(authUser);
-
     if (!authUser) {
       state.user.email = "";
+      state.user.id = "";
     } else {
       state.user.email = authUser.email;
+      state.user.id = authUser.uid;
+      
     }
   }
 };

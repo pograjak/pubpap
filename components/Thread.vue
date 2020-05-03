@@ -2,8 +2,11 @@
   <v-list-item three-line @click.stop="openDiag">
     <v-list-item-content>
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
-      <v-list-item-subtitle>Jiri Matas, prof.</v-list-item-subtitle>
-      <v-list-item-subtitle class="date">Created {{ format_timestamp(thread.createdAt) }}</v-list-item-subtitle>
+      <v-list-item-subtitle class="name">
+        {{ thread.userName }}
+        <br />
+        <small>Created {{ format_timestamp(thread.createdAt) }}</small>
+      </v-list-item-subtitle>
     </v-list-item-content>
 
     <v-list-item-icon>
@@ -42,9 +45,8 @@
                       <v-card-title>{{ thread.title }}</v-card-title>
                       <v-card-text>{{ thread.text }}</v-card-text>
                       <v-row no-gutters>
-                        <v-col></v-col><User
-                        :date="thread.createdAt"
-                        />
+                        <v-col></v-col>
+                        <User :date="thread.createdAt" :name="thread.userName" />
                       </v-row>
                     </v-col>
                   </v-row>
@@ -55,7 +57,8 @@
               <v-card-title>Answers</v-card-title>
 
               <div v-for="(r) in replies" :key="r.id">
-                <Comment :text="r.text" />
+                <Comment :text="r.text" 
+                :date="r.createdAt" :name="r.userName"/>
               </div>
 
               <!-- <Comment :text="thread.id" /> -->
@@ -65,13 +68,16 @@
                 <v-container fluid>
                   <v-row no-gutters justify="center">
                     <v-col cols="10" align="right">
+                      <div>
                       <v-card-title>Comment</v-card-title>
+                      <v-card-subtitle>Submitting as {{ this.user.email }}</v-card-subtitle>
                       <v-textarea filled v-model="reply"></v-textarea>
                       <v-btn
                         class="white--text button_right"
                         color="blue accent-4"
                         @click="addComment"
                       >Submit</v-btn>
+                      </div>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -108,7 +114,8 @@ export default {
   computed: {
     ...mapGetters({
       replies: "threads/replies"
-    })
+    }),
+    ...mapGetters(["user"])
   },
 
   methods: {
@@ -121,7 +128,8 @@ export default {
     addComment() {
       this.$store.dispatch("threads/addComment", {
         threadId: this.thread.id,
-        text: this.reply
+        text: this.reply,
+        userName: this.user.email
       });
       this.reply = "";
     },
@@ -167,12 +175,11 @@ export default {
 }
 .name {
   font-size: 10pt;
-  max-height: 20px;
-  text-align: right;
+  text-align: left;
   padding-right: 10px;
   line-height: 100%;
   margin: 0;
-  margin-bottom: 3px;
+  /* margin-bottom: 3px; */
 }
 .date {
   font-size: 10pt;

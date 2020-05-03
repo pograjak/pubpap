@@ -18,6 +18,7 @@
             </template>
             <v-card>
               <v-card-title>Create New Thread</v-card-title>
+              <v-card-subtitle>Submitting as {{ this.user.email }}</v-card-subtitle>
               <v-container fluid>
                 <v-row no-gutters justify="center">
                   <v-col cols="11" align="right">
@@ -79,7 +80,8 @@ export default {
   computed: {
     ...mapGetters({
       threads: "threads/threads"
-    })
+    }),
+    ...mapGetters(["user"])
   },
 
   methods: {
@@ -87,11 +89,16 @@ export default {
       this.text = "Hello second";
     },
     addThread() {
+      console.log(this.user.id);
       this.$store.dispatch("threads/addThread", {
         title: this.newthread_title,
-        text: this.newthread_question
+        text: this.newthread_question,
+        userId: this.user.id,
+        userName: this.user.email
       });
       this.dialog = false;
+      this.newthread_title = "";
+      this.newthread_question = "";
     }
   },
 

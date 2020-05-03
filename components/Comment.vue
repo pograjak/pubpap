@@ -8,16 +8,7 @@
             <v-col></v-col>
             <v-col cols="auto">
               <v-row dense>
-                <v-col cols="1">
-                  <v-icon>mdi-account</v-icon>
-                </v-col>
-                <v-col>
-                  <p class="name">
-                    prof. Jiri Matas
-                    <br />
-                    <small>Prof</small>
-                  </p>
-                </v-col>
+                <User :date="date" :name="name" />
               </v-row>
             </v-col>
           </v-row>
@@ -28,9 +19,16 @@
 </template>
 
 <script>
+import User from "~/components/User.vue";
+
 export default {
   props: {
     text: String,
+    date: Number,
+    name: String
+  },
+  components: {
+    User
   },
 };
 </script>
