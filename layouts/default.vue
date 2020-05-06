@@ -1,6 +1,6 @@
 <template>
   <v-app dark class="app">
-    <v-toolbar flat app>
+    <v-toolbar flat>
       <v-toolbar-title v-text="title" />
       <v-spacer />
       <v-btn
@@ -28,7 +28,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-toolbar flat app class="rcf">
+    <v-toolbar flat class="rcf">
       <span>
         pubpap: Made with <v-icon>mdi-coffee-outline</v-icon> at
         <a href="https://www.unihack.cz/" class="rc">Unihack</a>

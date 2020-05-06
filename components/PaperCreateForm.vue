@@ -11,16 +11,22 @@
     <v-btn color="success" @click="fetchArxiv">fetch data</v-btn>
     <br />
     <br />
-    {{ data }}
+    {{ title }}
+    <br />
+    {{ summary }}
   </div>
 </template>
 
 <script>
+let parseString = require("xml2js").parseString;
+
 export default {
   data() {
     return {
       paperUrl: "",
-      data: ""
+      data: "",
+      title: "",
+      summary: ""
     };
   },
 
@@ -33,6 +39,11 @@ export default {
       );
 
       this.data = await resp.text();
+      let self = this;
+      parseString(this.data, function(err, result) {
+        self.title = result.feed.entry[0].title[0];
+        self.summary = result.feed.entry[0].summary[0];
+      });
     }
   }
 };
