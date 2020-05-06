@@ -46,7 +46,9 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = false">Cancel</v-btn>
-                <v-btn :hidden="this.user.email == ''" text @click="addThread()">Submit</v-btn>
+                <v-btn :hidden="this.user.email == ''" text @click="addThread()"
+                  >Submit</v-btn
+                >
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -54,7 +56,7 @@
       </v-list-item>
       <v-divider></v-divider>
 
-      <div v-for="(thread) in threads" :key="thread.id">
+      <div v-for="thread in threads" :key="thread.id">
         <Thread :thread="thread" />
         <v-divider></v-divider>
       </div>
@@ -89,13 +91,16 @@ export default {
       newthread_question: ""
     };
   },
+
   created() {
     this.$store.dispatch("threads/bindThreads");
   },
+
   computed: {
     ...mapGetters({
       threads: "threads/threads"
     }),
+
     ...mapGetters(["user"])
   },
 
@@ -107,11 +112,12 @@ export default {
         return `Logged in as ${this.user.email}`;
       }
     },
+
     btnClick() {
       this.text = "Hello second";
     },
+
     addThread() {
-      console.log(this.user.id);
       this.$store.dispatch("threads/addThread", {
         title: this.newthread_title,
         text: this.newthread_question,

@@ -20,7 +20,6 @@ export const mutations = {
     } else {
       state.user.email = authUser.email;
       state.user.id = authUser.uid;
-      
     }
   }
 };

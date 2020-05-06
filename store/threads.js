@@ -20,10 +20,14 @@ export const actions = {
         .collection("papers")
         .doc("bVypOMp1sZ9I4R0ib5hV")
         .collection("threads")
-        .orderBy('upvotes', 'desc')
+        .orderBy("upvotes", "desc")
     );
   }),
-  bindReplies: firestoreAction(async function({ bindFirestoreRef }, herethreadId) {
+
+  bindReplies: firestoreAction(async function(
+    { bindFirestoreRef },
+    herethreadId
+  ) {
     await bindFirestoreRef(
       "replies",
       this.$fireStore
@@ -31,50 +35,54 @@ export const actions = {
         .doc("bVypOMp1sZ9I4R0ib5hV")
         .collection("threads")
         .doc(herethreadId)
-        .collection('replies')
-        .orderBy('createdAt')
+        .collection("replies")
+        .orderBy("createdAt")
     );
   }),
+
   addThread: async function(context, payload) {
-    const thread={
+    const thread = {
       text: payload.text,
       title: payload.title,
       upvotes: 0,
       userId: payload.userId,
       userName: payload.userName,
       createdAt: Date.now()
-    }
+    };
 
     await this.$fireStore
       .collection("papers")
       .doc("bVypOMp1sZ9I4R0ib5hV")
       .collection("threads")
       .doc()
-      .set(thread)
+      .set(thread);
   },
+
   upvote: async function(context, id) {
     await this.$fireStore
       .collection("papers")
       .doc("bVypOMp1sZ9I4R0ib5hV")
       .collection("threads")
       .doc(id)
-      .update({upvotes : this.$fireStoreObj.FieldValue.increment(1)});
+      .update({ upvotes: this.$fireStoreObj.FieldValue.increment(1) });
   },
+
   downvote: async function(context, id) {
     await this.$fireStore
       .collection("papers")
       .doc("bVypOMp1sZ9I4R0ib5hV")
       .collection("threads")
       .doc(id)
-      .update({upvotes : this.$fireStoreObj.FieldValue.increment(-1)});
+      .update({ upvotes: this.$fireStoreObj.FieldValue.increment(-1) });
   },
+
   addComment: async function(context, obj) {
-    const comment={
+    const comment = {
       text: obj.text,
       userId: -1,
       createdAt: Date.now(),
       userName: obj.userName
-    }
+    };
 
     await this.$fireStore
       .collection("papers")
@@ -84,6 +92,5 @@ export const actions = {
       .collection("replies")
       .doc()
       .set(comment);
-  },
-
+  }
 };

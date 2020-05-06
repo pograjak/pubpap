@@ -152,12 +152,15 @@ export default {
         return `Logged in as ${this.user.email}`;
       }
     },
+
     upvote() {
       this.$store.dispatch("threads/upvote", this.thread.id);
     },
+
     downvote() {
       this.$store.dispatch("threads/downvote", this.thread.id);
     },
+
     addComment() {
       this.$store.dispatch("threads/addComment", {
         threadId: this.thread.id,
@@ -166,10 +169,12 @@ export default {
       });
       this.reply = "";
     },
+
     openDiag() {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
     },
+
     format_timestamp(stamp) {
       const d = new Date(stamp);
       const dtf = new Intl.DateTimeFormat("en", {

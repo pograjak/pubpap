@@ -105,7 +105,6 @@ export default {
       const session = await fetch(
         "https://europe-west1-pubpap-redcute.cloudfunctions.net/payment"
       );
-
       const sessionIdc = await session.json();
 
       const stripe = await loadStripe(
