@@ -7,7 +7,7 @@
           Images and Deep Convolutional Neural Networks</v-card-title
         >
         <v-card-subtitle>Ali Narin, Ceren Kaya, Ziynet Pamuk</v-card-subtitle>
-        <v-card-text class="justify-center"
+        <v-card-text class="text-justify"
           >The 2019 novel coronavirus (COVID-19), with a starting point in
           China, has spread rapidly among people living in other countries, and
           is approaching approximately 305,275 cases worldwide according to the
@@ -57,7 +57,4 @@ export default {
 </script>
 
 <style scoped>
-.justify-center {
-  text-align: justify;
-}
 </style>
