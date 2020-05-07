@@ -8,12 +8,21 @@
       ref="paperUrl"
       v-model="paperUrl"
     ></v-text-field>
+    <v-text-field
+      name="gitHubUrl"
+      label="gitHubUrl"
+      ref="gitHubUrl"
+      v-model="gitHubUrl"
+    ></v-text-field>
     <v-btn color="success" @click="fetchArxiv">fetch data</v-btn>
     <br />
     <br />
     {{ title }}
     <br />
     {{ summary }}
+    <br />
+    {{ authors }}
+    <br />
   </div>
 </template>
 
@@ -26,7 +35,10 @@ export default {
       paperUrl: "",
       data: "",
       title: "",
-      summary: ""
+      summary: "",
+      authors: "",
+      arxLink: "",
+      gitHubUrl: ""
     };
   },
 
@@ -41,9 +53,26 @@ export default {
       this.data = await resp.text();
       let self = this;
       parseString(this.data, function(err, result) {
+        console.log(result.feed.entry[0]);
         self.title = result.feed.entry[0].title[0];
         self.summary = result.feed.entry[0].summary[0];
+        self.authors = result.feed.entry[0].author;
+        self.arxLink = result.feed.entry[0].id;
       });
+    },
+
+    async createPaper() {
+      let a = await this.$fireStore
+        .collection("papers")
+        .doc()
+        .set({
+          authorId: this.$fireAuth.currentUser.uid,
+          title: this.title,
+          authors: this.authors,
+          arxLink: this.arxLink,
+          summary: this.summary
+        });
+      console.log(a);
     }
   }
 };
