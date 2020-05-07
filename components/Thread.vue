@@ -5,7 +5,7 @@
       <v-list-item-subtitle class="name">
         {{ thread.userName }}
         <br />
-        <small>Created {{ format_timestamp(thread.createdAt) }}</small>
+        <small>Created {{ thread.createdAt | format-timestamp }}</small>
       </v-list-item-subtitle>
     </v-list-item-content>
 
@@ -174,31 +174,6 @@ export default {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
     },
-
-    format_timestamp(stamp) {
-      const d = new Date(stamp);
-      const dtf = new Intl.DateTimeFormat("en", {
-        year: "2-digit",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-      const [
-        { value: mo },
-        ,
-        { value: da },
-        ,
-        { value: ye },
-        ,
-        { value: hou },
-        ,
-        { value: min },
-
-        ,
-      ] = dtf.formatToParts(d);
-      return `${mo} ${da}'${ye} at ${hou}:${min}`;
-    }
   }
 };
 </script>

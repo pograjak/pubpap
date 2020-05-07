@@ -8,7 +8,7 @@
         <p class="name">
           {{ name }}
           <br />
-          <small>Created {{ format_timestamp(date) }}</small>
+          <small>Created {{ date | format-timestamp }}</small>
         </p>
       </v-col>
     </v-row>
@@ -22,25 +22,6 @@ export default {
     name: String
   },
   methods: {
-format_timestamp(stamp) {
-      const d = new Date(stamp);
-      const dtf = new Intl.DateTimeFormat("en", {
-        year: "2-digit",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-      const [
-        { value: mo },,
-        { value: da },,
-        { value: ye },,
-        { value: hou },,
-        { value: min },,
-
-      ] = dtf.formatToParts(d);
-      return `${mo} ${da}'${ye} at ${hou}:${min}`
-    }
   }
 
 };
