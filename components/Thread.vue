@@ -10,20 +10,15 @@
       <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.upvotes }}</div>
     </v-list-item-icon>
 
-    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
-      <v-card>
-        <v-toolbar dark color="primary">
-          <v-toolbar-title>Discuss</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-btn icon dark @click="dialog = false">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
+    <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
+      <v-btn fab @click="dialog = false" right top fixed class="mt-3 mr-5 pr-0">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
 
+      <v-card>
         <v-container fluid>
           <v-row no-gutters justify="center" align="center">
-            <v-col cols="8" no-gutters>
-              <v-card-title>Question</v-card-title>
+            <v-col no-gutters> 
               <v-card class="question">
                 <v-container fluid>
                   <v-row dense>
@@ -55,9 +50,6 @@
               <div v-for="r in replies" :key="r.id">
                 <Comment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
-
-              <!-- <Comment :text="thread.id" /> -->
-              <!-- <Comment :text="replies" /> -->
 
               <v-card>
                 <v-container fluid>
