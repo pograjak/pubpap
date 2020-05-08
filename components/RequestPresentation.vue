@@ -3,7 +3,7 @@
     <v-list>
       <v-list-item style="min-height:80px">
         <v-list-item-content>
-          <h1>Request online presentation</h1>
+          <v-list-item-title class="display-1">Request online presentation</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
