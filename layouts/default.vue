@@ -66,9 +66,9 @@ export default {
 </script>
 
 <style scoped>
-.app {
+/* .app {
   font-family: "Nunito", sans-serif;
-}
+} */
 
 a.rc {
   color: grey;
