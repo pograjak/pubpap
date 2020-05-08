@@ -1,14 +1,14 @@
 <template>
   <v-card>
-    <v-container fluid>
-      <v-row dense>
+    <v-container>
+      <v-row no-gutters>
         <v-col>
           <v-card-text>{{ text }}</v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
             <v-col cols="auto">
-              <v-row dense>
-                <User :date="date" :name="name" />
+              <v-row no-gutters>
+                <User :date="date" :name="name" :rightAlign="true" />
               </v-row>
             </v-col>
           </v-row>
@@ -29,7 +29,7 @@ export default {
   },
   components: {
     User
-  },
+  }
 };
 </script>
 
