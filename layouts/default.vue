@@ -1,7 +1,9 @@
 <template>
   <v-app dark class="app">
     <v-toolbar flat>
-      <v-toolbar-title v-text="title" />
+      <nuxt-link class="header-link" to="/">
+        <v-toolbar-title v-text="title" />
+      </nuxt-link>
       <v-spacer />
       <v-btn
         color="red lighten-2"
@@ -86,5 +88,10 @@ a.rc {
 .rcf {
   font-size: 14px;
   color: grey;
+}
+
+.header-link {
+  text-decoration: none;
+  color: black;
 }
 </style>
