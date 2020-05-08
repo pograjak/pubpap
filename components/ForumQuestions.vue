@@ -20,7 +20,7 @@
               <div v-if="this.user.email == ''">
                 <v-card-title>Log in to create a new thread.</v-card-title>
               </div>
-              <div v-if="this.user.email != ''">
+              <div v-else>
                 <v-card-title>Create New Thread</v-card-title>
                 <v-card-subtitle>{{ get_deco_username() }}</v-card-subtitle>
                 <v-container fluid>
