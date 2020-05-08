@@ -3,14 +3,14 @@
     <v-list>
       <v-list-item style="min-height:80px">
         <v-list-item-content>
-          <h1>Threads</h1>
+          <v-list-item-title class="display-1">Threads</v-list-item-title>
         </v-list-item-content>
 
-        <v-list-item-icon>
+        <v-list-item-action>
           <!-- New Thread dialog -->
           <v-dialog v-model="dialog" persistent max-width="800">
             <template v-slot:activator="{ on }">
-              <v-btn color="secondary" tile large v-on="on">
+              <v-btn color="primary" large v-on="on">
                 <!-- <v-icon>mdi-plus</v-icon> -->
                 New Thread
               </v-btn>
@@ -46,13 +46,11 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text @click="dialog = false">Cancel</v-btn>
-                <v-btn :hidden="this.user.email == ''" text @click="addThread()"
-                  >Submit</v-btn
-                >
+                <v-btn :hidden="this.user.email == ''" text @click="addThread()">Submit</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
-        </v-list-item-icon>
+        </v-list-item-action>
       </v-list-item>
       <v-divider></v-divider>
 

@@ -2,25 +2,15 @@
   <v-list-item three-line @click.stop="openDiag">
     <v-list-item-content>
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
-      <v-list-item-subtitle class="name">
-        {{ thread.userName }}
-        <br />
-        <small>Created {{ thread.createdAt | format-timestamp }}</small>
-      </v-list-item-subtitle>
+      <v-list-item-subtitle class="font-weight-bold">{{ thread.userName }}</v-list-item-subtitle>
+      <v-list-item-subtitle class="caption">Created {{ thread.createdAt | format-timestamp }}</v-list-item-subtitle>
     </v-list-item-content>
 
-    <v-list-item-icon>
-      {{ thread.upvotes }} &nbsp;
-
-      <v-icon dense>mdi-thumb-up</v-icon>
+    <v-list-item-icon right>
+      <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.upvotes }}</div>
     </v-list-item-icon>
 
-    <v-dialog
-      v-model="dialog"
-      fullscreen
-      hide-overlay
-      transition="dialog-bottom-transition"
-    >
+    <v-dialog v-model="dialog" fullscreen hide-overlay transition="dialog-bottom-transition">
       <v-card>
         <v-toolbar dark color="primary">
           <v-toolbar-title>Discuss</v-toolbar-title>
@@ -52,10 +42,7 @@
                       <v-card-text>{{ thread.text }}</v-card-text>
                       <v-row no-gutters>
                         <v-col></v-col>
-                        <User
-                          :date="thread.createdAt"
-                          :name="thread.userName"
-                        />
+                        <User :date="thread.createdAt" :name="thread.userName" />
                       </v-row>
                     </v-col>
                   </v-row>
@@ -66,11 +53,7 @@
               <v-card-title>Answers</v-card-title>
 
               <div v-for="r in replies" :key="r.id">
-                <Comment
-                  :text="r.text"
-                  :date="r.createdAt"
-                  :name="r.userName"
-                />
+                <Comment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
 
               <!-- <Comment :text="thread.id" /> -->
@@ -86,23 +69,20 @@
                             <v-card-title>Comment</v-card-title>
                           </v-col>
                           <v-col align="end" justify="end">
-                            <v-card-subtitle>{{
+                            <v-card-subtitle>
+                              {{
                               get_deco_username()
-                            }}</v-card-subtitle>
+                              }}
+                            </v-card-subtitle>
                           </v-col>
                         </v-row>
-                        <v-textarea
-                          :disabled="this.user.email == ''"
-                          filled
-                          v-model="reply"
-                        ></v-textarea>
+                        <v-textarea :disabled="this.user.email == ''" filled v-model="reply"></v-textarea>
                         <v-btn
                           :disabled="this.user.email == ''"
                           class="white--text button_right"
                           color="blue accent-4"
                           @click="addComment"
-                          >Submit</v-btn
-                        >
+                        >Submit</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -141,7 +121,15 @@ export default {
     ...mapGetters({
       replies: "threads/replies"
     }),
-    ...mapGetters(["user"])
+    ...mapGetters(["user"]),
+    highlightingClasses: function() {
+      return {
+        success: this.thread.upvotes > 5,
+        grey: (this.thread.upvotes <= 5) & (this.thread.upvotes >= -1),
+        error: this.thread.upvotes < -1,
+        "white--text": (this.thread.upvotes < -1) | (this.thread.upvotes > 5)
+      };
+    }
   },
 
   methods: {
@@ -173,7 +161,7 @@ export default {
     openDiag() {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
-    },
+    }
   }
 };
 </script>
@@ -186,15 +174,13 @@ export default {
   max-width: 45px;
   text-align: center;
 }
-.name {
-  font-size: 10pt;
-  text-align: left;
-  padding-right: 10px;
-  line-height: 100%;
-  margin: 0;
-  /* margin-bottom: 3px; */
-}
 .date {
   font-size: 10pt;
+}
+div.ratingicon {
+  width: 40px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
 }
 </style>
