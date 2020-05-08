@@ -40,7 +40,23 @@
 
 <script>
 export default {
-  layout: "signup"
+  layout: "signup",
+  data() {
+    return {
+      email: "",
+      password: ""
+    };
+  },
+
+  methods: {
+    async login() {
+      const user = await this.$fireAuth.signInWithEmailAndPassword(
+        this.email,
+        this.password
+      );
+      if (user) this.$router.push("/");
+    }
+  }
 };
 </script>
 
