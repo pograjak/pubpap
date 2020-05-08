@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      Register
+      Login
     </v-card-title>
     <v-form>
       <v-card-text>
@@ -28,10 +28,10 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="primary" @click.prevent="login">
-          Register
-        </v-btn>
-        <v-btn color="primary" text to="/login">
           Login
+        </v-btn>
+        <v-btn text color="primary" to="/register">
+          Register
         </v-btn>
       </v-card-actions>
     </v-form>

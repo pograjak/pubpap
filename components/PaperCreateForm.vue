@@ -1,29 +1,71 @@
 <template>
-  <div>
-    Hello from paper create form
+  <v-card>
+    <v-card-title primary-title>
+      Create new page for your awesome paper:
+    </v-card-title>
+    <v-card-text>
+      <div>
+        <v-text-field
+          name="paperUrl"
+          label="arxiv paper link"
+          ref="paperUrl"
+          :disabled="disabled"
+          v-model="paperUrl"
+        ></v-text-field>
+        <v-text-field
+          name="gitHubUrl"
+          label="git hub repo link"
+          ref="gitHubUrl"
+          :disabled="disabled"
+          v-model="gitHubUrl"
+        ></v-text-field>
+        <v-row>
+          <v-col>
+            <v-text-field
+              name="priceGoal"
+              label="How much do you want to collect co organize a meeting?"
+              ref="priceGoal"
+              :disabled="disabled"
+              v-model="priceGoal"
+            ></v-text-field>
+            <v-slider
+              v-model="priceGoal"
+              :disabled="disabled"
+              step="1"
+              max="1000"
+            ></v-slider>
+          </v-col>
+          <v-col>
+            <v-text-field
+              name="bid"
+              label="How much do you want to collect from one baker?"
+              ref="bid"
+              :disabled="disabled"
+              v-model="bid"
+            ></v-text-field>
+            <v-slider
+              v-model="bid"
+              :disabled="disabled"
+              step="1"
+              max="100"
+            ></v-slider>
+          </v-col>
+        </v-row>
 
-    <v-text-field
-      name="paperUrl"
-      label="paperUrl"
-      ref="paperUrl"
-      v-model="paperUrl"
-    ></v-text-field>
-    <v-text-field
-      name="gitHubUrl"
-      label="gitHubUrl"
-      ref="gitHubUrl"
-      v-model="gitHubUrl"
-    ></v-text-field>
-    <v-btn color="success" @click="fetchArxiv">fetch data</v-btn>
-    <br />
-    <br />
-    {{ title }}
-    <br />
-    {{ summary }}
-    <br />
-    {{ authors }}
-    <br />
-  </div>
+        <v-btn color="success" @click="fetchArxiv">fetch data</v-btn>
+
+        <v-btn color="success" @click="disabled = !disabled">Disable</v-btn>
+        <br />
+        <br />
+        {{ title }}
+        <br />
+        {{ summary }}
+        <br />
+        {{ authors }}
+        <br />
+      </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -38,7 +80,10 @@ export default {
       summary: "",
       authors: "",
       arxLink: "",
-      gitHubUrl: ""
+      gitHubUrl: "",
+      priceGoal: 100,
+      bid: 10,
+      disabled: false
     };
   },
 
@@ -70,7 +115,9 @@ export default {
           title: this.title,
           authors: this.authors,
           arxLink: this.arxLink,
-          summary: this.summary
+          summary: this.summary,
+          priceGoal: this.priceGoal,
+          bid: this.bid
         });
       console.log(a);
     }
