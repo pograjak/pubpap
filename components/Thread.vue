@@ -22,7 +22,7 @@
       </v-btn>
 
       <v-card>
-        <v-container style="max-width: 725px">
+        <v-container style="max-width: 900px">
           <v-row no-gutters justify="center" align="center">
             <!-- Main column -->
             <v-col no-gutters>
