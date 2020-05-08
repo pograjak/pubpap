@@ -1,14 +1,21 @@
 <template>
-  <div>
+  <v-container fluid>
     <v-row>
-      <v-card>
-        <UserDetail />
-      </v-card>
+      <v-col>
+        <v-card>
+          <v-card-text>
+            <UserDetail />
+          </v-card-text>
+        </v-card>
+      </v-col>
     </v-row>
+    <br />
     <v-row>
-      <PaperCreateForm />
+      <v-col>
+        <PaperCreateForm />
+      </v-col>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>

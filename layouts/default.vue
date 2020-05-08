@@ -14,9 +14,13 @@
 
       <UserLoginForm />
 
+      <v-btn color="primary" v-if="userLoggedIn.email != ''" to="/profile">
+        User profile
+      </v-btn>
+
       <v-btn
         color="primary"
-        v-show="userLoggedIn.email != ''"
+        v-if="userLoggedIn.email != ''"
         text
         @click="$fireAuth.signOut()"
       >
