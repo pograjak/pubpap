@@ -1,41 +1,14 @@
 <template>
-  <v-container fluid>
-    <v-row>
-      <v-col>
-        <PaperDetail />
-      </v-col>
-    </v-row>
-
-    <v-row>
-      <v-col>
-        <RequestPresentation />
-      </v-col>
-
-      <v-col>
-        <ForumQuestions />
-      </v-col>
-    </v-row>
-  </v-container>
+  <div>
+    <PaperList />
+  </div>
 </template>
 
 <script>
-import PaperDetail from "~/components/PaperDetail.vue";
-import RequestPresentation from "~/components/RequestPresentation.vue";
-import ForumQuestions from "~/components/ForumQuestions.vue";
-import Vue from "vue";
-import VueGoogleCharts from "vue-google-charts";
-
-Vue.use(VueGoogleCharts);
-
+import PaperList from "~/components/PaperList.vue";
 export default {
-  components: {
-    PaperDetail,
-    RequestPresentation,
-    ForumQuestions
-  },
-
-  computed: {}
+  components: { PaperList }
 };
 </script>
 
-<style scoped></style>
+<style></style>
