@@ -78,7 +78,6 @@
 import { mapGetters } from "vuex";
 
 import Thread from "~/components/Thread.vue";
-import Comment from "~/components/Comment.vue";
 
 export default {
   data: function() {
@@ -129,8 +128,7 @@ export default {
   },
 
   components: {
-    Thread,
-    Comment
+    Thread
   }
 };
 </script>

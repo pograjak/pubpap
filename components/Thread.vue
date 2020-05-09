@@ -1,4 +1,5 @@
 <template>
+  <!-- Thread menu overview -->
   <v-list-item three-line @click.stop="openDiag" style="min-height:70px">
     <v-list-item-content class="pt-2">
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
@@ -7,14 +8,13 @@
           <User :date="thread.createdAt" :name="thread.userName" :rightAlign="false" />
         </v-row>
       </v-container>
-      <!-- <v-list-item-subtitle class="font-weight-bold mb-0">{{ thread.userName }}</v-list-item-subtitle> -->
-      <!-- <v-list-item-subtitle class="caption ma-0">Created {{ thread.createdAt | format-timestamp }}</v-list-item-subtitle> -->
     </v-list-item-content>
 
     <v-list-item-icon right class="pt-2 mt-0">
       <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.upvotes }}</div>
     </v-list-item-icon>
 
+    <!-- POPUP DIALOG -->
     <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
       <!-- Exit button - fixed -->
       <v-btn fab @click="dialog = false" right top fixed class="mt-3 mr-5 pr-0 primary">
@@ -26,40 +26,22 @@
           <v-row no-gutters justify="center" align="center">
             <!-- Main column -->
             <v-col no-gutters>
-              <v-card color="yellow lighten-5">
-                <!-- Question -->
-                <v-container>
-                  <v-row no-gutters>
-                    <v-col cols="1" class="text-center icons">
-                      <v-btn icon @click="upvote">
-                        <v-icon>mdi-arrow-up-thick</v-icon>
-                      </v-btn>
-                      {{ thread.upvotes }}
-                      <v-btn icon @click="downvote">
-                        <v-icon>mdi-arrow-down-thick</v-icon>
-                      </v-btn>
-                    </v-col>
-
-                    <v-col>
-                      <v-card-title class="pt-0 pb-2">{{ thread.title }}</v-card-title>
-                      <v-card-text
-                        class="markdown-body code_override"
-                        v-html="render_markdown(thread.text)"
-                      ></v-card-text>
-                      <v-row no-gutters>
-                        <v-col></v-col>
-                        <User :date="thread.createdAt" :name="thread.userName" :rightAlign="true" />
-                      </v-row>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
+              <ThreadQuestion
+                class="code_override"
+                :threadId="thread.id"
+                :title="thread.title"
+                :text_html="render_markdown(thread.text)"
+                :date="thread.createdAt"
+                :name="thread.userName"
+                :upvotes="thread.upvotes"
+              />
 
               <v-spacer />
+
               <v-card-title class="pa-3">Answers</v-card-title>
 
               <div v-for="r in replies" :key="r.id">
-                <Comment
+                <ThreadComment
                   class="code_override"
                   :text="r.text"
                   :date="r.createdAt"
@@ -67,7 +49,7 @@
                 />
               </div>
 
-              <AddComment class="code_override" :threadId="thread.id" :user="user" />
+              <ThreadTextarea class="code_override" :threadId="thread.id" :user="user" />
             </v-col>
           </v-row>
         </v-container>
@@ -77,13 +59,14 @@
 </template>
 
 <script>
-import Comment from "~/components/Comment.vue";
+import ThreadQuestion from "~/components/ThreadQuestion.vue";
+import ThreadComment from "~/components/ThreadComment.vue";
 import User from "~/components/User.vue";
-import AddComment from "~/components/AddComment.vue";
+import ThreadTextarea from "~/components/ThreadTextarea.vue";
 import { mapGetters } from "vuex";
 import { md } from "~/plugins/markdown_render.js";
 import "github-markdown-css/github-markdown.css"; //
-import 'highlight.js/styles/github-gist.css';  // Code highlight style
+import "highlight.js/styles/github-gist.css"; // Code highlight style
 
 export default {
   props: {
@@ -96,9 +79,10 @@ export default {
     };
   },
   components: {
-    Comment,
-    User,
-    AddComment
+    ThreadComment,
+    ThreadQuestion,
+    ThreadTextarea,
+    User
   },
 
   computed: {
@@ -118,14 +102,6 @@ export default {
   },
 
   methods: {
-    upvote() {
-      this.$store.dispatch("threads/upvote", this.thread.id);
-    },
-
-    downvote() {
-      this.$store.dispatch("threads/downvote", this.thread.id);
-    },
-
     openDiag() {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
@@ -138,6 +114,7 @@ export default {
 </script>
 
 <style scoped>
+/* Override Vuetify formatting of code block, including children */
 .code_override /deep/ code {
   display: inline;
   overflow: visible;
@@ -152,13 +129,7 @@ export default {
 .code_override /deep/ code::after {
   content: none;
 }
-.icons {
-  max-width: 45px;
-  text-align: center;
-}
-.date {
-  font-size: 10pt;
-}
+/* Icons showing rating in the Threads menu */
 div.ratingicon {
   width: 40px;
   height: 25px;
