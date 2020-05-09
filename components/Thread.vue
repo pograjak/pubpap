@@ -17,7 +17,7 @@
 
     <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
       <!-- Exit button - fixed -->
-      <v-btn fab @click="dialog = false" right top fixed class="mt-3 mr-5 pr-0">
+      <v-btn fab @click="dialog = false" right top fixed class="mt-3 mr-5 pr-0 primary">
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
@@ -59,35 +59,7 @@
                 <Comment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
 
-              <v-card>
-                <v-container fluid>
-                  <v-row no-gutters justify="center">
-                    <v-col cols="10" align="right">
-                      <div>
-                        <v-row no-gutters>
-                          <v-col align="left">
-                            <v-card-title>Comment</v-card-title>
-                          </v-col>
-                          <v-col align="end" justify="end">
-                            <v-card-subtitle>
-                              {{
-                              get_deco_username()
-                              }}
-                            </v-card-subtitle>
-                          </v-col>
-                        </v-row>
-                        <v-textarea :disabled="this.user.email == ''" filled v-model="reply"></v-textarea>
-                        <v-btn
-                          :disabled="this.user.email == ''"
-                          class="white--text button_right"
-                          color="blue accent-4"
-                          @click="addComment"
-                        >Submit</v-btn>
-                      </div>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card>
+              <AddComment :threadId="thread.id" :user="user" />
             </v-col>
           </v-row>
         </v-container>
@@ -99,6 +71,7 @@
 <script>
 import Comment from "~/components/Comment.vue";
 import User from "~/components/User.vue";
+import AddComment from "~/components/AddComment.vue";
 import { mapGetters } from "vuex";
 
 export default {
@@ -108,13 +81,13 @@ export default {
 
   data() {
     return {
-      dialog: false,
-      reply: ""
+      dialog: false
     };
   },
   components: {
     Comment,
-    User
+    User,
+    AddComment
   },
 
   computed: {
@@ -125,7 +98,8 @@ export default {
     highlightingClasses: function() {
       return {
         success: this.thread.upvotes > 5,
-        'grey lighten-2': (this.thread.upvotes <= 5) & (this.thread.upvotes >= -1),
+        "grey lighten-2":
+          (this.thread.upvotes <= 5) & (this.thread.upvotes >= -1),
         error: this.thread.upvotes < -1,
         "white--text": (this.thread.upvotes < -1) | (this.thread.upvotes > 5)
       };
@@ -133,29 +107,12 @@ export default {
   },
 
   methods: {
-    get_deco_username() {
-      if (this.user.email == "") {
-        return "Not logged in";
-      } else {
-        return `Logged in as ${this.user.email}`;
-      }
-    },
-
     upvote() {
       this.$store.dispatch("threads/upvote", this.thread.id);
     },
 
     downvote() {
       this.$store.dispatch("threads/downvote", this.thread.id);
-    },
-
-    addComment() {
-      this.$store.dispatch("threads/addComment", {
-        threadId: this.thread.id,
-        text: this.reply,
-        userName: this.user.email
-      });
-      this.reply = "";
     },
 
     openDiag() {
