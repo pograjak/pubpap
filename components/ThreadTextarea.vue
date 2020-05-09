@@ -1,33 +1,33 @@
 <template>
   <v-card>
     <v-container>
-      <v-row no-gutters justify="center">
+      <v-row no-gutters justify="space-between" align="end">
         <v-col>
-          <div>
-            <v-row no-gutters>
-              <v-col align="left">
-                <v-card-title>Comment</v-card-title>
-              </v-col>
-              <v-col align="end" justify="end">
-                <v-card-subtitle>
-                  {{
-                  get_deco_username()
-                  }}
-                </v-card-subtitle>
-              </v-col>
-            </v-row>
-            <!-- <vue-simplemde v-model="reply" ref="markdownEditor" preview-class="markdown-body" :configs="editor_configs" /> -->
-            <!-- <v-textarea :disabled="user.email == ''" filled v-model="reply"></v-textarea> -->
-            <div class="markdown-body">
-              <textarea :id="'textarea_'+threadId"></textarea>
-            </div>
-            <v-btn
-              :disabled="user.email == ''"
-              class="white--text button_right"
-              color="blue accent-4"
-              @click="addComment"
-            >Submit</v-btn>
+          <v-card-title class="pt-0 pb-1 pt-2 pl-1">{{ title }}</v-card-title>
+        </v-col>
+        <v-col>
+          <p class="name text-right pb-2 pr-0 grey--text text--darken-1">
+            {{ get_deco_username() }}
+          </p>
+        </v-col>
+      </v-row>
+      <!-- <vue-simplemde v-model="reply" ref="markdownEditor" preview-class="markdown-body" :configs="editor_configs" /> -->
+      <!-- <v-textarea :disabled="user.email == ''" filled v-model="reply"></v-textarea> -->
+      <v-row no-gutters>
+        <v-col>
+          <div class="markdown-body">
+            <textarea :id="'textarea_'+threadId"></textarea>
           </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="text-right">
+          <v-btn
+            :disabled="user.email == ''"
+            class="white--text button_right"
+            color="blue accent-4"
+            @click="addComment"
+          >Submit</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -47,6 +47,7 @@ import "github-markdown-css/github-markdown.css";
 
 export default {
   props: {
+    title: String,
     threadId: String,
     user: Object
   },
@@ -182,4 +183,12 @@ export default {
 </script>
 
 <style scoped>
+.name {
+  font-size: 10pt;
+  max-height: 20px;
+  padding-right: 10px;
+  line-height: 100%;
+  margin: 0;
+  margin-bottom: 3px;
+}
 </style>

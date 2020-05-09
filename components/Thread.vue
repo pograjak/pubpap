@@ -49,7 +49,12 @@
                 />
               </div>
 
-              <ThreadTextarea class="code_override" :threadId="thread.id" :user="user" />
+              <ThreadTextarea
+                class="code_override"
+                title="Add Comment"
+                :threadId="thread.id"
+                :user="user"
+              />
             </v-col>
           </v-row>
         </v-container>
