@@ -3,7 +3,7 @@
     <v-container>
       <v-row no-gutters>
         <v-col>
-          <v-card-text>{{ text }}</v-card-text>
+          <v-card-text class="markdown-body" v-html="render_markdown(text)"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
             <v-col cols="auto">
@@ -20,6 +20,8 @@
 
 <script>
 import User from "~/components/User.vue";
+import { md } from "~/plugins/markdown_render.js";
+import "github-markdown-css/github-markdown.css"
 
 export default {
   props: {
@@ -29,6 +31,12 @@ export default {
   },
   components: {
     User
+  },
+
+  methods: {
+    render_markdown(mkdwn) {
+      return md.render(mkdwn);
+    }
   }
 };
 </script>

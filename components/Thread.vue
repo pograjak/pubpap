@@ -42,7 +42,10 @@
 
                     <v-col>
                       <v-card-title class="pt-0 pb-2">{{ thread.title }}</v-card-title>
-                      <v-card-text>{{ thread.text }}</v-card-text>
+                      <v-card-text
+                        class="markdown-body code_override"
+                        v-html="render_markdown(thread.text)"
+                      ></v-card-text>
                       <v-row no-gutters>
                         <v-col></v-col>
                         <User :date="thread.createdAt" :name="thread.userName" :rightAlign="true" />
@@ -56,10 +59,15 @@
               <v-card-title class="pa-3">Answers</v-card-title>
 
               <div v-for="r in replies" :key="r.id">
-                <Comment :text="r.text" :date="r.createdAt" :name="r.userName" />
+                <Comment
+                  class="code_override"
+                  :text="r.text"
+                  :date="r.createdAt"
+                  :name="r.userName"
+                />
               </div>
 
-              <AddComment :threadId="thread.id" :user="user" />
+              <AddComment class="code_override" :threadId="thread.id" :user="user" />
             </v-col>
           </v-row>
         </v-container>
@@ -73,6 +81,12 @@ import Comment from "~/components/Comment.vue";
 import User from "~/components/User.vue";
 import AddComment from "~/components/AddComment.vue";
 import { mapGetters } from "vuex";
+import { md } from "~/plugins/markdown_render.js";
+import "github-markdown-css/github-markdown.css";
+import 'highlight.js/styles/default.css';
+
+// var result = md.render("# markdown-it rulezz! <script>alert('XSS');<\/script>");
+// console.log(result);
 
 export default {
   props: {
@@ -118,12 +132,30 @@ export default {
     openDiag() {
       this.dialog = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id);
+    },
+    render_markdown(mkdwn) {
+      return md.render(mkdwn);
     }
   }
 };
 </script>
 
 <style scoped>
+.code_override /deep/ code {
+  display: inline;
+  overflow: visible;
+  box-shadow: none;
+  font-weight: 100;
+  border: 0;
+  color: #24292e;
+}
+.code_override /deep/ code::before {
+  content: none;
+}
+.code_override /deep/ code::after {
+  display: inline;
+  content: none;
+}
 .icons {
   max-width: 45px;
   text-align: center;

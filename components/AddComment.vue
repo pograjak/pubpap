@@ -18,7 +18,9 @@
             </v-row>
             <!-- <vue-simplemde v-model="reply" ref="markdownEditor" preview-class="markdown-body" :configs="editor_configs" /> -->
             <!-- <v-textarea :disabled="user.email == ''" filled v-model="reply"></v-textarea> -->
-            <textarea :id="'textarea_'+threadId" v-model="reply"></textarea>
+            <div class="markdown-body">
+              <textarea :id="'textarea_'+threadId"></textarea>
+            </div>
             <v-btn
               :disabled="user.email == ''"
               class="white--text button_right"
@@ -40,6 +42,8 @@
 
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css";
+import { md } from "~/plugins/markdown_render.js";
+import "github-markdown-css/github-markdown.css";
 
 export default {
   props: {
@@ -49,27 +53,15 @@ export default {
   //   components: { VueSimplemde },
   data() {
     return {
-      reply: "" //'v-icon mdi mdi-account'
-      //   editor_configs: {
-      //     autofocus: false,
-      //     hideIcons: ["image", "side-by-side", "fullscreen"],
-      //     indentWithTabs: false,
-      //     lineWrapping: false,
-      //     placeholder: "Add comment...",
-      //     renderingConfig: {
-      //       singleLineBreaks: false,
-      //       codeSyntaxHighlighting: false
-      //     },
-      //     spellChecker: false,
-      //     status: false,
-      //     styleSelectedText: false,
-      //     tabSize: 2,
-      //   }
+      easyMDE: null
     };
   },
   mounted() {
-    var easyMDE = new EasyMDE({
+    this.easyMDE = new EasyMDE({
       element: document.getElementById("textarea_" + this.threadId),
+      previewRender: function(plainText) {
+        return md.render(plainText); // Returns HTML from a custom parser
+      },
       autoDownloadFontAwesome: false,
       hideIcons: ["image", "side-by-side", "fullscreen"],
       indentWithTabs: false,
@@ -79,6 +71,12 @@ export default {
       status: false,
       styleSelectedText: false,
       toolbar: [
+        {
+          name: "heading",
+          action: EasyMDE.toggleHeading3,
+          className: "v-icon mdi mdi-format-header-3",
+          title: "Heading"
+        },
         {
           name: "bold",
           action: EasyMDE.toggleBold,
@@ -91,12 +89,7 @@ export default {
           className: "v-icon mdi mdi-format-italic",
           title: "Italic"
         },
-        {
-          name: "heading",
-          action: EasyMDE.toggleHeadingSmaller,
-          className: "v-icon mdi mdi-format-header-increase",
-          title: "Heading"
-        },
+
         "|",
         {
           name: "undo",
@@ -125,6 +118,12 @@ export default {
           className: "v-icon mdi mdi-format-quote-close",
           title: "Quote"
         },
+        {
+          name: "link",
+          action: EasyMDE.drawLink,
+          className: "v-icon mdi mdi-link",
+          title: "Create Link"
+        },
         "|",
         {
           name: "unordered-list",
@@ -137,13 +136,6 @@ export default {
           action: EasyMDE.toggleOrderedList,
           className: "v-icon mdi mdi-format-list-numbered",
           title: "Numbered List"
-        },
-        "|",
-        {
-          name: "link",
-          action: EasyMDE.drawLink,
-          className: "v-icon mdi mdi-link",
-          title: "Create Link"
         },
         "|",
         {
@@ -172,14 +164,18 @@ export default {
         return `Logged in as ${this.user.email}`;
       }
     },
-
     addComment() {
-      this.$store.dispatch("threads/addComment", {
-        threadId: this.threadId,
-        text: this.reply,
-        userName: this.user.email
-      });
-      this.reply = "";
+      if (this.easyMDE != null) {
+        var text = this.easyMDE.value();
+        if (text.length > 0) {
+          this.$store.dispatch("threads/addComment", {
+            threadId: this.threadId,
+            text: text,
+            userName: this.user.email
+          });
+          this.easyMDE.value("");
+        }
+      }
     }
   }
 };
