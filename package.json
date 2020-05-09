@@ -16,11 +16,9 @@
     "core-js": "2",
     "easymde": "^2.10.1",
     "firebase": "^7.14.2",
-    "github-markdown-css": "^4.0.0",
     "nuxt": "^2.0.0",
     "stripe": "^8.49.0",
     "vue-google-charts": "^0.3.2",
-    "vue-simplemde": "^1.0.4",
     "vuexfire": "^3.2.2",
     "xml2js": "^0.4.23"
   },
