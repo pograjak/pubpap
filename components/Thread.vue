@@ -82,11 +82,8 @@ import User from "~/components/User.vue";
 import AddComment from "~/components/AddComment.vue";
 import { mapGetters } from "vuex";
 import { md } from "~/plugins/markdown_render.js";
-import "github-markdown-css/github-markdown.css";
-import 'highlight.js/styles/default.css';
-
-// var result = md.render("# markdown-it rulezz! <script>alert('XSS');<\/script>");
-// console.log(result);
+import "github-markdown-css/github-markdown.css"; //
+import 'highlight.js/styles/github-gist.css';  // Code highlight style
 
 export default {
   props: {
@@ -153,7 +150,6 @@ export default {
   content: none;
 }
 .code_override /deep/ code::after {
-  display: inline;
   content: none;
 }
 .icons {
