@@ -32,6 +32,7 @@
 
 <script>
 import User from "~/components/User.vue";
+import "~/assets/own-github-markdown.css";
 
 export default {
   props: {

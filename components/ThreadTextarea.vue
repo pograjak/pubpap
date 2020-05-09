@@ -43,7 +43,7 @@
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css";
 import { md } from "~/plugins/markdown_render.js";
-import "github-markdown-css/github-markdown.css";
+import "~/assets/own-github-markdown.css";
 
 export default {
   props: {

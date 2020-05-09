@@ -70,7 +70,6 @@ import User from "~/components/User.vue";
 import ThreadTextarea from "~/components/ThreadTextarea.vue";
 import { mapGetters } from "vuex";
 import { md } from "~/plugins/markdown_render.js";
-import "github-markdown-css/github-markdown.css"; //
 import "highlight.js/styles/github-gist.css"; // Code highlight style
 
 export default {
