@@ -1,7 +1,7 @@
 <template>
   <v-card class="pb-1">
     <v-container class="px-4 pt-3 pb-0">
-      <v-row no-gutters justify="space-between" align="end">
+      <v-row no-gutters justify="space-between" align="baseline">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
@@ -32,7 +32,7 @@
         <v-row no-gutters class="pt-1">
           <v-col>
             <p class="grey--text ma-0 pa-0 caption">
-              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon>Styling with
+              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon>&nbsp;Styling with
               <a
                 class="grey--text"
                 href="https://www.markdownguide.org/basic-syntax/"
@@ -55,7 +55,7 @@
         <v-container class="pr-4">
           <v-row no-gutters></v-row>
         </v-container>
-      </v-card-actions> -->
+      </v-card-actions>-->
     </v-card>
   </v-card>
 </template>

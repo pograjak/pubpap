@@ -3,7 +3,7 @@
     <v-container>
       <v-row no-gutters>
         <v-col>
-          <v-card-text class="markdown-body" v-html="render_markdown(text)"></v-card-text>
+          <v-card-text class="markdown-body pb-1" v-html="render_markdown(text)"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
             <v-col cols="auto">
