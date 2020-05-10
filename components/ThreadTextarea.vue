@@ -17,10 +17,10 @@
       <v-container>
         <v-row no-gutters>
           <v-col>
-            <v-text-field label="Add title..." v-model="input_title"></v-text-field>
+            <!-- <v-text-field class="titlefield" label="Add title..." v-model="input_title"></v-text-field> -->
+            <input class="titlefield" placeholder="Add title...">
           </v-col>
         </v-row>
-
         <v-row no-gutters>
           <v-col>
             <div class="markdown-body">
@@ -33,7 +33,10 @@
           <v-col>
             <p class="grey--text ma-0 pa-0 caption">
               <v-icon style="line-height: inherit">mdi-language-markdown</v-icon> Format with
-              <a class="grey--text" href="https://www.markdownguide.org/basic-syntax/">Markdown</a>
+              <a
+                class="grey--text"
+                href="https://www.markdownguide.org/basic-syntax/"
+              >Markdown</a>
             </p>
           </v-col>
         </v-row>
@@ -208,4 +211,19 @@ export default {
 </script>
 
 <style scoped>
+.titlefield {
+  width:100%;
+  padding: 5px 14px;
+  padding-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 12px;
+  border-top: 1px solid #bbb;
+  border-left: 1px solid #bbb;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
 </style>
