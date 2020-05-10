@@ -1,6 +1,6 @@
 <template>
-  <v-card class="mt-6">
-    <v-container class="px-4 pt-6 pb-3">
+  <v-card class="">
+    <v-container class="px-4 py-3">
       <v-row no-gutters justify="space-between" align="end">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
@@ -32,11 +32,10 @@
         <v-row no-gutters class="pt-1">
           <v-col>
             <p class="grey--text ma-0 pa-0 caption">
-              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon> Format with
-              <a
+              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon> Styling with <a
                 class="grey--text"
                 href="https://www.markdownguide.org/basic-syntax/"
-              >Markdown</a>
+              >Markdown</a> supported.
             </p>
           </v-col>
         </v-row>

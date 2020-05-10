@@ -17,8 +17,8 @@
         </v-col>
 
         <v-col>
-          <v-card-title class="pt-0 pb-2">{{ title }}</v-card-title>
-          <v-card-text class="markdown-body code_override" v-html="text_html"></v-card-text>
+          <v-card-title class="pt-0 pb-2 subtitle-1">{{ title }}</v-card-title>
+          <v-card-text class="markdown-body" v-html="text_html"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
             <User :date="date" :name="name" :rightAlign="true" />

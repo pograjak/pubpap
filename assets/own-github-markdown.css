@@ -416,11 +416,24 @@
 }
 
 .markdown-body code {
+  display: inline;
+  overflow: visible;
+  box-shadow: none;
+  font-weight: 100;
+  border: 0;
+  color: #24292e;
   padding: .2em .4em;
   margin: 0;
   font-size: 85%;
   background-color: rgba(27,31,35,.05);
   border-radius: 3px;
+}
+
+.markdown-body code::before {
+  content: none;
+}
+.markdown-body code::after {
+  content: none;
 }
 
 .markdown-body pre {

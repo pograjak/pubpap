@@ -27,7 +27,6 @@
             <!-- Main column -->
             <v-col no-gutters>
               <ThreadQuestion
-                class="code_override"
                 :threadId="thread.id"
                 :title="thread.title"
                 :text_html="render_markdown(thread.text)"
@@ -38,11 +37,10 @@
 
               <v-spacer />
 
-              <v-card-title class="pa-3">Answers</v-card-title>
+              <p class="pa-3 ma-0 subtitle-1">Answers</p>
 
               <div v-for="r in replies" :key="r.id">
                 <ThreadComment
-                  class="code_override"
                   :text="r.text"
                   :date="r.createdAt"
                   :name="r.userName"
@@ -50,7 +48,7 @@
               </div>
 
               <ThreadTextarea
-                class="code_override"
+                class="mt-8"
                 title="Add Comment"
                 :threadId="thread.id"
                 :user="user"
@@ -119,7 +117,7 @@ export default {
 
 <style scoped>
 /* Override Vuetify formatting of code block, including children */
-.code_override /deep/ code {
+/* .code_override /deep/ code {
   display: inline;
   overflow: visible;
   box-shadow: none;
@@ -132,7 +130,7 @@ export default {
 }
 .code_override /deep/ code::after {
   content: none;
-}
+} */
 /* Icons showing rating in the Threads menu */
 div.ratingicon {
   width: 40px;
