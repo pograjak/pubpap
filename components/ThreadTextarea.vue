@@ -1,36 +1,60 @@
 <template>
-  <v-card>
-    <v-container>
+  <v-card class="mt-6">
+    <v-container class="px-4 pt-6 pb-3">
       <v-row no-gutters justify="space-between" align="end">
         <v-col>
-          <v-card-title class="pt-0 pb-1 pt-2 pl-1">{{ title }}</v-card-title>
+          <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
         <v-col>
-          <p class="name text-right pb-2 pr-0 grey--text text--darken-1">
-            {{ get_deco_username() }}
-          </p>
-        </v-col>
-      </v-row>
-      <!-- <vue-simplemde v-model="reply" ref="markdownEditor" preview-class="markdown-body" :configs="editor_configs" /> -->
-      <!-- <v-textarea :disabled="user.email == ''" filled v-model="reply"></v-textarea> -->
-      <v-row no-gutters>
-        <v-col>
-          <div class="markdown-body">
-            <textarea :id="'textarea_'+threadId"></textarea>
-          </div>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col class="text-right">
-          <v-btn
-            :disabled="user.email == ''"
-            class="white--text button_right"
-            color="blue accent-4"
-            @click="addComment"
-          >Submit</v-btn>
+          <p
+            class="text-right pa-0 ma-0 caption grey--text text--darken-1"
+          >{{ get_deco_username() }}</p>
         </v-col>
       </v-row>
     </v-container>
+
+    <v-card class="mx-4 my-0">
+      <v-container>
+        <v-row no-gutters>
+          <v-col>
+            <v-text-field label="Add title..." v-model="input_title"></v-text-field>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+          <v-col>
+            <div class="markdown-body">
+              <textarea :id="'textarea_'+this._uid"></textarea>
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-row no-gutters class="pt-1">
+          <v-col>
+            <p class="grey--text ma-0 pa-0 caption">
+              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon> Format with
+              <a class="grey--text" href="https://www.markdownguide.org/basic-syntax/">Markdown</a>
+            </p>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card>
+
+    <v-card-actions class="pa-0 ma-0">
+      <v-container class="pr-4">
+        <v-row no-gutters>
+          <v-col class="text-right">
+            <v-btn color="secondary">Cancel</v-btn>
+            <v-btn
+              :disabled="user.email == ''"
+              class="ml-2 white--text button_right"
+              color="blue accent-4"
+              @click="addComment"
+            >Submit</v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-actions>
   </v-card>
 </template>
 
@@ -54,12 +78,13 @@ export default {
   //   components: { VueSimplemde },
   data() {
     return {
-      easyMDE: null
+      easyMDE: null,
+      input_title: ""
     };
   },
   mounted() {
     this.easyMDE = new EasyMDE({
-      element: document.getElementById("textarea_" + this.threadId),
+      element: document.getElementById("textarea_" + this._uid),
       previewRender: function(plainText) {
         return md.render(plainText); // Returns HTML from a custom parser
       },
@@ -67,7 +92,7 @@ export default {
       hideIcons: ["image", "side-by-side", "fullscreen"],
       indentWithTabs: false,
       lineWrapping: false,
-      placeholder: "Add comment...",
+      placeholder: this.title + "...",
       spellChecker: false,
       status: false,
       styleSelectedText: false,
@@ -162,7 +187,7 @@ export default {
       if (this.user.email == "") {
         return "Not logged in";
       } else {
-        return `Logged in as ${this.user.email}`;
+        return `Submitting as ${this.user.email}`;
       }
     },
     addComment() {
@@ -183,12 +208,4 @@ export default {
 </script>
 
 <style scoped>
-.name {
-  font-size: 10pt;
-  max-height: 20px;
-  padding-right: 10px;
-  line-height: 100%;
-  margin: 0;
-  margin-bottom: 3px;
-}
 </style>
