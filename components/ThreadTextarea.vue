@@ -20,7 +20,7 @@
             v-model="titleValue"
             :disabled="isDisabled"
             class="titlefield"
-            :placeholder="isDisabled ? '' : 'Add title...'"
+            :placeholder="isDisabled ? disabledPlaceholder : 'Add title...'"
           />
         </v-col>
       </v-row>
@@ -39,7 +39,7 @@
               <textarea
                 class="pa-3"
                 style="background-color: #e0e0e0; width: 100%; height: 100%"
-                :placeholder="disabledPlaceholder"
+                :placeholder="showTitleField ? '' : disabledPlaceholder"
                 disabled
               ></textarea>
             </div>
@@ -61,12 +61,15 @@
         <v-col class="text-right pt-2">
           <v-btn
             v-if="showCancelButton"
-            :disabled="isDisabled"
-            color="secondary"
+            :class="{
+              'primary': isDisabled,
+              'secondary': !isDisabled
+            }"
             @click="cancel_click"
           >Cancel</v-btn>
           <v-btn
             :disabled="isDisabled"
+            v-show="!(isDisabled & showCancelButton)"
             class="ml-2 white--text button_right"
             color="blue accent-4"
             @click="submit_click"
@@ -241,6 +244,6 @@ export default {
   border-bottom-right-radius: 4px;
 }
 .titlefield:disabled {
-  background-color: #fafafa;
+  background-color: #e0e0e0;
 }
 </style>
