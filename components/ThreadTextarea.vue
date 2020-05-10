@@ -1,7 +1,8 @@
 <template>
-  <v-card class="pb-1">
+  <v-card class="pt-3 pb-4 px-4">
     <v-container class="px-4 pt-3 pb-0">
-      <v-row no-gutters justify="space-between" align="baseline">
+      <!-- Title -->
+      <v-row class="pb-2" no-gutters justify="space-between" align="baseline">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
@@ -11,52 +12,68 @@
           >{{ get_deco_username() }}</p>
         </v-col>
       </v-row>
-    </v-container>
 
-    <v-card class="mx-4 mt-2 mb-3" outlined>
-      <v-container class="pt-5">
-        <v-row v-if="showTitleField" no-gutters>
-          <v-col>
-            <!-- <v-text-field class="titlefield" label="Add title..." v-model="input_title"></v-text-field> -->
-            <input class="titlefield" placeholder="Add title..." />
-          </v-col>
-        </v-row>
-        <v-row no-gutters>
-          <v-col>
-            <div class="markdown-body">
+      <!-- Title field -->
+      <v-row v-if="showTitleField" no-gutters>
+        <v-col>
+          <input
+            v-model="titleValue"
+            :disabled="isDisabled"
+            class="titlefield"
+            :placeholder="isDisabled ? '' : 'Add title...'"
+          />
+        </v-col>
+      </v-row>
+
+      <!-- Textarea -->
+      <v-row no-gutters>
+        <v-col>
+          <div style="position: relative">
+            <div :style="{visibility: isDisabled ? 'hidden' : 'visible'}" class="markdown-body">
               <textarea :id="'textarea_'+this._uid"></textarea>
             </div>
-          </v-col>
-        </v-row>
+            <div
+              v-if="isDisabled"
+              style="position: absolute; top:0; left:0; width: 100%; height: 100%"
+            >
+              <textarea
+                class="pa-3"
+                style="background-color: #e0e0e0; width: 100%; height: 100%"
+                :placeholder="disabledPlaceholder"
+                disabled
+              ></textarea>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
 
-        <v-row no-gutters class="pt-1">
-          <v-col>
-            <p class="grey--text ma-0 pa-0 caption">
-              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon>&nbsp;Styling with
-              <a
-                class="grey--text"
-                href="https://www.markdownguide.org/basic-syntax/"
-              >Markdown</a> supported.
-            </p>
-          </v-col>
-          <v-col class="text-right pt-2">
-            <v-btn color="secondary">Cancel</v-btn>
-            <v-btn
-              :disabled="user.email == ''"
-              class="ml-2 white--text button_right"
-              color="blue accent-4"
-              @click="addComment"
-            >Submit</v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-
-      <!-- <v-card-actions class="pa-0 ma-0">
-        <v-container class="pr-4">
-          <v-row no-gutters></v-row>
-        </v-container>
-      </v-card-actions>-->
-    </v-card>
+      <!-- Markdown note and Buttons -->
+      <v-row no-gutters class="pt-1">
+        <v-col>
+          <p class="grey--text ma-0 pa-0 caption">
+            <v-icon style="line-height: inherit">mdi-language-markdown</v-icon>&nbsp;Styling with
+            <a
+              class="grey--text"
+              href="https://www.markdownguide.org/basic-syntax/"
+            >Markdown</a> supported.
+          </p>
+        </v-col>
+        <v-col class="text-right pt-2">
+          <v-btn
+            v-if="showCancelButton"
+            :disabled="isDisabled"
+            color="secondary"
+            @click="cancel_click"
+          >Cancel</v-btn>
+          <v-btn
+            :disabled="isDisabled"
+            class="ml-2 white--text button_right"
+            color="blue accent-4"
+            @click="submit_click"
+          >Submit</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-card>
 </template>
 
@@ -73,16 +90,18 @@ import "~/assets/own-github-markdown.css";
 
 export default {
   props: {
-    showTitleField: Boolean,
     title: String,
-    threadId: String,
-    user: Object
+    user: Object,
+    isDisabled: Boolean,
+    showTitleField: Boolean,
+    showCancelButton: Boolean,
+    disabledPlaceholder: String
   },
   //   components: { VueSimplemde },
   data() {
     return {
       easyMDE: null,
-      input_title: ""
+      titleValue: ""
     };
   },
   mounted() {
@@ -179,24 +198,26 @@ export default {
   },
 
   methods: {
+    cancel_click() {
+      this.$emit("cancel");
+    },
+    submit_click() {
+      if (this.easyMDE != null) {
+        this.$emit("submit", {
+          title: this.titleValue,
+          text: this.easyMDE.value()
+        });
+      }
+    },
+    clear() {
+      this.titleValue = "";
+      this.easyMDE.value("");
+    },
     get_deco_username() {
       if (this.user.email == "") {
         return "Not logged in";
       } else {
         return `Submitting as ${this.user.email}`;
-      }
-    },
-    addComment() {
-      if (this.easyMDE != null) {
-        var text = this.easyMDE.value();
-        if (text.length > 0) {
-          this.$store.dispatch("threads/addComment", {
-            threadId: this.threadId,
-            text: text,
-            userName: this.user.email
-          });
-          this.easyMDE.value("");
-        }
       }
     }
   }
@@ -218,5 +239,8 @@ export default {
   border-top-right-radius: 4px;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+}
+.titlefield:disabled {
+  background-color: #fafafa;
 }
 </style>

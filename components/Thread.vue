@@ -40,20 +40,19 @@
               <p class="pa-3 ma-0 subtitle-1">Answers</p>
 
               <div v-for="r in replies" :key="r.id">
-                <ThreadComment
-                  :text="r.text"
-                  :date="r.createdAt"
-                  :name="r.userName"
-                />
+                <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
 
               <ThreadTextarea
                 class="mt-8"
                 title="Add Comment"
-                :threadId="thread.id"
                 :user="user"
-                :showTitleField="false"
+                :isDisabled="this.user.email == ''"
+                @submit="textarea_sumbit"
+                disabledPlaceholder="Log in to add comments."
+                ref="threadTextarea"
               />
+              <!-- @cancel="textarea_cancel" -->
             </v-col>
           </v-row>
         </v-container>
@@ -111,6 +110,16 @@ export default {
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);
+    },
+    textarea_sumbit(item) {
+      if (item.text.length > 0) {
+        this.$store.dispatch("threads/addComment", {
+          threadId: this.thread.id,
+          text: item.text,
+          userName: this.user.email
+        });
+        this.$refs.threadTextarea.clear();
+      }
     }
   }
 };
