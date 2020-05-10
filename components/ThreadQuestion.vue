@@ -17,7 +17,7 @@
         </v-col>
 
         <v-col>
-          <v-card-title class="pt-0 pb-2 subtitle-1">{{ title }}</v-card-title>
+          <v-card-title class="pt-0 pb-2 title font-weight-bold">{{ title }}</v-card-title>
           <v-card-text class="markdown-body" v-html="text_html"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
