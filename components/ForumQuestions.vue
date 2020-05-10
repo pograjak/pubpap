@@ -29,6 +29,13 @@
       </v-list-item>
       <v-divider></v-divider>
 
+      <template v-if="showLoading">
+        <v-list-item>
+          <LoadingSpinner />
+        </v-list-item>
+        <v-divider />
+      </template>
+
       <div v-for="thread in threads" :key="thread.id">
         <Thread :thread="thread" />
         <v-divider></v-divider>
@@ -42,16 +49,25 @@ import { mapGetters } from "vuex";
 
 import Thread from "~/components/Thread.vue";
 import ThreadTextarea from "~/components/ThreadTextarea.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 export default {
   data: function() {
     return {
-      dialog: false
+      dialog: false,
+      showLoading: true
     };
+  },
+  components: {
+    Thread,
+    ThreadTextarea,
+    LoadingSpinner
   },
 
   created() {
-    this.$store.dispatch("threads/bindThreads");
+    this.$store.dispatch("threads/bindThreads").then(() => {
+      this.showLoading = false;
+    });
   },
 
   computed: {
@@ -75,11 +91,6 @@ export default {
         this.dialog = false;
       }
     }
-  },
-
-  components: {
-    Thread,
-    ThreadTextarea
   }
 };
 </script>

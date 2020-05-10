@@ -39,6 +39,10 @@
 
               <p class="pa-3 ma-0 subtitle-1">Answers</p>
 
+              <v-card v-if="showLoading">
+                <LoadingSpinner />
+              </v-card>
+
               <div v-for="r in replies" :key="r.id">
                 <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
@@ -66,6 +70,7 @@ import ThreadQuestion from "~/components/ThreadQuestion.vue";
 import ThreadComment from "~/components/ThreadComment.vue";
 import User from "~/components/User.vue";
 import ThreadTextarea from "~/components/ThreadTextarea.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import { mapGetters } from "vuex";
 import { md } from "~/plugins/markdown_render.js";
 import "highlight.js/styles/github-gist.css"; // Code highlight style
@@ -77,13 +82,15 @@ export default {
 
   data() {
     return {
-      dialog: false
+      dialog: false,
+      showLoading: false
     };
   },
   components: {
     ThreadComment,
     ThreadQuestion,
     ThreadTextarea,
+    LoadingSpinner,
     User
   },
 
@@ -106,7 +113,10 @@ export default {
   methods: {
     openDiag() {
       this.dialog = true;
-      this.$store.dispatch("threads/bindReplies", this.thread.id);
+      this.showLoading = true;
+      this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
+        this.showLoading = false;
+      });
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);
@@ -118,6 +128,7 @@ export default {
           text: item.text,
           userName: this.user.email
         });
+
         this.$refs.threadTextarea.clear();
       }
     }
