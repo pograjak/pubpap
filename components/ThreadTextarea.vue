@@ -1,6 +1,6 @@
 <template>
-  <v-card class="">
-    <v-container class="px-4 py-3">
+  <v-card class="pb-1">
+    <v-container class="px-4 pt-3 pb-0">
       <v-row no-gutters justify="space-between" align="end">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
@@ -13,12 +13,12 @@
       </v-row>
     </v-container>
 
-    <v-card class="mx-4 my-0">
-      <v-container>
-        <v-row no-gutters>
+    <v-card class="mx-4 mt-2 mb-3" outlined>
+      <v-container class="pt-5">
+        <v-row v-if="showTitleField" no-gutters>
           <v-col>
             <!-- <v-text-field class="titlefield" label="Add title..." v-model="input_title"></v-text-field> -->
-            <input class="titlefield" placeholder="Add title...">
+            <input class="titlefield" placeholder="Add title..." />
           </v-col>
         </v-row>
         <v-row no-gutters>
@@ -32,20 +32,14 @@
         <v-row no-gutters class="pt-1">
           <v-col>
             <p class="grey--text ma-0 pa-0 caption">
-              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon> Styling with <a
+              <v-icon style="line-height: inherit">mdi-language-markdown</v-icon>Styling with
+              <a
                 class="grey--text"
                 href="https://www.markdownguide.org/basic-syntax/"
               >Markdown</a> supported.
             </p>
           </v-col>
-        </v-row>
-      </v-container>
-    </v-card>
-
-    <v-card-actions class="pa-0 ma-0">
-      <v-container class="pr-4">
-        <v-row no-gutters>
-          <v-col class="text-right">
+          <v-col class="text-right pt-2">
             <v-btn color="secondary">Cancel</v-btn>
             <v-btn
               :disabled="user.email == ''"
@@ -56,7 +50,13 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-card-actions>
+
+      <!-- <v-card-actions class="pa-0 ma-0">
+        <v-container class="pr-4">
+          <v-row no-gutters></v-row>
+        </v-container>
+      </v-card-actions> -->
+    </v-card>
   </v-card>
 </template>
 
@@ -73,6 +73,7 @@ import "~/assets/own-github-markdown.css";
 
 export default {
   props: {
+    showTitleField: Boolean,
     title: String,
     threadId: String,
     user: Object
@@ -119,21 +120,21 @@ export default {
         },
 
         "|",
-        {
-          name: "undo",
-          action: EasyMDE.undo,
-          className: "v-icon mdi mdi-undo",
-          noDisable: true,
-          title: "Undo"
-        },
-        {
-          name: "redo",
-          action: EasyMDE.redo,
-          className: "v-icon mdi mdi-redo",
-          noDisable: true,
-          title: "Redo"
-        },
-        "|",
+        // {
+        //   name: "undo",
+        //   action: EasyMDE.undo,
+        //   className: "v-icon mdi mdi-undo",
+        //   noDisable: true,
+        //   title: "Undo"
+        // },
+        // {
+        //   name: "redo",
+        //   action: EasyMDE.redo,
+        //   className: "v-icon mdi mdi-redo",
+        //   noDisable: true,
+        //   title: "Redo"
+        // },
+        // "|",
         {
           name: "code",
           action: EasyMDE.toggleCodeBlock,
@@ -172,13 +173,6 @@ export default {
           className: "v-icon mdi mdi-eye",
           title: "Toggle Preview",
           noDisable: true
-        },
-        "|",
-        {
-          name: "guide",
-          action: "https://www.markdownguide.org/basic-syntax/",
-          className: "v-icon mdi mdi-information-variant",
-          title: "Numbered List"
         }
       ]
     });
@@ -211,10 +205,10 @@ export default {
 
 <style scoped>
 .titlefield {
-  width:100%;
+  width: 100%;
   padding: 5px 14px;
   padding-top: 10px;
-  margin-top: 5px;
+  margin-top: 0;
   margin-bottom: 12px;
   border-top: 1px solid #bbb;
   border-left: 1px solid #bbb;

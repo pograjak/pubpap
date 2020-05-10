@@ -52,6 +52,7 @@
                 title="Add Comment"
                 :threadId="thread.id"
                 :user="user"
+                :showTitleField="false"
               />
             </v-col>
           </v-row>
