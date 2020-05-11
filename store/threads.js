@@ -13,7 +13,7 @@ export const getters = {
 export const mutations = {};
 
 export const actions = {
-  bindThreads: firestoreAction(async function({ bindFirestoreRef }) {
+  bindThreads: firestoreAction(async function ({ bindFirestoreRef }) {
     await bindFirestoreRef(
       "threads",
       this.$fireStore
@@ -24,7 +24,7 @@ export const actions = {
     );
   }),
 
-  bindReplies: firestoreAction(async function(
+  bindReplies: firestoreAction(async function (
     { bindFirestoreRef },
     herethreadId
   ) {
@@ -40,7 +40,7 @@ export const actions = {
     );
   }),
 
-  addThread: async function(context, payload) {
+  addThread: async function (context, payload) {
     const thread = {
       text: payload.text,
       title: payload.title,
@@ -58,25 +58,35 @@ export const actions = {
       .set(thread);
   },
 
-  upvote: async function(context, id) {
-    await this.$fireStore
-      .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
-      .collection("threads")
-      .doc(id)
-      .update({ upvotes: this.$fireStoreObj.FieldValue.increment(1) });
+  vote: async function (context, item) {
+    // await this.$fireStore
+    //   .collection("papers")
+    //   .doc("bVypOMp1sZ9I4R0ib5hV")
+    //   .collection("threads")
+    //   .doc(id)
+    //   .update({ upvotes: this.$fireStoreObj.FieldValue.increment(1) });
+    if (item.state) {
+      await this.$fireStore  // add a vote
+        .collection("votes")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .collection("threads")
+        .doc(item.threadId)
+        .collection(item.voteType)
+        .doc(item.userId)
+        .set({'v':1});
+    }else{
+      await this.$fireStore  // delete a vote
+        .collection("votes")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .collection("threads")
+        .doc(item.threadId)
+        .collection(item.voteType)
+        .doc(item.userId)
+        .delete()
+    }
   },
 
-  downvote: async function(context, id) {
-    await this.$fireStore
-      .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
-      .collection("threads")
-      .doc(id)
-      .update({ upvotes: this.$fireStoreObj.FieldValue.increment(-1) });
-  },
-
-  addComment: async function(context, obj) {
+  addComment: async function (context, obj) {
     const comment = {
       text: obj.text,
       userId: -1,
