@@ -11,7 +11,10 @@
     </v-list-item-content>
 
     <v-list-item-icon right class="pt-2 mt-0">
-      <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.upvotes }}</div>
+      <div
+        class="ratingicon caption"
+        v-bind:class="highlightingClasses"
+      >{{ thread.votes }}</div>
     </v-list-item-icon>
 
     <!-- POPUP DIALOG -->
@@ -32,7 +35,7 @@
                 :text_html="render_markdown(thread.text)"
                 :date="thread.createdAt"
                 :name="thread.userName"
-                :upvotes="thread.upvotes"
+                :upvotes="thread.votes"
                 :votingDisabled="user.id == ''"
               />
 
@@ -44,7 +47,7 @@
                 <LoadingSpinner />
               </v-card>
 
-              <div v-for="r in replies" :key="r.id">
+              <div v-else v-for="r in replies" :key="r.id">
                 <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
               </div>
 
@@ -102,11 +105,11 @@ export default {
     ...mapGetters(["user"]),
     highlightingClasses: function() {
       return {
-        success: this.thread.upvotes > 5,
+        success: this.thread.votes > 5,
         "grey lighten-2":
-          (this.thread.upvotes <= 5) & (this.thread.upvotes >= -1),
-        error: this.thread.upvotes < -1,
-        "white--text": (this.thread.upvotes < -1) | (this.thread.upvotes > 5)
+          (this.thread.votes <= 5) & (this.thread.votes >= -1),
+        error: this.thread.votes < -1,
+        "white--text": (this.thread.votes < -1) | (this.thread.votes > 5)
       };
     }
   },
@@ -118,6 +121,12 @@ export default {
       this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
         this.showLoading = false;
       });
+      // This makes the opening a little bit smoother
+      // new Promise(r => setTimeout(r, 500)).then(() => {
+      //   this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
+      //     this.showLoading = false;
+      //   });
+      // });
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);

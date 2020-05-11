@@ -5,7 +5,7 @@
       <v-row no-gutters>
         <!-- Voting icons -->
         <v-col cols="1" class="text-center icons">
-          <div v-if="loadingVotes < 1">
+          <div v-if="loadingVotes">
             <LoadingSpinner style="transform: rotate(90deg);" />
           </div>
           <div v-else>
@@ -69,28 +69,26 @@ export default {
 
   created: function() {
     // load state of voting
-    var mainref = this.$fireStore
-      .collection("votes")
+    this.loadingVotes = true;
+    this.$fireStore // add a vote
+      .collection("papers")
       .doc("bVypOMp1sZ9I4R0ib5hV")
       .collection("threads")
-      .doc(this.threadId);
-
-    mainref
-      .collection("upvotes")
+      .doc(this.threadId)
+      .collection("user_votes")
       .doc(this.user.id)
       .get()
       .then(doc => {
-        this.state_upvote = doc.exists;
-        this.loadingVotes += 1;
-      });
-
-    mainref
-      .collection("downvotes")
-      .doc(this.user.id)
-      .get()
-      .then(doc => {
-        this.state_downvote = doc.exists;
-        this.loadingVotes += 1;
+        this.state_downvote = false;
+        this.state_upvote = false;
+        if (doc.exists) {
+          if (doc.data().v > 0) {
+            this.state_upvote = true;
+          } else {
+            this.state_downvote = true;
+          }
+        }
+        this.loadingVotes = false;
       });
   },
 
@@ -101,41 +99,34 @@ export default {
     return {
       state_upvote: false,
       state_downvote: false,
-      loadingVotes: 0
+      loadingVotes: true
     };
   },
   methods: {
-    updateStoreUpvote() {
+    updateStoreVote() {
+      var state = 0;
+      if (this.state_downvote) {
+        state = -1;
+      }
+      if (this.state_upvote) {
+        state = 1;
+      }
+
       this.$store.dispatch("threads/vote", {
         threadId: this.threadId,
         userId: this.user.id,
-        state: this.state_upvote,
-        voteType: "upvotes"
-      });
-    },
-    updateStoreDownvote() {
-      this.$store.dispatch("threads/vote", {
-        threadId: this.threadId,
-        userId: this.user.id,
-        state: this.state_downvote,
-        voteType: "downvotes"
+        state: state
       });
     },
     upvote() {
       this.state_upvote = !this.state_upvote;
-      this.updateStoreUpvote();
-      if (this.state_downvote) {
-        this.state_downvote = false;
-        this.updateStoreDownvote();
-      }
+      this.state_downvote = false;
+      this.updateStoreVote();
     },
     downvote() {
       this.state_downvote = !this.state_downvote;
-      this.updateStoreDownvote();
-      if (this.state_upvote) {
-        this.state_upvote = false;
-        this.updateStoreUpvote();
-      }
+      this.state_upvote = false;
+      this.updateStoreVote();
     }
   }
 };

@@ -44,10 +44,10 @@ export const actions = {
     const thread = {
       text: payload.text,
       title: payload.title,
-      upvotes: 0,
+      votes: 0,
       userId: payload.userId,
       userName: payload.userName,
-      createdAt: Date.now()
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     await this.$fireStore
@@ -65,24 +65,17 @@ export const actions = {
     //   .collection("threads")
     //   .doc(id)
     //   .update({ upvotes: this.$fireStoreObj.FieldValue.increment(1) });
-    if (item.state) {
-      await this.$fireStore  // add a vote
-        .collection("votes")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
-        .collection("threads")
-        .doc(item.threadId)
-        .collection(item.voteType)
-        .doc(item.userId)
-        .set({'v':1});
-    }else{
-      await this.$fireStore  // delete a vote
-        .collection("votes")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
-        .collection("threads")
-        .doc(item.threadId)
-        .collection(item.voteType)
-        .doc(item.userId)
-        .delete()
+    var voteRef = this.$fireStore  // add a vote
+      .collection("papers")
+      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .collection("threads")
+      .doc(item.threadId)
+      .collection('user_votes')
+      .doc(item.userId);
+    if (item.state != 0) {
+      await voteRef.set({ 'v': item.state });
+    } else {
+      await voteRef.delete();
     }
   },
 
