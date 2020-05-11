@@ -19,7 +19,7 @@
               <v-icon>mdi-arrow-up-thick</v-icon>
             </v-btn>
             <br />
-            <p class="my-1">{{ upvotes }}</p>
+            <p class="my-1">{{ votes_internal }}</p>
             <v-btn
               :disabled="votingDisabled"
               depressed
@@ -59,7 +59,7 @@ export default {
     text_html: String,
     date: Object,
     name: String,
-    upvotes: Number,
+    votes: Number,
     votingDisabled: Boolean
   },
   components: {
@@ -69,27 +69,30 @@ export default {
 
   created: function() {
     // load state of voting
-    this.loadingVotes = true;
-    this.$fireStore // add a vote
-      .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
-      .collection("threads")
-      .doc(this.threadId)
-      .collection("user_votes")
-      .doc(this.user.id)
-      .get()
-      .then(doc => {
-        this.state_downvote = false;
-        this.state_upvote = false;
-        if (doc.exists) {
-          if (doc.data().v > 0) {
-            this.state_upvote = true;
-          } else {
-            this.state_downvote = true;
+    this.votes_internal = this.votes;
+    if (this.user.id != "") {
+      this.loadingVotes = true;
+      this.$fireStore // get state of voting
+        .collection("papers")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .collection("threads")
+        .doc(this.threadId)
+        .collection("user_votes")
+        .doc(this.user.id)
+        .get()
+        .then(doc => {
+          this.state_downvote = false;
+          this.state_upvote = false;
+          if (doc.exists) {
+            if (doc.data().v > 0) {
+              this.state_upvote = true;
+            } else {
+              this.state_downvote = true;
+            }
           }
-        }
-        this.loadingVotes = false;
-      });
+          this.loadingVotes = false;
+        });
+    }
   },
 
   computed: {
@@ -99,8 +102,14 @@ export default {
     return {
       state_upvote: false,
       state_downvote: false,
-      loadingVotes: true
+      loadingVotes: false,
+      votes_internal: -999
     };
+  },
+  watch: {
+    votes: function(val) {
+      this.votes_internal = this.votes;
+    }
   },
   methods: {
     updateStoreVote() {
@@ -119,11 +128,21 @@ export default {
       });
     },
     upvote() {
+      this.votes_internal += this.state_upvote ? -1 : 1;
+      if (this.state_downvote) {
+        this.votes_internal += 1;
+      }
+
       this.state_upvote = !this.state_upvote;
       this.state_downvote = false;
       this.updateStoreVote();
     },
     downvote() {
+      this.votes_internal += this.state_downvote ? 1 : -1;
+      if (this.state_upvote) {
+        this.votes_internal -= 1;
+      }
+
       this.state_downvote = !this.state_downvote;
       this.state_upvote = false;
       this.updateStoreVote();

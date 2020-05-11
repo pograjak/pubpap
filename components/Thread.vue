@@ -35,7 +35,7 @@
                 :text_html="render_markdown(thread.text)"
                 :date="thread.createdAt"
                 :name="thread.userName"
-                :upvotes="thread.votes"
+                :votes="thread.votes"
                 :votingDisabled="user.id == ''"
               />
 
