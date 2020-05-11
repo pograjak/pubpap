@@ -33,6 +33,7 @@
                 :date="thread.createdAt"
                 :name="thread.userName"
                 :upvotes="thread.upvotes"
+                :votingDisabled="user.id == ''"
               />
 
               <v-spacer />

@@ -5,13 +5,24 @@
       <v-row no-gutters>
         <!-- Voting icons -->
         <v-col cols="1" class="text-center icons">
-          <v-btn icon @click="upvote">
+          <v-btn
+            :disabled="votingDisabled"
+            depressed
+            :class="{'upvotecol': state_upvote, 'anim': state_upvote}"
+            icon
+            @click="upvote"
+          >
             <v-icon>mdi-arrow-up-thick</v-icon>
           </v-btn>
-          <br>
-          {{ upvotes }}
-          <br>
-          <v-btn icon @click="downvote">
+          <br />
+          <p class="my-1">{{ upvotes }}</p>
+          <v-btn
+            :disabled="votingDisabled"
+            depressed
+            :class="{'downvotecol': state_downvote, 'anim': state_downvote}"
+            icon
+            @click="downvote"
+          >
             <v-icon>mdi-arrow-down-thick</v-icon>
           </v-btn>
         </v-col>
@@ -33,6 +44,7 @@
 <script>
 import User from "~/components/User.vue";
 import "~/assets/own-github-markdown.css";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -41,21 +53,52 @@ export default {
     text_html: String,
     date: Number,
     name: String,
-    upvotes: Number
+    upvotes: Number,
+    votingDisabled: Boolean
   },
   components: {
     User
   },
+
+  computed: {
+    ...mapGetters(["user"])
+  },
   data() {
-    return {};
+    return {
+      state_upvote: false,
+      state_downvote: false
+    };
   },
   methods: {
-    upvote() {
-      this.$store.dispatch("threads/upvote", this.threadId);
+    updateStoreUpvote() {
+      this.$store.dispatch("threads/upvote", {
+        threadId: this.threadId,
+        userId: this.user.id,
+        state: this.state_upvote
+      });
     },
-
+    updateStoreDownvote() {
+      this.$store.dispatch("threads/downvote", {
+        threadId: this.threadId,
+        userId: this.user.id,
+        state: this.state_downvote
+      });
+    },
+    upvote() {
+      this.state_upvote = !this.state_upvote;
+      this.updateStoreUpvote();
+      if (this.state_downvote) {
+        this.state_downvote = false;
+        this.updateStoreDownvote();
+      }
+    },
     downvote() {
-      this.$store.dispatch("threads/downvote", this.threadId);
+      this.state_downvote = !this.state_downvote;
+      this.updateStoreDownvote();
+      if (this.state_upvote) {
+        this.state_upvote = false;
+        this.updateStoreUpvote();
+      }
     }
   }
 };
@@ -65,5 +108,19 @@ export default {
 .icons {
   max-width: 40px;
   text-align: center;
+}
+.anim {
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+  filter: FlipH;
+  -ms-filter: "FlipH";
+}
+.downvotecol {
+  color: #b71c1c !important;
+}
+.upvotecol {
+  color: #4caf50 !important;
 }
 </style>
