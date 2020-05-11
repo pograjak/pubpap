@@ -57,7 +57,7 @@ export default {
     threadId: String,
     title: String,
     text_html: String,
-    date: Number,
+    date: Object,
     name: String,
     upvotes: Number,
     votingDisabled: Boolean

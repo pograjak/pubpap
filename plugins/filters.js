@@ -1,8 +1,13 @@
 import Vue from "vue";
 
 // Filters
-Vue.filter("format-timestamp", function(stamp) {
+Vue.filter("format-timestamp", function (stamp) {
+
+  try {
+    return stamp.toDate().toLocaleString();
+  } catch{
     const d = new Date(stamp);
+
     const dtf = new Intl.DateTimeFormat("en", {
       year: "2-digit",
       month: "short",
@@ -11,12 +16,12 @@ Vue.filter("format-timestamp", function(stamp) {
       minute: "2-digit"
     });
     const [
-      { value: mo },,
-      { value: da },,
-      { value: ye },,
-      { value: hou },,
-      { value: min },,
-    ] = dtf.formatToParts(d);
+      { value: mo }, ,
+      { value: da }, ,
+      { value: ye }, ,
+      { value: hou }, ,
+      { value: min }, ,
+    ] = dtf.formatToParts(stamp);
     return `${mo} ${da}'${ye} at ${hou}:${min}`;
-  });
-  
+  }
+});

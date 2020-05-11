@@ -26,7 +26,7 @@ import "~/assets/own-github-markdown.css";
 export default {
   props: {
     text: String,
-    date: Number,
+    date: Object,
     name: String
   },
   components: {

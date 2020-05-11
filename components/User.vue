@@ -20,7 +20,7 @@
 <script>
 export default {
   props: {
-    date: Number,
+    date: Object,
     name: String,
     rightAlign: Boolean
   },

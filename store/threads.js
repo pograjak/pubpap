@@ -20,7 +20,7 @@ export const actions = {
         .collection("papers")
         .doc("bVypOMp1sZ9I4R0ib5hV")
         .collection("threads")
-        .orderBy("upvotes", "desc")
+        .orderBy("votes", "desc")
     );
   }),
 
@@ -47,7 +47,7 @@ export const actions = {
       votes: 0,
       userId: payload.userId,
       userName: payload.userName,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: this.$fireStoreObj.FieldValue.serverTimestamp()
     };
 
     await this.$fireStore
