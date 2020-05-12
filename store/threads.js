@@ -91,7 +91,7 @@ export const actions = {
   addComment: async function (context, obj) {
     const comment = {
       text: obj.text,
-      userId: -1,
+      userId: obj.userId,
       createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
       userName: obj.userName
     };

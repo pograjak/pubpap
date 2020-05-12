@@ -23,6 +23,7 @@
     "nuxt": "^2.0.0",
     "stripe": "^8.49.0",
     "vue-google-charts": "^0.3.2",
+    "vue-moment": "^4.1.0",
     "vuexfire": "^3.2.2",
     "xml2js": "^0.4.23"
   },

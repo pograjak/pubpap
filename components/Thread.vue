@@ -153,7 +153,8 @@ export default {
         this.$store.dispatch("threads/addComment", {
           threadId: this.thread.id,
           text: item.text,
-          userName: this.user.email
+          userName: this.user.email,
+          userId: this.user.id
         });
 
         this.$refs.threadTextarea.clear();
