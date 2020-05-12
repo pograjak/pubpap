@@ -24,13 +24,13 @@ import { md } from "~/plugins/markdown_render.js";
 import "~/assets/own-github-markdown.css";
 
 export default {
+  components: {
+    User
+  },
   props: {
     text: String,
     date: Object,
     name: String
-  },
-  components: {
-    User
   },
 
   methods: {

@@ -2,12 +2,14 @@ import { firestoreAction } from "vuexfire";
 
 export const state = () => ({
   threads: [],
-  replies: []
+  replies: [],
+  voteState: 0
 });
 
 export const getters = {
   threads: state => state.threads,
-  replies: state => state.replies
+  replies: state => state.replies,
+  voteState: state => state.voteState
 };
 
 export const mutations = {};
@@ -40,6 +42,19 @@ export const actions = {
     );
   }),
 
+  bindVoteState: firestoreAction(async function ({ bindFirestoreRef }, item) {
+    await bindFirestoreRef(
+      "voteState",
+      this.$fireStore
+        .collection("papers")
+        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .collection("threads")
+        .doc(item.threadId)
+        .collection("user_votes")
+        .doc(item.userId)
+    );
+  }),
+
   addThread: async function (context, payload) {
     const thread = {
       text: payload.text,
@@ -59,12 +74,6 @@ export const actions = {
   },
 
   vote: async function (context, item) {
-    // await this.$fireStore
-    //   .collection("papers")
-    //   .doc("bVypOMp1sZ9I4R0ib5hV")
-    //   .collection("threads")
-    //   .doc(id)
-    //   .update({ upvotes: this.$fireStoreObj.FieldValue.increment(1) });
     var voteRef = this.$fireStore  // add a vote
       .collection("papers")
       .doc("bVypOMp1sZ9I4R0ib5hV")
@@ -83,7 +92,7 @@ export const actions = {
     const comment = {
       text: obj.text,
       userId: -1,
-      createdAt: Date.now(),
+      createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
       userName: obj.userName
     };
 

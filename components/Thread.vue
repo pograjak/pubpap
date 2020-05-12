@@ -11,10 +11,7 @@
     </v-list-item-content>
 
     <v-list-item-icon right class="pt-2 mt-0">
-      <div
-        class="ratingicon caption"
-        v-bind:class="highlightingClasses"
-      >{{ thread.votes }}</div>
+      <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.votes }}</div>
     </v-list-item-icon>
 
     <!-- POPUP DIALOG -->
@@ -35,8 +32,10 @@
                 :text_html="render_markdown(thread.text)"
                 :date="thread.createdAt"
                 :name="thread.userName"
+                :voteUserState="voteState"
                 :votes="thread.votes"
                 :votingDisabled="user.id == ''"
+                :votesShowLoading="votesShowLoading"
               />
 
               <v-spacer />
@@ -80,6 +79,13 @@ import { md } from "~/plugins/markdown_render.js";
 import "highlight.js/styles/github-gist.css"; // Code highlight style
 
 export default {
+  components: {
+    ThreadComment,
+    ThreadQuestion,
+    ThreadTextarea,
+    LoadingSpinner,
+    User
+  },
   props: {
     thread: Object
   },
@@ -87,15 +93,9 @@ export default {
   data() {
     return {
       dialog: false,
-      showLoading: false
+      showLoading: false,
+      votesShowLoading: false
     };
-  },
-  components: {
-    ThreadComment,
-    ThreadQuestion,
-    ThreadTextarea,
-    LoadingSpinner,
-    User
   },
 
   computed: {
@@ -106,11 +106,19 @@ export default {
     highlightingClasses: function() {
       return {
         success: this.thread.votes > 5,
-        "grey lighten-2":
-          (this.thread.votes <= 5) & (this.thread.votes >= -1),
+        "grey lighten-2": (this.thread.votes <= 5) & (this.thread.votes >= -1),
         error: this.thread.votes < -1,
         "white--text": (this.thread.votes < -1) | (this.thread.votes > 5)
       };
+    },
+    ...mapGetters({
+      store_vote_state: "threads/voteState"
+    }),
+    voteState() {
+      if (this.store_vote_state == null) {
+        return 0;
+      }
+      return this.store_vote_state.v;
     }
   },
 
@@ -118,6 +126,7 @@ export default {
     openDiag() {
       this.dialog = true;
       this.showLoading = true;
+      this.votesShowLoading = true;
       this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
         this.showLoading = false;
       });
@@ -127,6 +136,14 @@ export default {
       //     this.showLoading = false;
       //   });
       // });
+      this.$store
+        .dispatch("threads/bindVoteState", {
+          threadId: this.thread.id,
+          userId: this.user.id
+        })
+        .then(() => {
+          this.votesShowLoading = false;
+        });
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);
@@ -147,22 +164,6 @@ export default {
 </script>
 
 <style scoped>
-/* Override Vuetify formatting of code block, including children */
-/* .code_override /deep/ code {
-  display: inline;
-  overflow: visible;
-  box-shadow: none;
-  font-weight: 100;
-  border: 0;
-  color: #24292e;
-}
-.code_override /deep/ code::before {
-  content: none;
-}
-.code_override /deep/ code::after {
-  content: none;
-} */
-/* Icons showing rating in the Threads menu */
 div.ratingicon {
   width: 40px;
   height: 25px;

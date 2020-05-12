@@ -5,14 +5,14 @@
       <v-row no-gutters>
         <!-- Voting icons -->
         <v-col cols="1" class="text-center icons">
-          <div v-if="loadingVotes">
+          <div v-if="votesShowLoading">
             <LoadingSpinner style="transform: rotate(90deg);" />
           </div>
           <div v-else>
             <v-btn
               :disabled="votingDisabled"
               depressed
-              :class="{'upvotecol': state_upvote, 'anim': state_upvote, 'novotecol': !state_upvote}"
+              :class="{'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
               icon
               @click="upvote"
             >
@@ -23,7 +23,7 @@
             <v-btn
               :disabled="votingDisabled"
               depressed
-              :class="{'downvotecol': state_downvote, 'anim': state_downvote, 'novotecol': !state_downvote}"
+              :class="{'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
               icon
               @click="downvote"
             >
@@ -53,6 +53,10 @@ import "~/assets/own-github-markdown.css";
 import { mapGetters } from "vuex";
 
 export default {
+  components: {
+    User,
+    LoadingSpinner
+  },
   props: {
     threadId: String,
     title: String,
@@ -60,92 +64,64 @@ export default {
     date: Object,
     name: String,
     votes: Number,
-    votingDisabled: Boolean
+    votingDisabled: Boolean,
+    voteUserState: Number,
+    votesShowLoading: Boolean
   },
-  components: {
-    User,
-    LoadingSpinner
+  data() {
+    return {
+      votes_internal: -999
+    };
   },
 
   created: function() {
-    // load state of voting
     this.votes_internal = this.votes;
-    if (this.user.id != "") {
-      this.loadingVotes = true;
-      this.$fireStore // get state of voting
-        .collection("papers")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
-        .collection("threads")
-        .doc(this.threadId)
-        .collection("user_votes")
-        .doc(this.user.id)
-        .get()
-        .then(doc => {
-          this.state_downvote = false;
-          this.state_upvote = false;
-          if (doc.exists) {
-            if (doc.data().v > 0) {
-              this.state_upvote = true;
-            } else {
-              this.state_downvote = true;
-            }
-          }
-          this.loadingVotes = false;
-        });
-    }
   },
 
   computed: {
     ...mapGetters(["user"])
   },
-  data() {
-    return {
-      state_upvote: false,
-      state_downvote: false,
-      loadingVotes: false,
-      votes_internal: -999
-    };
-  },
+
   watch: {
     votes: function(val) {
       this.votes_internal = this.votes;
     }
   },
   methods: {
-    updateStoreVote() {
-      var state = 0;
-      if (this.state_downvote) {
-        state = -1;
-      }
-      if (this.state_upvote) {
-        state = 1;
-      }
-
+    updateStoreVote(newState) {
       this.$store.dispatch("threads/vote", {
         threadId: this.threadId,
         userId: this.user.id,
-        state: state
+        state: newState
       });
     },
     upvote() {
-      this.votes_internal += this.state_upvote ? -1 : 1;
-      if (this.state_downvote) {
+      var newState = 1;
+
+      if (this.voteUserState > 0) {
+        newState = 0;
+        this.votes_internal -= 1;
+      } else if (this.voteUserState == 0) {
+        this.votes_internal += 1;
+      } else {
+        this.votes_internal += 2;
+      }
+
+      this.updateStoreVote(newState);
+    },
+    downvote() {
+      var newState = -1;
+
+      if (this.voteUserState > 0) {
+        this.votes_internal -= 2;
+      } else if (this.voteUserState == 0) {
+        this.votes_internal -= 1;
+      } else {
+        newState = 0;
         this.votes_internal += 1;
       }
 
-      this.state_upvote = !this.state_upvote;
-      this.state_downvote = false;
-      this.updateStoreVote();
-    },
-    downvote() {
-      this.votes_internal += this.state_downvote ? 1 : -1;
-      if (this.state_upvote) {
-        this.votes_internal -= 1;
-      }
-
-      this.state_downvote = !this.state_downvote;
-      this.state_upvote = false;
-      this.updateStoreVote();
+      this.updateStoreVote(newState);
     }
   }
 };
