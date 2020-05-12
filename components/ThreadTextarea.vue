@@ -70,8 +70,8 @@
           <v-btn
             :disabled="isDisabled"
             v-show="!(isDisabled & showCancelButton)"
-            class="ml-2 white--text button_right"
-            color="blue accent-4"
+            class="ml-2"
+            color="primary"
             @click="submit_click"
           >Submit</v-btn>
         </v-col>

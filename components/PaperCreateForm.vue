@@ -5,7 +5,7 @@
       class="pb-0"
     >Create a new page for your paper by fetching data from arXiv or by entering it manually.</v-card-subtitle>
 
-    <v-list class="py-5">
+    <v-list class="pt-5 pb-0">
       <v-list-item>
         <v-text-field
           name="paperUrl"
@@ -70,42 +70,87 @@
       <!-- <v-card-subtitle>Paper presentation</v-card-subtitle> -->
 
       <v-list-item>
-        <v-checkbox label="Organize an online presentation" :disabled="disabled" v-model="organizePresentation"></v-checkbox>
+        <v-checkbox
+          label="Organize an online presentation"
+          :disabled="disabled"
+          v-model="organizePresentation"
+        ></v-checkbox>
       </v-list-item>
 
+      <v-list-item class="py-0">
+        <v-container class="pa-0 ma-0">
+          <v-row>
+            <v-col>
+              <p
+                class="caption"
+              >Set the goal for audience size. The presentation will only be organized if the number is reached.</p>
+              <v-slider
+                label="Audience goal"
+                :disabled="(disabled | (!organizePresentation))"
+                class="pa-0 ma-0"
+                v-model="audienceSize"
+                max="100"
+                min="10"
+                step="1"
+              >
+                <template v-slot:append>
+                  <v-text-field
+                    v-model="audienceSize"
+                    class="pa-0 ma-0"
+                    :disabled="(disabled | (!organizePresentation))"
+                    single-line
+                    type="number"
+                    style="width: 60px"
+                  ></v-text-field>
+                </template>
+              </v-slider>
+            </v-col>
+            <v-col>
+              <p
+                class="caption"
+              >Set the ticket price. The main goal of ticket purchase is to prove real interest in the presentation.</p>
+              <v-slider
+                label="Ticket price"
+                :disabled="(disabled | (!organizePresentation))"
+                class="pa-0 ma-0"
+                v-model="bid"
+                max="20"
+                min="3"
+                step="0.5"
+              >
+                <template v-slot:append>
+                  <v-text-field
+                    v-model="bid"
+                    class="pa-0 ma-0"
+                    :disabled="(disabled | (!organizePresentation))"
+                    single-line
+                    type="number"
+                    suffix="USD"
+                    style="width: 100px"
+                  ></v-text-field>
+                </template>
+              </v-slider>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-list-item>
+      <v-divider></v-divider>
       <v-list-item>
-        <v-row>
-          <v-col>
-            <v-text-field
-              name="priceGoal"
-              label="How much do you want to collect co organize a meeting?"
-              ref="priceGoal"
-              :disabled="disabled"
-              v-model="priceGoal"
-            ></v-text-field>
-            <v-slider v-model="priceGoal" :disabled="!organizePresentation" step="1" max="1000"></v-slider>
-          </v-col>
-          <v-col>
-            <v-text-field
-              name="bid"
-              label="How much do you want to collect from one baker?"
-              ref="bid"
-              :disabled="disabled"
-              v-model="bid"
-            ></v-text-field>
-            <v-slider v-model="bid" :disabled="disabled" step="1" max="100"></v-slider>
-          </v-col>
-        </v-row>
-
-        <v-btn color="success" @click="disabled = !disabled">Disable</v-btn>
-        <br />
-        <br />
-        {{ title }}
-        <br />
-        {{ summary }}
-        <br />
-        {{ authors }}
-        <br />
+        <v-list-item-content align-center>
+          <div class="text-right py-2">
+            <v-btn color="secondary" @click="disabled = !disabled">Clear</v-btn>
+            <v-btn class="ml-2" color="primary" @click="disabled = !disabled">Submit</v-btn>
+          </div>
+        </v-list-item-content>
+        <!-- <v-container>
+          <v-row no-gutters>
+            <v-col>
+              <v-row justify="end">
+               
+              </v-row>
+            </v-col>
+          </v-row>
+        </v-container>-->
       </v-list-item>
     </v-list>
   </v-card>
@@ -125,7 +170,8 @@ export default {
       arxLink: "",
       gitHubUrl: "",
       priceGoal: 100,
-      bid: 10,
+      audienceSize: 20,
+      bid: 5,
       disabled: false,
       organizePresentation: true
     };
@@ -156,7 +202,7 @@ export default {
 
         var auth_arr = [];
         for (const i in result.feed.entry[0].author) {
-          console.log(result.feed.entry[0].author[i].name)
+          console.log(result.feed.entry[0].author[i].name);
           auth_arr.push(result.feed.entry[0].author[i].name);
         }
         this.authors = auth_arr.join(", ");
