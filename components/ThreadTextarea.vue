@@ -100,7 +100,6 @@ export default {
     showCancelButton: Boolean,
     disabledPlaceholder: String
   },
-  //   components: { VueSimplemde },
   data() {
     return {
       easyMDE: null,
@@ -197,6 +196,9 @@ export default {
           noDisable: true
         }
       ]
+    });
+    new Promise(r => setTimeout(r, 500)).then(() => {
+      this.easyMDE.codemirror.refresh();  // Refresh after all animations are finished.
     });
   },
 
