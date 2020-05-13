@@ -148,7 +148,13 @@
           class="subtitle-2 pb-2"
         >Once the audience goal is reached, we will contact you and the guests with further details.</p>
 
-        <v-btn :loading="submit_loading" color="primary" @click="submitPaper">Submit</v-btn>
+        <p v-if="submit_error" class="caption mb-0 error--text">Error submitting paper.</p>
+        <v-btn
+          :class="{'error': submit_error}"
+          :loading="submit_loading"
+          color="primary"
+          @click="submitPaper"
+        >Submit</v-btn>
         <v-btn text @click="stepper = 2">Back</v-btn>
       </v-stepper-content>
 
@@ -156,7 +162,13 @@
 
       <v-stepper-content step="4">
         <h3 class="subtitle-1">Success!</h3>
-        <p class="subtitle-2">Link to paper page: https://pubpap.com/paper/asdfghjkl</p>
+        <p class="subtitle-2">
+          Link to paper page:
+          <a
+            class="grey--text text--darken-1"
+            :href="`http://${currentUrl}/paper/${newPaperId}`"
+          >http://{{currentUrl}}/paper/{{ newPaperId }}</a>
+        </p>
         <v-btn color="primary" @click="clearForm">Add another</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -171,20 +183,28 @@ export default {
     return {
       // Paper informations
       arxLink: "",
-      title: "A",
-      authors: "B",
-      summary: "C",
+      title: "",
+      authors: "",
+      summary: "",
       githublink: "",
       organizePresentation: true,
       bid: 5,
       audienceSize: 20,
 
       // Page essentials
-      stepper: 3,
+      stepper: 1,
       paperUrl: "",
       disabled: false,
       arxiv_loading: false,
       submit_loading: false,
+      submit_error: false,
+      newPaperId: "",
+
+      // TODO: remove this dev feature
+      currentUrl:
+        window.location.hostname == "localhost"
+          ? "localhost:3000"
+          : window.location.hostname,
 
       textfieldErrors: {
         arxivlink: "",
@@ -241,7 +261,7 @@ export default {
             auth_arr.push(result.feed.entry[0].author[i].name);
           }
           this.authors = auth_arr.join(", ");
-          this.arxLink = result.feed.entry[0].id;
+          this.arxLink = result.feed.entry[0].id[0];
 
           // Control UI
           this.arxiv_loading = false;
@@ -254,25 +274,32 @@ export default {
       });
     },
 
-    async submitPaper() {
+    submitPaper() {
+      this.submit_error = false;
       this.submit_loading = true;
-      new Promise(r => setTimeout(r, 800)).then(() => {
-        this.stepper = 4;
-      });
-      // let a = await this.$fireStore
-      //   .collection("papers")
-      //   .doc()
-      //   .set({
-      //     authorId: this.$fireAuth.currentUser.uid,
-      //     title: this.title,
-      //     authors: this.authors,
-      //     arxLink: this.arxLink,
-      //     summary: this.summary,
-      //     githublink: this.githublink,
-      //     audienceSize: this.audienceSize,
-      //     bid: this.bid
-      //   });
-      // console.log(a);
+      this.$fireStore
+        .collection("papers")
+        .add({
+          authorId: this.$fireAuth.currentUser.uid,
+          createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
+          title: this.title,
+          authors: this.authors,
+          arxLink: this.arxLink,
+          summary: this.summary,
+          githublink: this.githublink,
+          organizePresentation: this.organizePresentation,
+          audienceSize: this.audienceSize,
+          bid: this.bid
+        })
+        .then(docRef => {
+          this.newPaperId = docRef.id;
+          this.stepper = 4;
+          this.submit_loading = false;
+        })
+        .catch(err => {
+          this.submit_error = true;
+          throw err;
+        });
     },
 
     clearForm() {
@@ -284,6 +311,9 @@ export default {
       this.githublink = "";
       this.organizePresentation = true;
       this.paperUrl = "";
+      this.submit_error = false;
+      this.submit_loading = false;
+      this.arxiv_loading = false;
     },
 
     checkBasicInfo() {
