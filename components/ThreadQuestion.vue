@@ -90,6 +90,7 @@ export default {
   methods: {
     updateStoreVote(newState) {
       this.$store.dispatch("threads/vote", {
+        paperId: this.$route.params.id,
         threadId: this.threadId,
         userId: this.user.id,
         state: newState

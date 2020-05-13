@@ -2,7 +2,7 @@
   <v-card class="pt-3 pb-4 px-4">
     <v-container class="px-4 pt-3 pb-0">
       <!-- Title -->
-      <v-row class="pb-2" no-gutters justify="space-between" align="baseline">
+      <v-row class="pb-4" no-gutters justify="space-between" align="baseline">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
@@ -16,18 +16,29 @@
       <!-- Title field -->
       <v-row v-if="showTitleField" no-gutters>
         <v-col>
-          <input
+          <!-- <input
             v-model="titleValue"
             :disabled="isDisabled"
             class="titlefield"
+            required
             :placeholder="isDisabled ? disabledPlaceholder : 'Add title...'"
-          />
+          />-->
+          <v-text-field
+            outlined
+            v-model="titleValue"
+            label="Title"
+            :disabled="isDisabled"
+            :error-messages="titleError"
+            :placeholder="isDisabled ? disabledPlaceholder : 'Add title...'"
+            @input="titleError = ''"
+          ></v-text-field>
         </v-col>
       </v-row>
 
       <!-- Textarea -->
       <v-row no-gutters>
         <v-col>
+          <p v-if="textEmptyError" style="margin-top: -20px !important" class="error--text caption ma-0 pa-0">Add text</p>
           <div style="position: relative">
             <div :style="{visibility: isDisabled ? 'hidden' : 'visible'}" class="markdown-body">
               <textarea :id="'textarea_'+this._uid"></textarea>
@@ -72,6 +83,7 @@
             v-show="!(isDisabled & showCancelButton)"
             class="ml-2"
             color="primary"
+            :loading="submitShowLoading"
             @click="submit_click"
           >Submit</v-btn>
         </v-col>
@@ -98,12 +110,15 @@ export default {
     isDisabled: Boolean,
     showTitleField: Boolean,
     showCancelButton: Boolean,
-    disabledPlaceholder: String
+    disabledPlaceholder: String,
+    submitShowLoading: Boolean
   },
   data() {
     return {
       easyMDE: null,
-      titleValue: ""
+      titleValue: "",
+      titleError: "",
+      textEmptyError: false
     };
   },
   mounted() {
@@ -116,7 +131,7 @@ export default {
       hideIcons: ["image", "side-by-side", "fullscreen"],
       indentWithTabs: false,
       lineWrapping: false,
-      placeholder: this.title + "...",
+      placeholder: this.showTitleField ? "" : this.title + "...",
       spellChecker: false,
       status: false,
       styleSelectedText: false,
@@ -198,7 +213,7 @@ export default {
       ]
     });
     new Promise(r => setTimeout(r, 500)).then(() => {
-      this.easyMDE.codemirror.refresh();  // Refresh after all animations are finished.
+      this.easyMDE.codemirror.refresh(); // Refresh after all animations are finished.
     });
   },
 
@@ -207,6 +222,19 @@ export default {
       this.$emit("cancel");
     },
     submit_click() {
+      this.titleError = "";
+      this.textEmptyError = false;
+
+      if (this.showTitleField & (this.titleValue.length < 1)) {
+        this.titleError = "Enter title";
+        return;
+      }
+
+      if ((this.easyMDE != null) & (this.easyMDE.value().length < 1)) {
+        this.textEmptyError = true;
+        return;
+      }
+
       if (this.easyMDE != null) {
         this.$emit("submit", {
           title: this.titleValue,
@@ -230,7 +258,7 @@ export default {
 </script>
 
 <style scoped>
-.titlefield {
+/* .titlefield {
   width: 100%;
   padding: 5px 14px;
   padding-top: 10px;
@@ -247,5 +275,5 @@ export default {
 }
 .titlefield:disabled {
   background-color: #e0e0e0;
-}
+} */
 </style>

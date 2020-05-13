@@ -15,12 +15,12 @@ export const getters = {
 export const mutations = {};
 
 export const actions = {
-  bindThreads: firestoreAction(async function ({ bindFirestoreRef }) {
+  bindThreads: firestoreAction(async function ({ bindFirestoreRef }, item) {
     await bindFirestoreRef(
       "threads",
       this.$fireStore
         .collection("papers")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .doc(item.paperId)
         .collection("threads")
         .orderBy("votes", "desc")
     );
@@ -28,15 +28,15 @@ export const actions = {
 
   bindReplies: firestoreAction(async function (
     { bindFirestoreRef },
-    herethreadId
+    item
   ) {
     await bindFirestoreRef(
       "replies",
       this.$fireStore
         .collection("papers")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .doc(item.paperId)
         .collection("threads")
-        .doc(herethreadId)
+        .doc(item.threadId)
         .collection("replies")
         .orderBy("createdAt")
     );
@@ -47,7 +47,7 @@ export const actions = {
       "voteState",
       this.$fireStore
         .collection("papers")
-        .doc("bVypOMp1sZ9I4R0ib5hV")
+        .doc(item.paperId)
         .collection("threads")
         .doc(item.threadId)
         .collection("user_votes")
@@ -67,7 +67,7 @@ export const actions = {
 
     await this.$fireStore
       .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .doc(payload.paperId)
       .collection("threads")
       .doc()
       .set(thread);
@@ -76,7 +76,7 @@ export const actions = {
   vote: async function (context, item) {
     var voteRef = this.$fireStore  // add a vote
       .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .doc(item.paperId)
       .collection("threads")
       .doc(item.threadId)
       .collection('user_votes')
@@ -88,19 +88,19 @@ export const actions = {
     }
   },
 
-  addComment: async function (context, obj) {
+  addComment: async function (context, item) {
     const comment = {
-      text: obj.text,
-      userId: obj.userId,
+      text: item.text,
+      userId: item.userId,
       createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
-      userName: obj.userName
+      userName: item.userName
     };
 
     await this.$fireStore
       .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
+      .doc(item.paperId)
       .collection("threads")
-      .doc(obj.threadId)
+      .doc(item.threadId)
       .collection("replies")
       .doc()
       .set(comment);

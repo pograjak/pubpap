@@ -21,6 +21,7 @@
               :isDisabled="this.user.email == ''"
               @submit="addThread"
               @cancel="dialog = false"
+              :submitShowLoading="submitShowLoading"
               disabledPlaceholder="Log in to add new threads."
               ref="newthreadTextarea"
             />
@@ -55,7 +56,8 @@ export default {
   data: function() {
     return {
       dialog: false,
-      showLoading: true
+      showLoading: true,
+      submitShowLoading: false
     };
   },
   components: {
@@ -65,8 +67,11 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("threads/bindThreads").then(() => {
+    this.$store.dispatch("threads/bindThreads", { paperId: this.$route.params.id }).then(() => {
       this.showLoading = false;
+    }).catch((error) => {
+      this.showLoading = false;
+      throw(error);
     });
   },
 
@@ -81,14 +86,19 @@ export default {
   methods: {
     addThread(item) {
       if ((item.title.length > 0) & (item.text.length > 0)) {
+        this.submitShowLoading = true;
         this.$store.dispatch("threads/addThread", {
+          paperId: this.$route.params.id,
           title: item.title,
           text: item.text,
           userId: this.user.id,
           userName: this.user.email
+        }).then(() => {
+          this.submitShowLoading = false;
+          this.$refs.newthreadTextarea.clear();
+          this.dialog = false;
         });
-        this.$refs.newthreadTextarea.clear();
-        this.dialog = false;
+        
       }
     }
   }

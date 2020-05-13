@@ -54,10 +54,11 @@
                 class="mt-8"
                 title="Add Comment"
                 :user="user"
-                :isDisabled="this.user.email == ''"
+                :isDisabled="user.id == ''"
                 @submit="textarea_sumbit"
                 disabledPlaceholder="Log in to add comments."
                 ref="threadTextarea"
+                :submitShowLoading="submitShowLoading"
               />
               <!-- @cancel="textarea_cancel" -->
             </v-col>
@@ -94,7 +95,8 @@ export default {
     return {
       dialog: false,
       showLoading: false,
-      votesShowLoading: false
+      votesShowLoading: false,
+      submitShowLoading: false
     };
   },
 
@@ -125,39 +127,57 @@ export default {
   methods: {
     openDiag() {
       this.dialog = true;
+
+      // Load replies
       this.showLoading = true;
-      this.votesShowLoading = true;
-      this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
-        this.showLoading = false;
-      });
-      // This makes the opening a little bit smoother
-      // new Promise(r => setTimeout(r, 500)).then(() => {
-      //   this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
-      //     this.showLoading = false;
-      //   });
+      // this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
+      //   this.showLoading = false;
       // });
-      this.$store
-        .dispatch("threads/bindVoteState", {
-          threadId: this.thread.id,
-          userId: this.user.id
-        })
-        .then(() => {
-          this.votesShowLoading = false;
-        });
+      // This makes the opening a little bit smoother
+      new Promise(r => setTimeout(r, 600)).then(() => {
+        this.$store
+          .dispatch("threads/bindReplies", {
+            paperId: this.$route.params.id,
+            threadId: this.thread.id
+          })
+          .then(() => {
+            this.showLoading = false;
+          });
+      });
+
+      // Load voting state
+      if (this.user.id != "") {
+        this.votesShowLoading = true;
+
+        this.$store
+          .dispatch("threads/bindVoteState", {
+            paperId: this.$route.params.id,
+            threadId: this.thread.id,
+            userId: this.user.id
+          })
+          .then(() => {
+            this.votesShowLoading = false;
+          });
+      }
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);
     },
     textarea_sumbit(item) {
       if (item.text.length > 0) {
-        this.$store.dispatch("threads/addComment", {
-          threadId: this.thread.id,
-          text: item.text,
-          userName: this.user.email,
-          userId: this.user.id
-        });
-
-        this.$refs.threadTextarea.clear();
+        this.submitShowLoading = true;
+        this.$store
+          .dispatch("threads/addComment", {
+            paperId: this.$route.params.id,
+            threadId: this.thread.id,
+            text: item.text,
+            userName: this.user.email,
+            userId: this.user.id
+          })
+          .then(() => {
+            this.submitShowLoading = false;
+            this.$refs.threadTextarea.clear();
+          });
       }
     }
   }
