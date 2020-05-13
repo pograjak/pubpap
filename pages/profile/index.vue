@@ -23,6 +23,7 @@ import PaperCreateForm from "@/components/PaperCreateForm.vue";
 import UserDetail from "@/components/UserDetail.vue";
 
 export default {
+  middleware: "auth",
   components: {
     PaperCreateForm,
     UserDetail

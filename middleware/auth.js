@@ -1,6 +1,8 @@
-export default function({ store, redirect }) {
-  // If the user is not authenticated
-  if (!store.state.user.email != "") {
-    return redirect("/login");
+export default function(ctx) {
+  console.log(ctx);
+
+  // If the user is not authenticated { store, redirect }
+  if (ctx.store.state.user.email == "") {
+    return ctx.redirect(`/login/?nextPage=${ctx.from.path}`);
   }
 }
