@@ -55,11 +55,11 @@
           <small> Don't have an account? </small>
         </nuxt-link>
         <v-spacer></v-spacer>
-        <a>
+        <nuxt-link to="/forgot">
           <small>
             Forgot password?
           </small>
-        </a>
+        </nuxt-link>
       </v-card-actions>
     </v-form>
   </v-card>
