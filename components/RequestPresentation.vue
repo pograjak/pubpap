@@ -99,7 +99,10 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("requestPresentation/bindRequest");
+    this.$store.dispatch(
+      "requestPresentation/bindRequest",
+      this.$route.params.id
+    );
   },
 
   computed: {
@@ -123,10 +126,6 @@ export default {
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionIdc.id
       });
-    },
-
-    addCoin() {
-      this.$store.dispatch("requestPresentation/addCoin");
     }
   }
 };
