@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title primary-title>
-      Login
+      Login to pubpap
     </v-card-title>
     <v-form>
       <v-card-text>
@@ -21,18 +21,23 @@
           prepend-icon="mdi-lock"
           type="password"
         />
+        <v-btn color="primary" @click.prevent="login" block>
+          Login
+        </v-btn>
       </v-card-text>
 
       <v-divider></v-divider>
 
       <v-card-actions>
+        <nuxt-link to="/register">
+          <small> Don't have an account? </small>
+        </nuxt-link>
         <v-spacer></v-spacer>
-        <v-btn color="primary" @click.prevent="login">
-          Login
-        </v-btn>
-        <v-btn text color="primary" to="/register">
-          Register
-        </v-btn>
+        <a>
+          <small>
+            Forgot password?
+          </small>
+        </a>
       </v-card-actions>
     </v-form>
   </v-card>

@@ -1,9 +1,11 @@
 import { vuexfireMutations } from "vuexfire";
+import { auth } from "firebase";
 
 export const state = () => ({
   user: {
     email: "",
-    id: ""
+    id: "",
+    photoUrl: ""
   }
 });
 
@@ -17,9 +19,11 @@ export const mutations = {
     if (!authUser) {
       state.user.email = "";
       state.user.id = "";
+      state.user.photoUrl = "";
     } else {
       state.user.email = authUser.email;
       state.user.id = authUser.uid;
+      state.user.photoUrl = authUser.photoUrl;
     }
   }
 };
