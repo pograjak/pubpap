@@ -36,7 +36,6 @@
           v-model="title"
           label="Title"
           placeholder="Title of the paper"
-          :rules="[textfieldRules.required]"
           :error-messages="textfieldErrors.title"
           @input="textfieldErrors.title = ''"
           :disabled="disabled"
@@ -47,7 +46,6 @@
           v-model="authors"
           label="Author(s)"
           placeholder="Mary Smith, John Dee"
-          :rules="[textfieldRules.required]"
           :error-messages="textfieldErrors.authors"
           @input="textfieldErrors.authors = ''"
           :disabled="disabled"
@@ -58,7 +56,6 @@
           v-model="summary"
           label="Abstract"
           placeholder="Abstract of the paper"
-          :rules="[textfieldRules.required]"
           :error-messages="textfieldErrors.abstract"
           @input="textfieldErrors.abstract = ''"
           :disabled="disabled"
@@ -82,10 +79,10 @@
       <v-stepper-step :complete="stepper > 3" step="3">Online presentation</v-stepper-step>
 
       <v-stepper-content step="3">
-        <p
-          class="subtitle-2"
-        >Help others understand your ideas by giving an online presentation!<br>
-        The presentation will take place as an interactive online call. A recording will be freely available on pubpap.</p>
+        <p class="subtitle-2">
+          Help others understand your ideas by giving an online presentation!
+          <br />The presentation will take place as an interactive online call. A recording will be freely available on pubpap.
+        </p>
         <v-checkbox
           class="subtitle-2"
           label="Organize an online presentation"
@@ -147,10 +144,20 @@
             </v-col>
           </v-row>
         </v-container>
-        <p class="subtitle-2 pb-2">Once the audience goal is reached, we will contact you and the guests with further details.</p>
+        <p
+          class="subtitle-2 pb-2"
+        >Once the audience goal is reached, we will contact you and the guests with further details.</p>
 
-        <v-btn color="primary" @click="stepper = 4">Submit</v-btn>
+        <v-btn :loading="submit_loading" color="primary" @click="submitPaper">Submit</v-btn>
         <v-btn text @click="stepper = 2">Back</v-btn>
+      </v-stepper-content>
+
+      <v-stepper-step :complete="stepper >= 4" step="4">Share</v-stepper-step>
+
+      <v-stepper-content step="4">
+        <h3 class="subtitle-1">Success!</h3>
+        <p class="subtitle-2">Link to paper page: https://pubpap.com/paper/asdfghjkl</p>
+        <v-btn color="primary" @click="clearForm">Add another</v-btn>
       </v-stepper-content>
     </v-stepper>
   </v-card>
@@ -173,10 +180,11 @@ export default {
       audienceSize: 20,
 
       // Page essentials
-      stepper: 1,
+      stepper: 3,
       paperUrl: "",
       disabled: false,
       arxiv_loading: false,
+      submit_loading: false,
 
       textfieldErrors: {
         arxivlink: "",
@@ -184,9 +192,6 @@ export default {
         authors: "",
         abstract: "",
         githublink: ""
-      },
-      textfieldRules: {
-        required: value => !!value || "Required."
       }
     };
   },
@@ -249,23 +254,40 @@ export default {
       });
     },
 
-    async createPaper() {
-      let a = await this.$fireStore
-        .collection("papers")
-        .doc()
-        .set({
-          authorId: this.$fireAuth.currentUser.uid,
-          title: this.title,
-          authors: this.authors,
-          arxLink: this.arxLink,
-          summary: this.summary,
-          githublink: this.githublink,
-          audienceSize: this.audienceSize,
-          bid: this.bid
-        });
-      console.log(a);
+    async submitPaper() {
+      this.submit_loading = true;
+      new Promise(r => setTimeout(r, 800)).then(() => {
+        this.stepper = 4;
+      });
+      // let a = await this.$fireStore
+      //   .collection("papers")
+      //   .doc()
+      //   .set({
+      //     authorId: this.$fireAuth.currentUser.uid,
+      //     title: this.title,
+      //     authors: this.authors,
+      //     arxLink: this.arxLink,
+      //     summary: this.summary,
+      //     githublink: this.githublink,
+      //     audienceSize: this.audienceSize,
+      //     bid: this.bid
+      //   });
+      // console.log(a);
     },
-    checkBasicInfo() {  // Check the basic infor about paper
+
+    clearForm() {
+      this.stepper = 1;
+      this.arxLink = "";
+      this.title = "";
+      this.authors = "";
+      this.summary = "";
+      this.githublink = "";
+      this.organizePresentation = true;
+      this.paperUrl = "";
+    },
+
+    checkBasicInfo() {
+      // Check the basic infor about paper
       var error = false;
       if (this.title.length < 1) {
         this.textfieldErrors.title = "Required.";
@@ -310,7 +332,7 @@ export default {
 </script>
 
 <style scoped>
-.v-stepper{
-    box-shadow: none;
+.v-stepper {
+  box-shadow: none;
 }
 </style>
