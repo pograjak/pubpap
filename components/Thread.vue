@@ -54,7 +54,7 @@
                 class="mt-8"
                 title="Add Comment"
                 :user="user"
-                :isDisabled="this.user.email == ''"
+                :isDisabled="user.id == ''"
                 @submit="textarea_sumbit"
                 disabledPlaceholder="Log in to add comments."
                 ref="threadTextarea"
@@ -125,25 +125,32 @@ export default {
   methods: {
     openDiag() {
       this.dialog = true;
+
+      // Load replies
       this.showLoading = true;
-      this.votesShowLoading = true;
-      this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
-        this.showLoading = false;
-      });
-      // This makes the opening a little bit smoother
-      // new Promise(r => setTimeout(r, 500)).then(() => {
-      //   this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
-      //     this.showLoading = false;
-      //   });
+      // this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
+      //   this.showLoading = false;
       // });
-      this.$store
-        .dispatch("threads/bindVoteState", {
-          threadId: this.thread.id,
-          userId: this.user.id
-        })
-        .then(() => {
-          this.votesShowLoading = false;
+      // This makes the opening a little bit smoother
+      new Promise(r => setTimeout(r, 400)).then(() => {
+        this.$store.dispatch("threads/bindReplies", this.thread.id).then(() => {
+          this.showLoading = false;
         });
+      });
+
+      // Load voting state
+      if (this.user.id != "") {
+        this.votesShowLoading = true;
+
+        this.$store
+          .dispatch("threads/bindVoteState", {
+            threadId: this.thread.id,
+            userId: this.user.id
+          })
+          .then(() => {
+            this.votesShowLoading = false;
+          });
+      }
     },
     render_markdown(mkdwn) {
       return md.render(mkdwn);
