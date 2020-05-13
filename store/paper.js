@@ -1,26 +1,24 @@
 import { firestoreAction } from "vuexfire";
 
 export const state = () => ({
-  paper: {
-    title: "",
-    authors: "",
-    summary: ""
-  }
+  paper: {}
 });
 
 export const getters = {
   paper: state => state.paper
 };
 
-export const mutations = {};
+export const mutations = {
+  loadPaper: function(state, paper) {
+    state.paper = paper;
+  }
+};
 
 export const actions = {
-  bindPaper: firestoreAction(async function({ bindFirestoreRef }, paperId) {
-    console.log(paperId);
+  loadPaper: async function(ctx, paperId) {
+    let pRef = await this.$fireStore.collection("papers").doc(paperId);
+    let p = await pRef.get();
 
-    await bindFirestoreRef(
-      "paper",
-      this.$fireStore.collection("papers").doc(paperId)
-    );
-  })
+    ctx.commit("loadPaper", p.data());
+  }
 };

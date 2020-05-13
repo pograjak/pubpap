@@ -38,20 +38,16 @@ export default {
     };
   },
 
+  created() {
+    if (this.$route.params.id) {
+      this.$store.dispatch("paper/loadPaper", this.$route.params.id);
+    }
+  },
+
   computed: {
     ...mapGetters({
       paper: "paper/paper"
     })
-  },
-
-  created() {
-    if (this.$route.params.id) {
-      this.$store.dispatch("paper/bindPaper", this.$route.params.id);
-    } else {
-      this.paper = {
-        title: "fck"
-      };
-    }
   }
 };
 </script>

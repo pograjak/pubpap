@@ -3,7 +3,9 @@
     <v-list>
       <v-list-item style="min-height:80px">
         <v-list-item-content>
-          <v-list-item-title class="display-1">Request online presentation</v-list-item-title>
+          <v-list-item-title class="display-1"
+            >Request online presentation</v-list-item-title
+          >
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -33,6 +35,12 @@
       </v-list-item>
 
       <v-list-item>
+        <v-btn
+          color="success"
+          @click="$router.push(`/login/?nextPage=${$route.fullPath}`)"
+        >
+          Redirect to login with mem
+        </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           color="#D4AF37"
@@ -67,6 +75,7 @@
 <script>
 import { loadStripe } from "@stripe/stripe-js";
 import { mapGetters } from "vuex";
+import loginVue from "../pages/login.vue";
 
 export default {
   data() {
@@ -90,7 +99,10 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("requestPresentation/bindRequest");
+    this.$store.dispatch(
+      "requestPresentation/bindRequest",
+      this.$route.params.id
+    );
   },
 
   computed: {
@@ -114,10 +126,6 @@ export default {
       const { error } = await stripe.redirectToCheckout({
         sessionId: sessionIdc.id
       });
-    },
-
-    addCoin() {
-      this.$store.dispatch("requestPresentation/addCoin");
     }
   }
 };

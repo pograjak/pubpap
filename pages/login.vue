@@ -83,7 +83,7 @@ export default {
         this.email,
         this.password
       );
-      if (user) this.$router.push("/");
+      if (user) this.redirect();
       else this.loading = false;
     },
 
@@ -91,7 +91,15 @@ export default {
       this.loading = true;
       let provider = new this.$fireAuthObj.GoogleAuthProvider();
       const user = await this.$fireAuth.signInWithPopup(provider);
-      if (user) this.$router.push("/");
+      if (user) this.redirect();
+    },
+
+    redirect() {
+      if (this.$route.query.nextPage) {
+        this.$router.push(this.$route.query.nextPage);
+      } else {
+        this.$router.push("/");
+      }
     }
   }
 };

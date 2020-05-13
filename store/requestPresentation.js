@@ -1,4 +1,6 @@
-import { firestoreAction } from "vuexfire";
+import { firestoreAction, firestoreOptions } from "vuexfire";
+
+firestoreOptions.reset = false;
 
 export const state = () => ({
   request: {}
@@ -11,16 +13,10 @@ export const getters = {
 export const mutations = {};
 
 export const actions = {
-  bindRequest: firestoreAction(async function({ bindFirestoreRef }) {
+  bindRequest: firestoreAction(async function({ bindFirestoreRef }, paperId) {
     await bindFirestoreRef(
       "request",
-      this.$fireStore.collection("papers").doc("bVypOMp1sZ9I4R0ib5hV")
+      this.$fireStore.collection("papers").doc(paperId)
     );
-  }),
-  addCoin: async function(ctx) {
-    this.$fireStore
-      .collection("papers")
-      .doc("bVypOMp1sZ9I4R0ib5hV")
-      .update({ requestCurrent: this.$fireStoreObj.FieldValue.increment(1) });
-  }
+  })
 };
