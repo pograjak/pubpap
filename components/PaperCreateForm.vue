@@ -80,7 +80,7 @@
       <v-list-item class="py-0">
         <v-container class="pa-0 ma-0">
           <v-row>
-            <v-col>
+            <v-col cols="12" md="6">
               <p
                 class="caption"
               >Set the goal for audience size. The presentation will only be organized if the number is reached.</p>
@@ -105,7 +105,7 @@
                 </template>
               </v-slider>
             </v-col>
-            <v-col>
+            <v-col cols="12" md="6">
               <p
                 class="caption"
               >Set the ticket price. The main goal of ticket purchase is to prove real interest in the presentation.</p>
