@@ -72,6 +72,7 @@
             v-show="!(isDisabled & showCancelButton)"
             class="ml-2"
             color="primary"
+            :loading="submitShowLoading"
             @click="submit_click"
           >Submit</v-btn>
         </v-col>
@@ -98,7 +99,8 @@ export default {
     isDisabled: Boolean,
     showTitleField: Boolean,
     showCancelButton: Boolean,
-    disabledPlaceholder: String
+    disabledPlaceholder: String,
+    submitShowLoading: Boolean
   },
   data() {
     return {
