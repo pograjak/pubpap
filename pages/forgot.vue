@@ -30,7 +30,18 @@
 
 <script>
 export default {
-  layout: "signup"
+  layout: "signup",
+  data() {
+    return {
+      email: ""
+    };
+  },
+
+  methods: {
+    async resetPassword() {
+      let sentEmail = await this.$fireAuth.sendPasswordResetEmail(this.email);
+    }
+  }
 };
 </script>
 

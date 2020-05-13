@@ -5,6 +5,22 @@
     </v-card-title>
     <v-form>
       <v-card-text>
+        <v-btn
+          color="primary"
+          @click.prevent="loginWithGoogle"
+          block
+          large
+          :disabled="loading"
+          :loading="loading"
+        >
+          <v-icon left>mdi-google</v-icon>
+          Log in with Google
+        </v-btn>
+        <br />
+        <v-divider></v-divider>
+
+        <div align="center">or</div>
+
         <v-text-field
           v-model="email"
           label="Email"
@@ -21,7 +37,13 @@
           prepend-icon="mdi-lock"
           type="password"
         />
-        <v-btn color="primary" @click.prevent="login" block>
+        <v-btn
+          color="primary"
+          @click.prevent="login"
+          block
+          :disabled="loading"
+          :loading="loading"
+        >
           Login
         </v-btn>
       </v-card-text>
@@ -49,16 +71,26 @@ export default {
   data() {
     return {
       email: "",
-      password: ""
+      password: "",
+      loading: false
     };
   },
 
   methods: {
     async login() {
+      this.loading = true;
       const user = await this.$fireAuth.signInWithEmailAndPassword(
         this.email,
         this.password
       );
+      if (user) this.$router.push("/");
+      else this.loading = false;
+    },
+
+    async loginWithGoogle() {
+      this.loading = true;
+      let provider = new this.$fireAuthObj.GoogleAuthProvider();
+      const user = await this.$fireAuth.signInWithPopup(provider);
       if (user) this.$router.push("/");
     }
   }
