@@ -14,6 +14,7 @@
     "@nuxtjs/firebase": "^5.2.0",
     "@stripe/stripe-js": "^1.5.0",
     "core-js": "2",
+    "cropper": "^4.1.0",
     "easymde": "^2.10.1",
     "firebase": "^7.14.2",
     "firebase-functions": "^3.6.1",

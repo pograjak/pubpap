@@ -29,7 +29,10 @@
       </v-stepper-content>
 
       <!-- Fill in fields -->
-      <v-stepper-step :complete="stepper > 2" step="2">Basic information</v-stepper-step>
+      <v-stepper-step :complete="stepper > 2" step="2">
+        Basic information
+        <small>Fill in the basic information.</small>
+      </v-stepper-step>
 
       <v-stepper-content step="2">
         <v-text-field
@@ -75,10 +78,31 @@
         <v-btn text :disabled="disabled" @click="stepper = 1">Back</v-btn>
       </v-stepper-content>
 
-      <!-- Online presentation -->
-      <v-stepper-step :complete="stepper > 3" step="3">Online presentation</v-stepper-step>
-
+      <!-- Thumbnail upload -->
+      <v-stepper-step :complete="stepper > 3" step="3">
+        Thumbnail
+        <small>Upload a thumbnail for your paper.</small>
+      </v-stepper-step>
       <v-stepper-content step="3">
+        <p
+          class="subtitle-2"
+        >If you have a cool thumbnail for your paper, feel free to upload it! We accept either PNG or JPG.</p>
+        <ImageUpload
+          ref="imageUploader"
+          @selected="imguploadBtnText = 'next'"
+          @canceled="imguploadBtnText = 'skip'"
+        />
+        <v-btn color="primary" @click="thumbnailSubmit">{{ imguploadBtnText }}</v-btn>
+        <v-btn text @click="stepper = 2">Back</v-btn>
+      </v-stepper-content>
+
+      <!-- Online presentation -->
+      <v-stepper-step :complete="stepper > 4" step="4">
+        Online presentation
+        <small>Setup online presentation.</small>
+      </v-stepper-step>
+
+      <v-stepper-content step="4">
         <p class="subtitle-2">
           Help others understand your ideas by giving an online presentation!
           <br />The presentation will take place as an interactive online call. A recording will be freely available on pubpap.
@@ -154,13 +178,16 @@
           :loading="submit_loading"
           color="primary"
           @click="submitPaper"
-        >Submit</v-btn>
-        <v-btn text @click="stepper = 2">Back</v-btn>
+        >Submit paper</v-btn>
+        <v-btn text @click="stepper = 3">Back</v-btn>
       </v-stepper-content>
 
-      <v-stepper-step :complete="stepper >= 4" step="4">Share</v-stepper-step>
+      <v-stepper-step :complete="stepper >= 5" step="5">
+        Share
+        <small>Share the paper page!</small>
+      </v-stepper-step>
 
-      <v-stepper-content step="4">
+      <v-stepper-content step="5">
         <h3 class="subtitle-1">Success!</h3>
         <p class="subtitle-2">
           Link to paper page:
@@ -176,6 +203,8 @@
 </template>
 
 <script>
+import ImageUpload from "~/components/ImageUpload.vue";
+
 let parseString = require("xml2js").parseString;
 
 export default {
@@ -199,6 +228,8 @@ export default {
       submit_loading: false,
       submit_error: false,
       newPaperId: "",
+      imguploadBtnText: "skip",
+      thumbnailObj: null,
 
       // TODO: remove this dev feature
       currentUrl:
@@ -214,6 +245,10 @@ export default {
         githublink: ""
       }
     };
+  },
+
+  components: {
+    ImageUpload
   },
 
   methods: {
@@ -289,15 +324,41 @@ export default {
           githublink: this.githublink,
           organizePresentation: this.organizePresentation,
           audienceSize: this.audienceSize,
-          bid: this.bid
+          bid: this.bid,
+          hasImg: this.thumbnailObj != null
         })
         .then(docRef => {
           this.newPaperId = docRef.id;
-          this.stepper = 4;
-          this.submit_loading = false;
+
+          if (this.thumbnailObj != null) {
+            const imgName =
+              "paper_thumbnails/" +
+              this.newPaperId +
+              "." +
+              this.thumbnailObj.fmt;
+
+            this.$fireStorage
+              .ref()
+              .child(imgName)
+              .putString(this.thumbnailObj.img, "data_url")
+              .then(() => {
+                console.log('Image uploaded');
+                this.stepper = 5;
+                this.submit_loading = false;
+              })
+              .catch(err => {
+                this.submit_error = true;
+                this.submit_loading = false;
+                throw err;
+              });
+          } else {
+            this.stepper = 5;
+            this.submit_loading = false;
+          }
         })
         .catch(err => {
           this.submit_error = true;
+          this.submit_loading = false;
           throw err;
         });
     },
@@ -314,6 +375,9 @@ export default {
       this.submit_error = false;
       this.submit_loading = false;
       this.arxiv_loading = false;
+      this.imguploadBtnText = "skip";
+      this.thumbnailObj = null;
+      this.$refs.imageUploader.setupCropper(null);
     },
 
     checkBasicInfo() {
@@ -356,6 +420,15 @@ export default {
       if (!error) {
         this.stepper = 3;
       }
+    },
+
+    thumbnailSubmit() {
+      const imgobj = this.$refs.imageUploader.getImage();
+      if (imgobj != null) {
+        this.thumbnailObj = imgobj;
+      }
+
+      this.stepper = 4;
     }
   }
 };
