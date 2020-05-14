@@ -29,7 +29,10 @@
       </v-stepper-content>
 
       <!-- Fill in fields -->
-      <v-stepper-step :complete="stepper > 2" step="2">Basic information</v-stepper-step>
+      <v-stepper-step :complete="stepper > 2" step="2">
+        Basic information
+        <small>Fill in the basic information.</small>
+      </v-stepper-step>
 
       <v-stepper-content step="2">
         <v-text-field
@@ -75,10 +78,31 @@
         <v-btn text :disabled="disabled" @click="stepper = 1">Back</v-btn>
       </v-stepper-content>
 
-      <!-- Online presentation -->
-      <v-stepper-step :complete="stepper > 3" step="3">Online presentation</v-stepper-step>
-
+      <!-- Thumbnail upload -->
+      <v-stepper-step :complete="stepper > 3" step="3">
+        Thumbnail
+        <small>Upload a thumbnail for your paper.</small>
+      </v-stepper-step>
       <v-stepper-content step="3">
+        <p
+          class="subtitle-2"
+        >If you have a cool thumbnail for your paper, feel free to upload it! We accept either PNG or JPG.</p>
+        <ImageUpload
+          ref="imageUploader"
+          @selected="imguploadBtnText = 'next'"
+          @canceled="imguploadBtnText = 'skip'"
+        />
+        <v-btn color="primary" @click="thumbnailSubmit">{{ imguploadBtnText }}</v-btn>
+        <v-btn text @click="stepper = 2">Back</v-btn>
+      </v-stepper-content>
+
+      <!-- Online presentation -->
+      <v-stepper-step :complete="stepper > 4" step="4">
+        Online presentation
+        <small>Setup online presentation.</small>
+      </v-stepper-step>
+
+      <v-stepper-content step="4">
         <p class="subtitle-2">
           Help others understand your ideas by giving an online presentation!
           <br />The presentation will take place as an interactive online call. A recording will be freely available on pubpap.
@@ -148,15 +172,30 @@
           class="subtitle-2 pb-2"
         >Once the audience goal is reached, we will contact you and the guests with further details.</p>
 
-        <v-btn :loading="submit_loading" color="primary" @click="submitPaper">Submit</v-btn>
-        <v-btn text @click="stepper = 2">Back</v-btn>
+        <p v-if="submit_error" class="caption mb-0 error--text">Error submitting paper.</p>
+        <v-btn
+          :class="{'error': submit_error}"
+          :loading="submit_loading"
+          color="primary"
+          @click="submitPaper"
+        >Submit paper</v-btn>
+        <v-btn text @click="stepper = 3">Back</v-btn>
       </v-stepper-content>
 
-      <v-stepper-step :complete="stepper >= 4" step="4">Share</v-stepper-step>
+      <v-stepper-step :complete="stepper >= 5" step="5">
+        Share
+        <small>Share the paper page!</small>
+      </v-stepper-step>
 
-      <v-stepper-content step="4">
+      <v-stepper-content step="5">
         <h3 class="subtitle-1">Success!</h3>
-        <p class="subtitle-2">Link to paper page: https://pubpap.com/paper/asdfghjkl</p>
+        <p class="subtitle-2">
+          Link to paper page:
+          <a
+            class="grey--text text--darken-1"
+            :href="`http://${currentUrl}/paper/${newPaperId}`"
+          >http://{{currentUrl}}/paper/{{ newPaperId }}</a>
+        </p>
         <v-btn color="primary" @click="clearForm">Add another</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -164,6 +203,8 @@
 </template>
 
 <script>
+import ImageUpload from "~/components/ImageUpload.vue";
+
 let parseString = require("xml2js").parseString;
 
 export default {
@@ -171,20 +212,30 @@ export default {
     return {
       // Paper informations
       arxLink: "",
-      title: "A",
-      authors: "B",
-      summary: "C",
+      title: "",
+      authors: "",
+      summary: "",
       githublink: "",
       organizePresentation: true,
       bid: 5,
       audienceSize: 20,
 
       // Page essentials
-      stepper: 3,
+      stepper: 1,
       paperUrl: "",
       disabled: false,
       arxiv_loading: false,
       submit_loading: false,
+      submit_error: false,
+      newPaperId: "",
+      imguploadBtnText: "skip",
+      thumbnailObj: null,
+
+      // TODO: remove this dev feature
+      currentUrl:
+        window.location.hostname == "localhost"
+          ? "localhost:3000"
+          : window.location.hostname,
 
       textfieldErrors: {
         arxivlink: "",
@@ -194,6 +245,10 @@ export default {
         githublink: ""
       }
     };
+  },
+
+  components: {
+    ImageUpload
   },
 
   methods: {
@@ -241,7 +296,7 @@ export default {
             auth_arr.push(result.feed.entry[0].author[i].name);
           }
           this.authors = auth_arr.join(", ");
-          this.arxLink = result.feed.entry[0].id;
+          this.arxLink = result.feed.entry[0].id[0];
 
           // Control UI
           this.arxiv_loading = false;
@@ -254,25 +309,58 @@ export default {
       });
     },
 
-    async submitPaper() {
+    submitPaper() {
+      this.submit_error = false;
       this.submit_loading = true;
-      new Promise(r => setTimeout(r, 800)).then(() => {
-        this.stepper = 4;
-      });
-      // let a = await this.$fireStore
-      //   .collection("papers")
-      //   .doc()
-      //   .set({
-      //     authorId: this.$fireAuth.currentUser.uid,
-      //     title: this.title,
-      //     authors: this.authors,
-      //     arxLink: this.arxLink,
-      //     summary: this.summary,
-      //     githublink: this.githublink,
-      //     audienceSize: this.audienceSize,
-      //     bid: this.bid
-      //   });
-      // console.log(a);
+      this.$fireStore
+        .collection("papers")
+        .add({
+          authorId: this.$fireAuth.currentUser.uid,
+          createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
+          title: this.title,
+          authors: this.authors,
+          arxLink: this.arxLink,
+          summary: this.summary,
+          githublink: this.githublink,
+          organizePresentation: this.organizePresentation,
+          audienceSize: this.audienceSize,
+          bid: this.bid,
+          hasImg: this.thumbnailObj != null
+        })
+        .then(docRef => {
+          this.newPaperId = docRef.id;
+
+          if (this.thumbnailObj != null) {
+            const imgName =
+              "paper_thumbnails/" +
+              this.newPaperId +
+              "." +
+              this.thumbnailObj.fmt;
+
+            this.$fireStorage
+              .ref()
+              .child(imgName)
+              .putString(this.thumbnailObj.img, "data_url")
+              .then(() => {
+                console.log('Image uploaded');
+                this.stepper = 5;
+                this.submit_loading = false;
+              })
+              .catch(err => {
+                this.submit_error = true;
+                this.submit_loading = false;
+                throw err;
+              });
+          } else {
+            this.stepper = 5;
+            this.submit_loading = false;
+          }
+        })
+        .catch(err => {
+          this.submit_error = true;
+          this.submit_loading = false;
+          throw err;
+        });
     },
 
     clearForm() {
@@ -284,6 +372,12 @@ export default {
       this.githublink = "";
       this.organizePresentation = true;
       this.paperUrl = "";
+      this.submit_error = false;
+      this.submit_loading = false;
+      this.arxiv_loading = false;
+      this.imguploadBtnText = "skip";
+      this.thumbnailObj = null;
+      this.$refs.imageUploader.setupCropper(null);
     },
 
     checkBasicInfo() {
@@ -326,6 +420,15 @@ export default {
       if (!error) {
         this.stepper = 3;
       }
+    },
+
+    thumbnailSubmit() {
+      const imgobj = this.$refs.imageUploader.getImage();
+      if (imgobj != null) {
+        this.thumbnailObj = imgobj;
+      }
+
+      this.stepper = 4;
     }
   }
 };
