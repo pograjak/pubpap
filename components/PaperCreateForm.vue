@@ -5,7 +5,7 @@
 
     <v-stepper v-model="stepper" vertical>
       <!-- arXiv link & fetch -->
-      <v-stepper-step :complete="stepper >= 1" step="1">
+      <v-stepper-step :complete="stepper > 1" step="1">
         arXiv link
         <small>Fetch data from arXiv or choose to fill it manually.</small>
       </v-stepper-step>
@@ -204,12 +204,28 @@
         <h3 class="subtitle-1">Success!</h3>
         <p class="subtitle-2">
           Link to paper page:
-          <a
-            class="grey--text text--darken-1"
-            :href="`http://${currentUrl}/paper/${newPaperId}`"
-            >http://{{ currentUrl }}/paper/{{ newPaperId }}</a
-          >
+          <a class="grey--text text--darken-1" :href="newPaperURL">{{
+            newPaperURL
+          }}</a>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" icon v-clipboard:copy="newPaperURL">
+                <v-icon>mdi-clipboard-text-outline</v-icon>
+              </v-btn>
+            </template>
+            <span class="caption">Copy to clipboard</span>
+          </v-tooltip>
+
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn v-on="on" color="#1da1f2" icon @click="twitterClick">
+                <v-icon>mdi-twitter</v-icon>
+              </v-btn>
+            </template>
+            <span class="caption">Tweet</span>
+          </v-tooltip>
         </p>
+
         <v-btn color="primary" @click="clearForm">Add another</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -217,6 +233,11 @@
 </template>
 
 <script>
+import Vue from "vue";
+import VueClipboard from "vue-clipboard2";
+
+Vue.use(VueClipboard);
+
 import ImageUpload from "~/components/ImageUpload.vue";
 
 let parseString = require("xml2js").parseString;
@@ -261,11 +282,24 @@ export default {
     };
   },
 
+  computed: {
+    newPaperURL() {
+      return "http://" + this.currentUrl + "/paper/" + this.newPaperId;
+    }
+  },
+
   components: {
     ImageUpload
   },
 
   methods: {
+    sharePopUp(url) {
+      window.open(url, "newwindow", "width=600, height=600");
+      return false;
+    },
+    twitterClick() {
+      this.sharePopUp("https://twitter.com/share?url=" + this.newPaperURL);
+    },
     async fetchArxiv() {
       if (this.paperUrl.length < 1) {
         this.textfieldErrors.arxivlink =
