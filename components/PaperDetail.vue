@@ -38,12 +38,6 @@ export default {
     };
   },
 
-  created() {
-    if (this.$route.params.id) {
-      this.$store.dispatch("paper/loadPaper", this.$route.params.id);
-    }
-  },
-
   computed: {
     ...mapGetters({
       paper: "paper/paper"

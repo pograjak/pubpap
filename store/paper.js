@@ -16,9 +16,16 @@ export const mutations = {
 
 export const actions = {
   loadPaper: async function(ctx, paperId) {
-    let pRef = await this.$fireStore.collection("papers").doc(paperId);
-    let p = await pRef.get();
-
+    let p;
+    try {
+      let pRef = this.$fireStore.collection("papers").doc(paperId);
+      p = await pRef.get();
+      if (!p.exists) {
+        throw "paper does not exixsts";
+      }
+    } catch (error) {
+      throw error;
+    }
     ctx.commit("loadPaper", p.data());
   }
 };

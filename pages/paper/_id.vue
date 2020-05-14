@@ -28,13 +28,20 @@ import VueGoogleCharts from "vue-google-charts";
 Vue.use(VueGoogleCharts);
 
 export default {
+  async validate({ params, store }) {
+    try {
+      let resp = await store.dispatch("paper/loadPaper", params.id);
+    } catch (error) {
+      return false;
+    }
+    return true;
+  },
+
   components: {
     PaperDetail,
     RequestPresentation,
     ForumQuestions
-  },
-
-  computed: {}
+  }
 };
 </script>
 

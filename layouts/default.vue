@@ -6,10 +6,18 @@
       </nuxt-link>
       <v-spacer />
       <v-btn
+        color="primary"
+        text
+        v-show="userLoggedIn.email == ''"
+        :to="`/login?nextPage=${$route.fullPath}`"
+      >
+        Login
+      </v-btn>
+      <v-btn
         color="red lighten-2"
         dark
         v-show="userLoggedIn.email == ''"
-        @click="$store.dispatch('login/openModal')"
+        :to="`/register?nextPage=${$route.fullPath}`"
       >
         Sign Up
       </v-btn>
