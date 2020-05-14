@@ -5,7 +5,7 @@
 
     <v-stepper v-model="stepper" vertical>
       <!-- arXiv link & fetch -->
-      <v-stepper-step :complete="stepper >= 1" step="1">
+      <v-stepper-step :complete="stepper > 1" step="1">
         arXiv link
         <small>Fetch data from arXiv or choose to fill it manually.</small>
       </v-stepper-step>
