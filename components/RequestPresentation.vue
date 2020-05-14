@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-list>
+    <v-list v-if="request">
       <v-list-item style="min-height:80px">
         <v-list-item-content>
           <v-list-item-title class="display-1"
@@ -15,13 +15,10 @@
           rounded
           color="#D4AF37"
           height="30"
-          :value="(request.requestCurrent / request.requestGoal) * 100"
+          :value="(request.currentValue / request.goal) * 100"
           striped
         >
-          <strong
-            >{{ request.requestCurrent }} /
-            {{ request.requestGoal }} Goal</strong
-          >
+          <strong>{{ request.currentValue }} / {{ request.goal }} Goal</strong>
         </v-progress-linear>
       </v-list-item>
 
@@ -48,7 +45,7 @@
           @click="payment()"
           :loading="loading"
           :disable="loading"
-          >Buy a ticket (10 Kč)</v-btn
+          >Buy a ticket ({{ request.bid }} Kč)</v-btn
         >
       </v-list-item>
 
@@ -98,16 +95,16 @@ export default {
     };
   },
 
-  created() {
-    this.$store.dispatch(
-      "requestPresentation/bindRequest",
-      this.$route.params.id
-    );
-  },
+  // created() {
+  //   this.$store.dispatch(
+  //     "requestPresentation/bindRequest",
+  //     this.$route.params.id
+  //   );
+  // },
 
   computed: {
     ...mapGetters({
-      request: "requestPresentation/request"
+      request: "paper/requestPresentation"
     })
   },
 

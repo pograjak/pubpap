@@ -5,19 +5,37 @@
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
       <v-container class="pa-0 pt-1 ma-0">
         <v-row no-gutters>
-          <User :date="thread.createdAt" :name="thread.userName" :rightAlign="false" />
+          <User
+            :date="thread.createdAt"
+            :name="thread.userName"
+            :rightAlign="false"
+          />
         </v-row>
       </v-container>
     </v-list-item-content>
 
     <v-list-item-icon right class="pt-2 mt-0">
-      <div class="ratingicon caption" v-bind:class="highlightingClasses">{{ thread.votes }}</div>
+      <div class="ratingicon caption" v-bind:class="highlightingClasses">
+        {{ thread.votes }}
+      </div>
     </v-list-item-icon>
 
     <!-- POPUP DIALOG -->
-    <v-dialog v-model="dialog" fullscreen persistent transition="dialog-bottom-transition">
+    <v-dialog
+      v-model="dialog"
+      fullscreen
+      persistent
+      transition="dialog-bottom-transition"
+    >
       <!-- Exit button - fixed -->
-      <v-btn fab @click="dialog = false" right top fixed class="mt-3 mr-5 pr-0 primary">
+      <v-btn
+        fab
+        @click="dialog = false"
+        right
+        top
+        fixed
+        class="mt-3 mr-5 pr-0 primary"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
 
@@ -47,7 +65,11 @@
               </v-card>
 
               <div v-else v-for="r in replies" :key="r.id">
-                <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
+                <ThreadComment
+                  :text="r.text"
+                  :date="r.createdAt"
+                  :name="r.userName"
+                />
               </div>
 
               <ThreadTextarea
@@ -104,7 +126,9 @@ export default {
     ...mapGetters({
       replies: "threads/replies"
     }),
+
     ...mapGetters(["user"]),
+
     highlightingClasses: function() {
       return {
         success: this.thread.votes > 5,
@@ -113,9 +137,11 @@ export default {
         "white--text": (this.thread.votes < -1) | (this.thread.votes > 5)
       };
     },
+
     ...mapGetters({
       store_vote_state: "threads/voteState"
     }),
+
     voteState() {
       if (this.store_vote_state == null) {
         return 0;

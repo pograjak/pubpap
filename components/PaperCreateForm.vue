@@ -24,8 +24,11 @@
           :disabled="disabled"
           :loading="arxiv_loading"
           @click="fetchArxiv"
-        >fetch</v-btn>
-        <v-btn text :disabled="disabled" @click="stepper = 2">Fill manually</v-btn>
+          >fetch</v-btn
+        >
+        <v-btn text :disabled="disabled" @click="stepper = 2"
+          >Fill manually</v-btn
+        >
       </v-stepper-content>
 
       <!-- Fill in fields -->
@@ -84,15 +87,18 @@
         <small>Upload a thumbnail for your paper.</small>
       </v-stepper-step>
       <v-stepper-content step="3">
-        <p
-          class="subtitle-2"
-        >If you have a cool thumbnail for your paper, feel free to upload it! We accept either PNG or JPG.</p>
+        <p class="subtitle-2">
+          If you have a cool thumbnail for your paper, feel free to upload it!
+          We accept either PNG or JPG.
+        </p>
         <ImageUpload
           ref="imageUploader"
           @selected="imguploadBtnText = 'next'"
           @canceled="imguploadBtnText = 'skip'"
         />
-        <v-btn color="primary" @click="thumbnailSubmit">{{ imguploadBtnText }}</v-btn>
+        <v-btn color="primary" @click="thumbnailSubmit">{{
+          imguploadBtnText
+        }}</v-btn>
         <v-btn text @click="stepper = 2">Back</v-btn>
       </v-stepper-content>
 
@@ -105,7 +111,8 @@
       <v-stepper-content step="4">
         <p class="subtitle-2">
           Help others understand your ideas by giving an online presentation!
-          <br />The presentation will take place as an interactive online call. A recording will be freely available on pubpap.
+          <br />The presentation will take place as an interactive online call.
+          A recording will be freely available on pubpap.
         </p>
         <v-checkbox
           class="subtitle-2"
@@ -116,9 +123,10 @@
         <v-container class="py-0 px-0">
           <v-row>
             <v-col cols="12" md="6" class="pb-0">
-              <p
-                class="caption"
-              >Set the goal for audience size. The presentation will only be organized if the number is reached.</p>
+              <p class="caption">
+                Set the goal for audience size. The presentation will only be
+                organized if the number is reached.
+              </p>
               <v-slider
                 label="Audience goal"
                 :disabled="!organizePresentation"
@@ -141,9 +149,10 @@
               </v-slider>
             </v-col>
             <v-col cols="12" md="6" class="pb-0">
-              <p
-                class="caption"
-              >Set the ticket price. Mind that the main goal of ticket purchase is to prove real interest in the presentation.</p>
+              <p class="caption">
+                Set the ticket price. Mind that the main goal of ticket purchase
+                is to prove real interest in the presentation.
+              </p>
               <v-slider
                 label="Ticket price"
                 :disabled="!organizePresentation"
@@ -168,17 +177,21 @@
             </v-col>
           </v-row>
         </v-container>
-        <p
-          class="subtitle-2 pb-2"
-        >Once the audience goal is reached, we will contact you and the guests with further details.</p>
+        <p class="subtitle-2 pb-2">
+          Once the audience goal is reached, we will contact you and the guests
+          with further details.
+        </p>
 
-        <p v-if="submit_error" class="caption mb-0 error--text">Error submitting paper.</p>
+        <p v-if="submit_error" class="caption mb-0 error--text">
+          Error submitting paper.
+        </p>
         <v-btn
-          :class="{'error': submit_error}"
+          :class="{ error: submit_error }"
           :loading="submit_loading"
           color="primary"
           @click="submitPaper"
-        >Submit paper</v-btn>
+          >Submit paper</v-btn
+        >
         <v-btn text @click="stepper = 3">Back</v-btn>
       </v-stepper-content>
 
@@ -194,7 +207,8 @@
           <a
             class="grey--text text--darken-1"
             :href="`http://${currentUrl}/paper/${newPaperId}`"
-          >http://{{currentUrl}}/paper/{{ newPaperId }}</a>
+            >http://{{ currentUrl }}/paper/{{ newPaperId }}</a
+          >
         </p>
         <v-btn color="primary" @click="clearForm">Add another</v-btn>
       </v-stepper-content>
@@ -323,9 +337,16 @@ export default {
           summary: this.summary,
           githublink: this.githublink,
           organizePresentation: this.organizePresentation,
-          audienceSize: this.audienceSize,
-          bid: this.bid,
-          hasImg: this.thumbnailObj != null
+          //audienceSize: this.audienceSize,
+          //bid: this.bid,
+          hasImg: this.thumbnailObj != null,
+          requestPresentation: {
+            //TODO goal: this.goal
+            bid: this.bid,
+            currentValue: 0,
+            audienceSize: thsi.audienceSize,
+            subsIds: []
+          }
         })
         .then(docRef => {
           this.newPaperId = docRef.id;
@@ -342,7 +363,7 @@ export default {
               .child(imgName)
               .putString(this.thumbnailObj.img, "data_url")
               .then(() => {
-                console.log('Image uploaded');
+                console.log("Image uploaded");
                 this.stepper = 5;
                 this.submit_loading = false;
               })

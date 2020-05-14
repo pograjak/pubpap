@@ -5,11 +5,13 @@ export const state = () => ({
 });
 
 export const getters = {
-  paper: state => state.paper
+  paper: state => state.paper,
+  requestPresentation: state => state.paper.requestPresentation
 };
 
 export const mutations = {
   loadPaper: function(state, paper) {
+    console.log(paper);
     state.paper = paper;
   }
 };
