@@ -30,9 +30,9 @@
       </v-tab-item>
 
       <v-tab-item>
-        <v-list>
-          <template v-for="(p, index) in mypapersSorted">
-            <PaperListItem :paper="p" :key="index"/>
+        <v-list class="py-0">
+          <template v-for="(p, index) in sortPaps(mypapers)">
+            <PaperListItem :paper="p" :key="index" />
           </template>
         </v-list>
       </v-tab-item>
@@ -45,7 +45,7 @@ import { mapGetters } from "vuex";
 import PaperListItem from "~/components/PaperListItem.vue";
 
 export default {
-  components:{
+  components: {
     PaperListItem
   },
 
@@ -55,24 +55,25 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters({
-      mypapers: "paperlist/mypapers"
-    }),
-    mypapersSorted() {
-      var newpaps = [...this.mypapers];
-      return newpaps.sort((a,b) => {
-        return b.createdAt - a.createdAt;
-      });
-    }
-  },
-
   created() {
     this.$store
       .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
-      .then(() => {
-        
+      .then(() => {});
+  },
+
+  computed: {
+    ...mapGetters({
+      mypapers: "paperlist/mypapers"
+    })
+  },
+
+  methods: {
+    sortPaps(paplist) {
+      var newpaps = [...paplist];
+      return newpaps.sort((a, b) => {
+        return b.createdAt - a.createdAt;
       });
+    }
   }
 };
 </script>
