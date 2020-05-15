@@ -91,11 +91,6 @@ export default {
               });
           }
         });
-
-      // this.$fireStorage
-      //         .ref()
-      //         .child(imgName)
-      //         .putString(this.thumbnailObj.img, "data_url")
     }
   },
 
