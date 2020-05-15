@@ -4,11 +4,12 @@
       <v-list-item-title>{{ paper.title }}</v-list-item-title>
       <v-list-item-subtitle class="caption">Created {{ paper.createdAt.toDate() | moment('lll') }}</v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-content class="justify-end" style="max-width:150px">
+    <v-list-item-content class="justify-end mx-2" style="max-width:150px">
       <v-progress-linear
         rounded
         height="20"
         color="secondary"
+        class
         :value="(paper.requestPresentation.currentValue / paper.requestPresentation.goal) * 100"
         striped
       >
@@ -22,10 +23,42 @@
       <v-btn icon large @click.prevent="clicking" @mousedown.stop @touchstart.native.stop>
         <v-icon>mdi-image-edit</v-icon>
       </v-btn>
-      <v-btn icon large @click.prevent="clicking" @mousedown.stop @touchstart.native.stop>
+      <v-btn
+        icon
+        large
+        @click.prevent="deleteDialog = true"
+        @mousedown.stop
+        @touchstart.native.stop
+      >
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </v-list-item-action>
+
+    <!-- Delete dialog -->
+
+    <v-dialog v-model="deleteDialog" max-width="400px">
+      <v-card>
+        <v-card-title class="title font-weight-bold">Delete Paper</v-card-title>
+
+        <v-card-text class="error--text text--darken-1 red lighten-4 py-4">
+          Do you really want to delete the whole paper
+          <strong>discussion</strong> and
+          <strong>presentation requests?</strong>
+        </v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="deleteDialog = false">Cancel</v-btn>
+          <!-- TODO: Change to our email -->
+          <v-btn
+            color="error"
+            error
+            :href="`mailto:delete@pubpap.com?subject=Please delete paper ID \'${paper.id}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.id}\' because of the following reasons:%0D%0A%0D%0A`"
+            @click="deleteDialog = false"
+          >Delete</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-list-item>
 </template>
 
@@ -36,6 +69,12 @@ Vue.use(require("vue-moment"));
 export default {
   props: {
     paper: Object
+  },
+
+  data() {
+    return {
+      deleteDialog: false
+    };
   },
 
   methods: {
