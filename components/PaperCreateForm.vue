@@ -18,6 +18,7 @@
           v-model="paperUrl"
           :error-messages="textfieldErrors.arxivlink"
           class="pb-2"
+          @keydown.enter="fetchArxiv"
         ></v-text-field>
         <v-btn
           color="primary"
