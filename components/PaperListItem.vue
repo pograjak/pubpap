@@ -18,7 +18,7 @@
         </span>
       </v-progress-linear>
     </v-list-item-content>
-    <v-list-item-action class="d-inline">
+    <v-list-item-action class="d-inline" v-if="isAuthor">
       <v-btn icon large @click.prevent="clicking" @mousedown.stop @touchstart.native.stop>
         <v-icon>mdi-image-edit</v-icon>
       </v-btn>
@@ -41,6 +41,9 @@ export default {
   methods: {
     clicking() {
       return 0;
+    },
+    isAuthor() {
+      return this.$fireAuth.currentUser.uid == this.paper.authorId;
     }
   }
 };
