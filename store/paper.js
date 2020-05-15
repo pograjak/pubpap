@@ -11,7 +11,7 @@ export const getters = {
 
 export const mutations = {
   loadPaper: function(state, paper) {
-    console.log(paper);
+    // console.log(paper);
     state.paper = paper;
   }
 };
@@ -23,7 +23,7 @@ export const actions = {
       let pRef = this.$fireStore.collection("papers").doc(paperId);
       p = await pRef.get();
       if (!p.exists) {
-        throw "paper does not exixsts";
+        throw "paper does not exist";
       }
     } catch (error) {
       throw error;
