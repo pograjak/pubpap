@@ -378,7 +378,7 @@ export default {
             //TODO goal: this.goal
             bid: this.bid,
             currentValue: 0,
-            audienceSize: thsi.audienceSize,
+            audienceSize: this.audienceSize,
             subsIds: []
           }
         })
@@ -388,9 +388,7 @@ export default {
           if (this.thumbnailObj != null) {
             const imgName =
               "paper_thumbnails/" +
-              this.newPaperId +
-              "." +
-              this.thumbnailObj.fmt;
+              this.newPaperId;
 
             this.$fireStorage
               .ref()
