@@ -29,5 +29,36 @@ export const actions = {
       throw error;
     }
     ctx.commit("loadPaper", p.data());
+  },
+
+  updateHasImg: async function(ctx, item) {
+    let pRef = this.$fireStore.collection("papers").doc(item.paperId);
+    await pRef.set({ hasImg: item.hasImg }, { merge: true });
+  },
+
+  uploadThumbnail: async function(ctx, item) {
+    await ctx.dispatch("updateHasImg", { paperId: item.paperId, hasImg: true });
+
+    const imgName = "paper_thumbnails/" + item.paperId;
+    await this.$fireStorage
+      .ref()
+      .child(imgName)
+      .putString(item.img, "data_url");
+  },
+
+  deleteThumbnail: async function(ctx, paperId) {
+    const imgName = "paper_thumbnails/" + paperId;
+
+    await this.$fireStorage
+      .ref()
+      .child(imgName)
+      .delete()
+      .catch(err => {
+        console.log(err);
+        if (err.code_ != "storage/object-not-found") {
+          throw err;
+        }
+      });
+    await ctx.dispatch("updateHasImg", { paperId: paperId, hasImg: false });
   }
 };

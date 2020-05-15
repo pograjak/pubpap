@@ -16,7 +16,7 @@
             <v-img
               contain
               max-width="350px"
-              max-height="350px"
+              max-height="500px"
               :src="images.paper"
               style="margin: 0 auto"
             >

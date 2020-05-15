@@ -83,12 +83,20 @@
       <v-card>
         <v-card-title>Change thumbnail</v-card-title>
         <div class="px-6">
-          <ImageUpload ref="imageUploader"/>
+          <ImageUpload
+            ref="imageUploader"
+            @selected="imguploadBtnText = 'Upload'"
+            @canceled="imguploadBtnText = 'Delete current'"
+          />
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="cancelThumbDiag">Cancel</v-btn>
-          <v-btn color="primary" :loading="thumbnailLoading" @click="submitThumbDiag">Upload</v-btn>
+          <v-btn
+            color="primary"
+            :loading="thumbnailLoading"
+            @click="submitThumbDiag"
+          >{{ imguploadBtnText }}</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -109,7 +117,8 @@ export default {
     return {
       deleteDialog: false,
       thumbnailDialog: false,
-      thumbnailLoading: false
+      thumbnailLoading: false,
+      imguploadBtnText: "Delete current"
     };
   },
 
@@ -124,9 +133,25 @@ export default {
     },
     submitThumbDiag() {
       this.thumbnailLoading = true;
-      // submit has img
-      // upload to store
 
+      // Retrieve image
+      const imgobj = this.$refs.imageUploader.getImage();
+
+      if (imgobj == null) {
+        this.$store
+          .dispatch("paper/deleteThumbnail", this.paper.id)
+          .then(() => {
+            this.thumbnailLoading = false;
+            this.thumbnailDialog = false;
+          });
+      } else {
+        this.$store
+          .dispatch("paper/uploadThumbnail", { paperId: this.paper.id, img: imgobj.img })
+          .then(() => {
+            this.thumbnailLoading = false;
+            this.thumbnailDialog = false;
+          });
+      }
     },
     isAuthor() {
       return this.$fireAuth.currentUser.uid == this.paper.authorId;
