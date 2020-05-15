@@ -20,22 +20,40 @@
       </v-progress-linear>
     </v-list-item-content>
     <v-list-item-action class="d-inline" v-if="isAuthor">
-      <v-btn icon large @click.prevent="clicking" @mousedown.stop @touchstart.native.stop>
-        <v-icon>mdi-image-edit</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        large
-        @click.prevent="deleteDialog = true"
-        @mousedown.stop
-        @touchstart.native.stop
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            icon
+            large
+            v-on="on"
+            @click.prevent="thumbnailDialog = true"
+            @mousedown.stop
+            @touchstart.native.stop
+          >
+            <v-icon>mdi-image-edit</v-icon>
+          </v-btn>
+        </template>
+        <span>Change thumbnail</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn
+            v-on="on"
+            icon
+            large
+            @click.prevent="deleteDialog = true"
+            @mousedown.stop
+            @touchstart.native.stop
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <span>Request removal</span>
+      </v-tooltip>
     </v-list-item-action>
 
     <!-- Delete dialog -->
-
     <v-dialog v-model="deleteDialog" max-width="400px">
       <v-card>
         <v-card-title class="title font-weight-bold">Delete Paper</v-card-title>
@@ -59,10 +77,26 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+    <!-- Change Thumbnail dialog -->
+    <v-dialog v-model="thumbnailDialog" max-width="800px">
+      <v-card>
+        <v-card-title>Change thumbnail</v-card-title>
+        <div class="px-6">
+          <ImageUpload ref="imageUploader"/>
+        </div>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="cancelThumbDiag">Cancel</v-btn>
+          <v-btn color="primary" :loading="thumbnailLoading" @click="submitThumbDiag">Upload</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-list-item>
 </template>
 
 <script>
+import ImageUpload from "~/components/ImageUpload.vue";
 import Vue from "vue";
 Vue.use(require("vue-moment"));
 
@@ -73,13 +107,26 @@ export default {
 
   data() {
     return {
-      deleteDialog: false
+      deleteDialog: false,
+      thumbnailDialog: false,
+      thumbnailLoading: false
     };
   },
 
+  components: {
+    ImageUpload
+  },
+
   methods: {
-    clicking() {
-      return 0;
+    cancelThumbDiag() {
+      this.$refs.imageUploader.setupCropper(null);
+      this.thumbnailDialog = false;
+    },
+    submitThumbDiag() {
+      this.thumbnailLoading = true;
+      // submit has img
+      // upload to store
+
     },
     isAuthor() {
       return this.$fireAuth.currentUser.uid == this.paper.authorId;
