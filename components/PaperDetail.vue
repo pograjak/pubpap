@@ -43,10 +43,10 @@
       </v-row>
       <v-row no-gutters>
         <v-col>
-          <v-card-actions class="px-4">
-            <v-btn color="white-black">arXiv</v-btn>
-            <v-btn color="white-black">arXiv PDF</v-btn>
-            <v-btn color="white-black">
+          <v-card-actions class="px-4 py-0">
+            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none mb-2" :href="paper.arxLink" target="_blank">arXiv</v-btn>
+            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none mb-2" :href="arxivPDF" target="_blank">arXiv PDF</v-btn>
+            <v-btn v-if="paper.githublink != ''" depressed color="#24292e" class="white--text mb-2" :href="paper.githublink" target="_blank">
               <v-icon>mdi-github</v-icon>
             </v-btn>
           </v-card-actions>
@@ -102,7 +102,11 @@ export default {
   computed: {
     ...mapGetters({
       paper: "paper/paper"
-    })
+    }),
+    arxivPDF(){
+      const paperId = /[^/]*$/.exec(this.paper.arxLink)[0];
+      return `https://arxiv.org/pdf/${paperId}`
+    }
   }
 };
 </script>
