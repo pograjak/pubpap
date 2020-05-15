@@ -1,86 +1,73 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-card>
-        <v-toolbar color="primary">
-          <v-toolbar-title>Papers</v-toolbar-title>
-        </v-toolbar>
+  <v-card>
+    <v-tabs v-model="tab">
+      <v-tabs-slider></v-tabs-slider>
+
+      <v-tab>
+        <v-icon left>mdi-star</v-icon>Favorites
+      </v-tab>
+
+      <v-tab>
+        <v-icon left>mdi-card-text-outline</v-icon>My Tickets
+      </v-tab>
+
+      <v-tab>
+        <v-icon left>mdi-account</v-icon>My Papers
+      </v-tab>
+    </v-tabs>
+
+    <v-tabs-items v-model="tab">
+      <v-tab-item>
+        <v-card flat>
+          <v-card-text>Favs</v-card-text>
+        </v-card>
+      </v-tab-item>
+
+      <v-tab-item>
+        <v-card flat>
+          <v-card-text>Tics</v-card-text>
+        </v-card>
+      </v-tab-item>
+
+      <v-tab-item>
         <v-list>
-          <template v-for="(item, index) in items">
-            <v-list-item :key="item.title">
-              <template v-slot:default="{ active, toggle }">
-                <v-list-item-content>
-                  <v-list-item-title v-text="item.title"></v-list-item-title>
-                  <v-list-item-subtitle
-                    class="text--primary"
-                    v-text="item.headline"
-                  ></v-list-item-subtitle>
-                  <v-list-item-subtitle
-                    v-text="item.subtitle"
-                  ></v-list-item-subtitle>
-                </v-list-item-content>
-
-                <v-list-item-action>
-                  <v-btn color="success" :to="`/paper/${item.id}`"
-                    >go to Paper</v-btn
-                  >
-                </v-list-item-action>
-              </template>
-            </v-list-item>
-
-            <v-divider v-if="index + 1 < items.length" :key="index"></v-divider>
+          <template v-for="(p, index) in mypapers">
+            <PaperListItem :paper="p" :key="index"/>
           </template>
         </v-list>
-      </v-card>
-    </v-col>
-  </v-row>
+      </v-tab-item>
+    </v-tabs-items>
+  </v-card>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import PaperListItem from "~/components/PaperListItem.vue";
+
 export default {
-  data: () => ({
-    selected: [2],
-    items: [
-      {
-        action: "15 min",
-        headline: "Brunch this weekend?",
-        title: "Ali Connors",
-        subtitle:
-          "I'll be in your neighborhood doing errands this weekend. Do you want to hang out?",
-        id: "bVypOMp1sZ9I4R0ib5hV"
-      },
-      {
-        action: "2 hr",
-        headline: "Summer BBQ",
-        title: "me, Scrott, Jennifer",
-        subtitle: "Wish I could come, but I'm out of town this weekend.",
-        id: "9ocRUvaThzphjthf8H1y"
-      },
-      {
-        action: "6 hr",
-        headline: "Oui oui",
-        title: "Sandra Adams",
-        subtitle: "Do you have Paris recommendations? Have you ever been?",
-        id: "5MMwOo8A4jiRqmoDCU52"
-      },
-      {
-        action: "12 hr",
-        headline: "Birthday gift",
-        title: "Trevor Hansen",
-        subtitle:
-          "Have any ideas about what we should get Heidi for her birthday?",
-        id: "bVypOMp1sZ9I4R0ib5hV"
-      },
-      {
-        action: "18hr",
-        headline: "Recipe to try",
-        title: "Britta Holt",
-        subtitle:
-          "We should eat this: Grate, Squash, Corn, and tomatillo Tacos.",
-        id: "bVypOMp1sZ9I4R0ib5hV"
-      }
-    ]
-  })
+  components:{
+    PaperListItem
+  },
+
+  data() {
+    return {
+      tab: 2
+    };
+  },
+
+  computed: {
+    ...mapGetters({
+      mypapers: "paperlist/mypapers"
+    })
+  },
+
+  created() {
+    this.$store
+      .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
+      .then(() => {
+        console.log(this.mypapers);
+      });
+  }
 };
 </script>
 
