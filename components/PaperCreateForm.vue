@@ -204,9 +204,10 @@
         <h3 class="subtitle-1">Success!</h3>
         <p class="subtitle-2">
           Link to paper page:
-          <a class="grey--text text--darken-1" :href="newPaperURL">{{
+          <nuxt-link class="grey--text text--darken-1" :to="newPaperPage">{{
             newPaperURL
-          }}</a>
+          }}</nuxt-link>
+          <!-- <a  :href=""></a> -->
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
               <v-btn v-on="on" icon v-clipboard:copy="newPaperURL">
@@ -285,7 +286,11 @@ export default {
   computed: {
     newPaperURL() {
       return "http://" + this.currentUrl + "/paper/" + this.newPaperId;
+    },
+    newPaperPage() {
+      return "/paper/" + this.newPaperId;
     }
+
   },
 
   components: {
@@ -311,7 +316,7 @@ export default {
       this.textfieldErrors.arxivlink = "";
 
       const paperId = /[^/]*$/.exec(this.paperUrl)[0];
-      console.log(paperId);
+      // console.log(paperId);
       const resp = await fetch(
         // `http://export.arxiv.org/api/query?search_query=${paperId}&start=0&max_results=10`
         `http://export.arxiv.org/api/query?id_list=${paperId}&sortBy=lastUpdatedDate&sortOrder=descending
