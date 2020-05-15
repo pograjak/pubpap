@@ -8,11 +8,11 @@
         </v-col>
       </v-row>
       <v-row v-if="paper.hasImg & !images.loadingErr" no-gutters>
-        <v-col class="d-md-flex">
+        <v-col class="d-md-flex justify-space-between">
           <div>
             <v-card-text class="pt-0">{{ paper.summary }}</v-card-text>
           </div>
-          <div class="px-4">
+          <div class="pr-4">
             <v-img
               contain
               max-width="350px"
@@ -44,9 +44,9 @@
       <v-row no-gutters>
         <v-col>
           <v-card-actions class="px-4 py-0">
-            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none mb-2" :href="paper.arxLink" target="_blank">arXiv</v-btn>
-            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none mb-2" :href="arxivPDF" target="_blank">arXiv PDF</v-btn>
-            <v-btn v-if="paper.githublink != ''" depressed color="#24292e" class="white--text mb-2" :href="paper.githublink" target="_blank">
+            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none my-2" :href="paper.arxLink" target="_blank">arXiv</v-btn>
+            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none my-2" :href="arxivPDF" target="_blank">arXiv PDF</v-btn>
+            <v-btn v-if="paper.githublink != ''" depressed color="#24292e" class="white--text my-2" :href="paper.githublink" target="_blank">
               <v-icon>mdi-github</v-icon>
             </v-btn>
           </v-card-actions>
