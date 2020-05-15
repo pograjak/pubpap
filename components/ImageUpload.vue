@@ -154,7 +154,7 @@ export default {
         return {
           fmt: fmt,
           img: this.cropper
-            .getCroppedCanvas({ maxWidth: 350, maxHeight: 350 })
+            .getCroppedCanvas({ maxWidth: 350, maxHeight: 350, imageSmoothingQuality: 'high' })
             .toDataURL(this.inputImgType)
         };
       }
