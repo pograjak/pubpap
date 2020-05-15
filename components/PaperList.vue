@@ -25,6 +25,19 @@
 
       <v-tab-item>
         <v-list class="py-0">
+          <!-- Loading spinner -->
+          <v-list-item two-line v-if="showLoading.ticks">
+            <v-list-item-content>
+              <LoadingSpinner />
+            </v-list-item-content>
+          </v-list-item>
+          <!-- Empty placeholder -->
+          <v-list-item two-line v-if="showEmpty.ticks">
+            <v-list-item-content>
+              <v-list-item-title class="text-center">No tickets bought yet <v-icon>mdi-emoticon-frown-outline</v-icon></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
           <template v-for="(p, index) in sortPaps(subpapers)">
             <PaperListItem :paper="p" :key="index" />
           </template>
@@ -33,6 +46,19 @@
 
       <v-tab-item>
         <v-list class="py-0">
+          <!-- Loading spinner -->
+          <v-list-item two-line v-if="showLoading.mypaps">
+            <v-list-item-content>
+              <LoadingSpinner />
+            </v-list-item-content>
+          </v-list-item>
+          <!-- Empty placeholder -->
+          <v-list-item two-line v-if="showEmpty.mypaps">
+            <v-list-item-content>
+              <v-list-item-title class="text-center">No papers added yet <v-icon>mdi-emoticon-sad-outline</v-icon></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
           <template v-for="(p, index) in sortPaps(mypapers)">
             <PaperListItem :paper="p" :key="index" />
           </template>
@@ -45,25 +71,49 @@
 <script>
 import { mapGetters } from "vuex";
 import PaperListItem from "~/components/PaperListItem.vue";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 export default {
   components: {
-    PaperListItem
+    PaperListItem,
+    LoadingSpinner
   },
 
   data() {
     return {
-      tab: 2
+      tab: 1,
+      showLoading: {
+        favs: false,
+        ticks: false,
+        mypaps: false
+      },
+      showEmpty: {
+        favs: false,
+        ticks: false,
+        mypaps: false
+      }
     };
   },
 
   created() {
+    this.showLoading.ticks = true;
+    this.showLoading.mypaps = true;
     this.$store
       .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
-      .then(() => {});
+      .then(() => {
+        this.showLoading.mypaps = false;
+        if(this.mypapers.length == 0){
+          this.showEmpty.mypaps = true;
+        }
+      });
     this.$store
       .dispatch("paperlist/loadSubsPapers", this.$fireAuth.currentUser.uid)
-      .then(() => {});
+      .then(() => {
+        this.showLoading.ticks = false;
+        if(this.subpapers.length == 0){
+          this.showEmpty.ticks = true;
+        }
+      });
   },
 
   computed: {
