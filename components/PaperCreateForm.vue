@@ -131,14 +131,14 @@
                 label="Audience goal"
                 :disabled="!organizePresentation"
                 class="pa-0 ma-0"
-                v-model="audienceSize"
+                v-model="audienceGoal"
                 max="100"
                 min="10"
                 step="1"
               >
                 <template v-slot:append>
                   <v-text-field
-                    v-model="audienceSize"
+                    v-model="audienceGoal"
                     :disabled="!organizePresentation"
                     class="pa-0 ma-0"
                     single-line
@@ -253,7 +253,7 @@ export default {
       githublink: "",
       organizePresentation: true,
       bid: 5,
-      audienceSize: 20,
+      audienceGoal: 20,
 
       // Page essentials
       stepper: 1,
@@ -371,14 +371,14 @@ export default {
           summary: this.summary,
           githublink: this.githublink,
           organizePresentation: this.organizePresentation,
-          //audienceSize: this.audienceSize,
+          //audienceGoal: this.audienceGoal,
           //bid: this.bid,
           hasImg: this.thumbnailObj != null,
           requestPresentation: {
-            //TODO goal: this.goal
+            goal: this.audienceGoal * this.bid,
             bid: this.bid,
             currentValue: 0,
-            audienceSize: this.audienceSize,
+            audienceGoal: this.audienceGoal,
             subsIds: []
           }
         })
