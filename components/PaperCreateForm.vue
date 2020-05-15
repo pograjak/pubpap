@@ -384,7 +384,7 @@ export default {
             goal: this.audienceGoal * this.bid,
             bid: this.bid,
             currentValue: 0,
-            audienceGoal: this.audienceGoal,
+            // audienceGoal: this.audienceGoal,
             subsIds: []
           }
         })
