@@ -31,7 +31,7 @@
 
       <v-tab-item>
         <v-list>
-          <template v-for="(p, index) in mypapers">
+          <template v-for="(p, index) in mypapersSorted">
             <PaperListItem :paper="p" :key="index"/>
           </template>
         </v-list>
@@ -58,14 +58,20 @@ export default {
   computed: {
     ...mapGetters({
       mypapers: "paperlist/mypapers"
-    })
+    }),
+    mypapersSorted() {
+      var newpaps = [...this.mypapers];
+      return newpaps.sort((a,b) => {
+        return b.createdAt - a.createdAt;
+      });
+    }
   },
 
   created() {
     this.$store
       .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
       .then(() => {
-        console.log(this.mypapers);
+        
       });
   }
 };
