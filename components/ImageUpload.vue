@@ -137,7 +137,7 @@ export default {
       });
     },
     updatePreview(event) {
-      const canvas = this.cropper.getCroppedCanvas();
+      const canvas = this.cropper.getCroppedCanvas({ maxWidth: 700, maxHeight: 700 });
       this.previewCropped = canvas.toDataURL(this.inputImgType);
     },
     getImage() {
@@ -154,7 +154,7 @@ export default {
         return {
           fmt: fmt,
           img: this.cropper
-            .getCroppedCanvas({ maxWidth: 350, maxHeight: 350, imageSmoothingQuality: 'high' })
+            .getCroppedCanvas({ maxWidth: 700, maxHeight: 700, imageSmoothingQuality: 'high' })
             .toDataURL(this.inputImgType)
         };
       }
