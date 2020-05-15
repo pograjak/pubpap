@@ -24,7 +24,7 @@
                   <v-icon small="small">mdi-aspect-ratio</v-icon>
                 </v-btn>
               </template>
-              <span>Full size</span>
+              <span>Full image</span>
             </v-tooltip>
 
             <v-tooltip bottom>
@@ -129,9 +129,10 @@ export default {
     },
     setupCropperInstance() {
       this.cropper = new Cropper(this.$refs.source, {
-        scalable: false,
-        zoomable: false,
-        viewMode: 3,
+        // scalable: false,
+        // zoomable: false,
+        viewMode: 1,
+        dragMode: 'move',
         crop: this.debouncedUpdatePreview
       });
     },
@@ -153,7 +154,7 @@ export default {
         return {
           fmt: fmt,
           img: this.cropper
-            .getCroppedCanvas({ maxWidth: 320, maxHeight: 640 })
+            .getCroppedCanvas({ maxWidth: 350, maxHeight: 350 })
             .toDataURL(this.inputImgType)
         };
       }
@@ -170,8 +171,8 @@ export default {
 
 .image-preview
     display: block
-    max-width: 320px
-    max-height: 640px
+    max-width: 350px
+    max-height: 350px
 </style>
 
 <style lang="sass">
