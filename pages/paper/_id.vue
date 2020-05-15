@@ -1,6 +1,12 @@
 <template>
-  <v-container fluid>
-    <v-row>
+  <v-container fluid class="pa-0">
+    <v-row no-gutters>
+      <v-col>
+        <PaperTopBar />
+      </v-col>
+    </v-row>
+
+    <v-row no-gutters>
       <v-col>
         <PaperDetail />
       </v-col>
@@ -19,6 +25,7 @@
 </template>
 
 <script>
+import PaperTopBar from "~/components/PaperTopBar.vue"
 import PaperDetail from "~/components/PaperDetail.vue";
 import RequestPresentation from "~/components/RequestPresentation.vue";
 import ForumQuestions from "~/components/ForumQuestions.vue";
@@ -36,6 +43,7 @@ export default {
   },
 
   components: {
+    PaperTopBar,
     PaperDetail,
     RequestPresentation,
     ForumQuestions
