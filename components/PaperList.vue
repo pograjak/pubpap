@@ -24,9 +24,11 @@
       </v-tab-item>
 
       <v-tab-item>
-        <v-card flat>
-          <v-card-text>Tics</v-card-text>
-        </v-card>
+        <v-list class="py-0">
+          <template v-for="(p, index) in sortPaps(subpapers)">
+            <PaperListItem :paper="p" :key="index" />
+          </template>
+        </v-list>
       </v-tab-item>
 
       <v-tab-item>
@@ -59,11 +61,15 @@ export default {
     this.$store
       .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
       .then(() => {});
+    this.$store
+      .dispatch("paperlist/loadSubsPapers", this.$fireAuth.currentUser.uid)
+      .then(() => {});
   },
 
   computed: {
     ...mapGetters({
-      mypapers: "paperlist/mypapers"
+      mypapers: "paperlist/mypapers",
+      subpapers: "paperlist/subpapers"
     })
   },
 

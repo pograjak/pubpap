@@ -126,6 +126,12 @@ export default {
     ImageUpload
   },
 
+  computed: {
+    isAuthor() {
+      return this.$fireAuth.currentUser.uid == this.paper.authorId;
+    }
+  },
+
   methods: {
     cancelThumbDiag() {
       this.$refs.imageUploader.setupCropper(null);
@@ -146,15 +152,15 @@ export default {
           });
       } else {
         this.$store
-          .dispatch("paper/uploadThumbnail", { paperId: this.paper.id, img: imgobj.img })
+          .dispatch("paper/uploadThumbnail", {
+            paperId: this.paper.id,
+            img: imgobj.img
+          })
           .then(() => {
             this.thumbnailLoading = false;
             this.thumbnailDialog = false;
           });
       }
-    },
-    isAuthor() {
-      return this.$fireAuth.currentUser.uid == this.paper.authorId;
     }
   }
 };
