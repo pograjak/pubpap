@@ -10,7 +10,7 @@
           </div>
           <div v-else>
             <v-btn
-              :disabled="votingDisabled"
+              :disabled="votingDisabled || disable_voting"
               depressed
               :class="{'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
               icon
@@ -21,7 +21,7 @@
             <br />
             <p class="my-1">{{ votes_internal }}</p>
             <v-btn
-              :disabled="votingDisabled"
+              :disabled="votingDisabled || disable_voting"
               depressed
               :class="{'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
               icon
@@ -70,7 +70,8 @@ export default {
   },
   data() {
     return {
-      votes_internal: -999
+      votes_internal: 0,
+      disable_voting: false,
     };
   },
 
@@ -85,6 +86,7 @@ export default {
   watch: {
     votes: function(val) {
       this.votes_internal = this.votes;
+      this.disable_voting = false;
     }
   },
   methods: {
@@ -97,6 +99,10 @@ export default {
       });
     },
     upvote() {
+      if(this.disable_voting){
+        return;
+      }
+      this.disable_voting = true;
       var newState = 1;
 
       if (this.voteUserState > 0) {
@@ -111,6 +117,10 @@ export default {
       this.updateStoreVote(newState);
     },
     downvote() {
+      if(this.disable_voting){
+        return;
+      }
+      this.disable_voting = true;
       var newState = -1;
 
       if (this.voteUserState > 0) {
