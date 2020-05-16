@@ -96,7 +96,7 @@ export default {
 
   data() {
     return {
-      tab: 1,
+      tab: 0,
       showLoading: {
         favs: false,
         ticks: false,

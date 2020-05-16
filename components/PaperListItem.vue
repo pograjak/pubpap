@@ -4,7 +4,7 @@
       <v-list-item-title>{{ paper.title }}</v-list-item-title>
       <v-list-item-subtitle class="caption">Created {{ paper.createdAt.toDate() | moment('lll') }}</v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-content class="justify-end mx-2" style="max-width:150px">
+    <v-list-item-content v-if="paper.organizePresentation" class="justify-end mx-2" style="max-width:150px">
       <v-progress-linear
         rounded
         height="20"
