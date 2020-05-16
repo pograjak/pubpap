@@ -113,6 +113,7 @@ export default {
   created() {
     this.showLoading.ticks = true;
     this.showLoading.mypaps = true;
+    this.showLoading.favs = true;
     this.$store
       .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
       .then(() => {
