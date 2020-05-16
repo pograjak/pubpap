@@ -31,6 +31,17 @@ export const actions = {
     ctx.commit("loadPaper", p.data());
   },
 
+  editFavorites: async function(ctx, item) {
+    let pRef = this.$fireStore.collection("papers").doc(item.paperId);
+    var setter = null;
+    if (item.add) {
+      setter = this.$fireStoreObj.FieldValue.arrayUnion(item.userId);
+    } else {
+      setter = this.$fireStoreObj.FieldValue.arrayRemove(item.userId);
+    }
+    await pRef.update({ favs: setter });
+  },
+
   updateHasImg: async function(ctx, item) {
     let pRef = this.$fireStore.collection("papers").doc(item.paperId);
     await pRef.set({ hasImg: item.hasImg }, { merge: true });

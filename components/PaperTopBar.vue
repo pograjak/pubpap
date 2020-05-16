@@ -40,7 +40,8 @@ Vue.use(VueClipboard);
 export default {
   data() {
     return {
-      stared: true
+      stared: true,
+      clickChangeRunning: false
     };
   },
 
@@ -60,7 +61,23 @@ export default {
       this.sharePopUp("https://twitter.com/share?url=" + this.paperURL);
     },
     starClick() {
-      this.stared = !this.stared;
+      if (this.clickChangeRunning) {
+        return;
+      }
+      this.clickChangeRunning = true;
+      this.$store
+        .dispatch("paper/editFavorites", {
+          paperId: this.$route.params.id,
+          userId: this.$fireAuth.currentUser.uid,
+          add: !this.stared
+        })
+        .then(() => {
+          this.stared = !this.stared;
+          new Promise(r => setTimeout(r, 1000)).then(() => {
+            // alow changes after a delay
+            this.clickChangeRunning = false;
+          });
+        });
     }
   }
 };
