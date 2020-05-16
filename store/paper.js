@@ -47,9 +47,12 @@ export const actions = {
   loadImgUrl: async function(ctx, paperId) {
     const imgName = "paper_thumbnails/" + paperId;
     let url;
+    let meta;
     url = await this.$fireStorage.ref(imgName).getDownloadURL();
+    meta = await this.$fireStorage.ref(imgName).getMetadata();
 
     ctx.commit("setImgUrl", url);
+    return {url: url, meta: meta};
   },
 
   editFavorites: async function({ commit, state }, paperId) {

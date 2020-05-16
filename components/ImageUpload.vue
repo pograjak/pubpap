@@ -11,6 +11,16 @@
       @change="setupCropper"
     ></v-file-input>
     <v-container class="py-0">
+      <v-row v-if="showLoading">
+        <v-col>
+          <LoadingSpinner />
+        </v-col>
+      </v-row>
+      <v-row v-else-if="showEmpty">
+        <v-col>
+          <p class="text-center caption"><v-icon>mdi-image-off-outline</v-icon> No thumbnail.</p>
+        </v-col>
+      </v-row>
       <v-row v-if="objectUrl">
         <v-col class="text-center" cols="12" md="6">
           <div class="caption">Original</div>
@@ -71,8 +81,13 @@
 <script>
 import Cropper from "cropperjs";
 import debounce from "lodash/debounce";
+import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 export default {
+  components: {
+    LoadingSpinner
+  },
+
   data() {
     return {
       cropper: null,
@@ -80,11 +95,48 @@ export default {
       previewCropped: null,
       selectedFile: null,
       inputImgType: null,
-      debouncedUpdatePreview: debounce(this.updatePreview, 257)
+      debouncedUpdatePreview: debounce(this.updatePreview, 257),
+      showLoading: false,
+      showEmpty: true
     };
   },
 
+  props: {
+    paperId: String
+  },
+
+  created() {
+    this.reloadRemoteImg();
+  },
+
   methods: {
+    reloadRemoteImg() {
+      if (this.paperId) {
+        // Load the thumbnail
+        this.showLoading = true;
+        this.$store
+          .dispatch("paper/loadImgUrl", this.paperId)
+          .then(imgObj => {
+            // console.log(imgObj);
+            this.$emit("selected");
+            this.$emit("loadedRemote");
+            this.inputImgType = imgObj.meta.contentType;
+            this.objectUrl = imgObj.url;
+            this.showLoading = false;
+            this.showEmpty = false;
+            this.$nextTick(this.setupCropperInstance);
+          })
+          .catch(err => {
+            console.log(err);
+            if (err.code_ != "storage/object-not-found") {
+              throw err;
+            }else{
+              this.showLoading = false;
+              this.showEmpty = true;
+            }
+          });
+      }
+    },
     resetCropper() {
       this.cropper.reset();
     },
@@ -118,11 +170,13 @@ export default {
         this.cropper = null;
         this.objectUrl = null;
         this.previewCropped = null;
+        this.showEmpty = true;
         this.$emit("canceled");
         return;
       }
 
       this.$emit("selected");
+      this.showEmpty = false;
       this.inputImgType = selectedFile.type;
       this.objectUrl = window.URL.createObjectURL(selectedFile);
       this.$nextTick(this.setupCropperInstance);
@@ -132,12 +186,15 @@ export default {
         // scalable: false,
         // zoomable: false,
         viewMode: 1,
-        dragMode: 'move',
+        dragMode: "move",
         crop: this.debouncedUpdatePreview
       });
     },
     updatePreview(event) {
-      const canvas = this.cropper.getCroppedCanvas({ maxWidth: 700, maxHeight: 700 });
+      const canvas = this.cropper.getCroppedCanvas({
+        maxWidth: 700,
+        maxHeight: 700
+      });
       this.previewCropped = canvas.toDataURL(this.inputImgType);
     },
     getImage() {
@@ -154,7 +211,11 @@ export default {
         return {
           fmt: fmt,
           img: this.cropper
-            .getCroppedCanvas({ maxWidth: 700, maxHeight: 700, imageSmoothingQuality: 'high' })
+            .getCroppedCanvas({
+              maxWidth: 700,
+              maxHeight: 700,
+              imageSmoothingQuality: "high"
+            })
             .toDataURL(this.inputImgType)
         };
       }
@@ -167,12 +228,12 @@ export default {
 
 <style lang="sass" scoped>
 .image-container
-    display: inline-block
+  display: inline-block
 
 .image-preview
-    display: block
-    max-width: 350px
-    max-height: 350px
+  display: block
+  max-width: 350px
+  max-height: 350px
 </style>
 
 <style lang="sass">

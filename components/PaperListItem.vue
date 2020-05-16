@@ -26,7 +26,7 @@
             icon
             large
             v-on="on"
-            @click.prevent="thumbnailDialog = true"
+            @click.prevent="openThumbDiag"
             @mousedown.stop
             @touchstart.native.stop
           >
@@ -85,18 +85,27 @@
         <div class="px-6">
           <ImageUpload
             ref="imageUploader"
-            @selected="imguploadBtnText = 'Upload'"
-            @canceled="imguploadBtnText = 'Delete current'"
+            :paperId="paper.id"
+            @selected="thumbnailDiagDisable.upload = false"
+            @canceled="thumbnailDiagDisable.upload = true"
+            @loadedRemote="thumbnailDiagDisable.delete = false"
           />
         </div>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="cancelThumbDiag">Cancel</v-btn>
           <v-btn
+            text
+            :loading="thumbnailDiagLoading.delete"
+            :disabled="thumbnailDiagDisable.delete"
+            @click="deleteThumbDiag"
+          >Delete current</v-btn>
+          <v-btn
             color="primary"
-            :loading="thumbnailLoading"
-            @click="submitThumbDiag"
-          >{{ imguploadBtnText }}</v-btn>
+            :disabled="thumbnailDiagDisable.upload"
+            :loading="thumbnailDiagLoading.upload"
+            @click="uploadThumbDiag"
+          >Upload</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -117,8 +126,14 @@ export default {
     return {
       deleteDialog: false,
       thumbnailDialog: false,
-      thumbnailLoading: false,
-      imguploadBtnText: "Delete current"
+      thumbnailDiagLoading: {
+        upload: false,
+        delete: false
+      },
+      thumbnailDiagDisable: {
+        upload: true,
+        delete: true
+      }
     };
   },
 
@@ -133,34 +148,43 @@ export default {
   },
 
   methods: {
+    openThumbDiag() {
+      this.thumbnailDialog = true;
+      this.thumbnailDiagDisable.upload = true;
+      this.thumbnailDiagDisable.delete = true;
+      if (this.$refs.imageUploader) {
+        this.$refs.imageUploader.reloadRemoteImg();
+      }
+    },
     cancelThumbDiag() {
       this.$refs.imageUploader.setupCropper(null);
       this.thumbnailDialog = false;
     },
-    submitThumbDiag() {
-      this.thumbnailLoading = true;
+    deleteThumbDiag() {
+      this.thumbnailDiagLoading.delete = true;
+      this.$store.dispatch("paper/deleteThumbnail", this.paper.id).then(() => {
+        this.thumbnailDiagLoading.delete = false;
+        // this.thumbnailDiagDisable.delete = true;
+        this.thumbnailDialog = false;
+        this.$refs.imageUploader.setupCropper(null);
+      });
+    },
+    uploadThumbDiag() {
+      this.thumbnailDiagLoading.upload = true;
 
       // Retrieve image
       const imgobj = this.$refs.imageUploader.getImage();
 
-      if (imgobj == null) {
-        this.$store
-          .dispatch("paper/deleteThumbnail", this.paper.id)
-          .then(() => {
-            this.thumbnailLoading = false;
-            this.thumbnailDialog = false;
-          });
-      } else {
-        this.$store
-          .dispatch("paper/uploadThumbnail", {
-            paperId: this.paper.id,
-            img: imgobj.img
-          })
-          .then(() => {
-            this.thumbnailLoading = false;
-            this.thumbnailDialog = false;
-          });
-      }
+      this.$store
+        .dispatch("paper/uploadThumbnail", {
+          paperId: this.paper.id,
+          img: imgobj.img
+        })
+        .then(() => {
+          this.thumbnailDiagLoading.upload = false;
+          this.thumbnailDialog = false;
+          this.$refs.imageUploader.setupCropper(null);
+        });
     }
   }
 };
