@@ -379,6 +379,7 @@ export default {
           organizePresentation: this.organizePresentation,
           //audienceGoal: this.audienceGoal,
           //bid: this.bid,
+          favs: [],
           hasImg: this.thumbnailObj != null,
           requestPresentation: {
             goal: this.audienceGoal * this.bid,

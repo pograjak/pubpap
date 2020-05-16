@@ -2,7 +2,7 @@
   <div class="d-flex justify-end">
     <v-tooltip bottom v-if="loggedin">
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="starClick">
+        <v-btn v-on="on" icon @click="starClick" :disabled="clickChangeRunning">
           <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
           <v-icon v-else class="nostar">mdi-star-outline</v-icon>
         </v-btn>
@@ -34,24 +34,32 @@
 <script>
 import Vue from "vue";
 import VueClipboard from "vue-clipboard2";
+import { mapGetters } from "vuex";
 
 Vue.use(VueClipboard);
 
 export default {
   data() {
     return {
-      stared: true,
       clickChangeRunning: false
     };
   },
 
   computed: {
+    ...mapGetters({
+      paper: "paper/paper"
+    }),
     paperURL() {
       // TODO: change this to correct address
       return `https://pubpap.com/paper/${this.$route.params.id}`;
     },
     loggedin() {
       return this.$fireAuth.currentUser != null;
+    },
+    stared() {
+      if (this.loggedin && Array.isArray(this.paper.favs)) {
+        return this.paper.favs.includes(this.$fireAuth.currentUser.uid);
+      }
     }
   },
 
@@ -69,14 +77,9 @@ export default {
       }
       this.clickChangeRunning = true;
       this.$store
-        .dispatch("paper/editFavorites", {
-          paperId: this.$route.params.id,
-          userId: this.$fireAuth.currentUser.uid,
-          add: !this.stared
-        })
+        .dispatch("paper/editFavorites", this.$route.params.id)
         .then(() => {
-          this.stared = !this.stared;
-          new Promise(r => setTimeout(r, 1000)).then(() => {
+          new Promise(r => setTimeout(r, 200)).then(() => {
             // alow changes after a delay
             this.clickChangeRunning = false;
           });

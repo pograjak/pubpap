@@ -6,18 +6,26 @@ export const state = () => ({
 
 export const getters = {
   paper: state => state.paper,
-  requestPresentation: state => state.paper.requestPresentation
+  requestPresentation: state => state.paper.requestPresentation,
 };
 
 export const mutations = {
   loadPaper: function(state, paper) {
     // console.log(paper);
     state.paper = paper;
+  },
+  addUserToFav: function(state, uid){
+    state.paper.favs.push(uid);
+  },
+  rmUserFromFav: function(state, uid){
+    state.paper.favs = state.paper.favs.filter(function(e){ return e != uid });
   }
+
 };
 
 export const actions = {
   loadPaper: async function(ctx, paperId) {
+    console.log("LOAD PAPER DISPATCH");
     let p;
     try {
       let pRef = this.$fireStore.collection("papers").doc(paperId);
@@ -31,15 +39,27 @@ export const actions = {
     ctx.commit("loadPaper", p.data());
   },
 
-  editFavorites: async function(ctx, item) {
-    let pRef = this.$fireStore.collection("papers").doc(item.paperId);
-    var setter = null;
-    if (item.add) {
-      setter = this.$fireStoreObj.FieldValue.arrayUnion(item.userId);
+  editFavorites: async function({commit, state}, paperId) {
+    let pRef = this.$fireStore.collection("papers").doc(paperId);
+    const uid = this.$fireAuth.currentUser.uid;
+
+    var added = false;
+    var setter = this.$fireStoreObj.FieldValue;
+    if (state.paper.favs.includes(uid)) {
+      setter = setter.arrayRemove(uid);
     } else {
-      setter = this.$fireStoreObj.FieldValue.arrayRemove(item.userId);
+      setter = setter.arrayUnion(uid);
+      added = true;
     }
+    // store the change on Firestore
     await pRef.update({ favs: setter });
+    
+    // commit locally
+    if(added){
+      commit("addUserToFav", uid);
+    }else{
+      commit("rmUserFromFav", uid);
+    }
   },
 
   updateHasImg: async function(ctx, item) {
