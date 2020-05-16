@@ -3,13 +3,12 @@
     <v-tooltip bottom>
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon @click="starClick">
-          51
-          <v-icon v-if="stared" class="yestar">mdi-star</v-icon>
-          <v-icon v-else>mdi-star-outline</v-icon>
+          <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
+          <v-icon v-else class="nostar">mdi-star-outline</v-icon>
         </v-btn>
       </template>
-      <span v-if="stared" class="caption">Add to favorites</span>
-      <span v-else class="caption">Remove from favorites</span>
+      <span v-if="stared" class="caption">Remove from favorites</span>
+      <span v-else class="caption">Add to favorites</span>
     </v-tooltip>
 
     <v-tooltip bottom>
@@ -69,6 +68,43 @@ export default {
 
 <style scoped>
 .yestar {
-  color: #3f51b5 !important;
+  animation: pulseStar 500ms ease-in-out;
+  z-index: 50;
+}
+@keyframes pulseStar {
+  0% {
+    color: #777777;
+    transform: scale(1);
+  }
+  50% {
+    color: #f1cf0c;
+    transform: scale(2);
+  }
+  100% {
+    color: #f1cf0c;
+    transform: scale(1);
+  }
+}
+
+.nostar {
+  animation: pulseUnstar 500ms ease-in-out 50ms;
+  z-index: 50;
+}
+
+@keyframes pulseUnstar {
+  0% {
+    color: #f1cf0c;
+    transform: scale(1);
+  }
+
+  50% {
+    color: #777777;
+    transform: scale(0.8);
+  }
+
+  100% {
+    color: #777777;
+    transform: scale(1);
+  }
 }
 </style>
