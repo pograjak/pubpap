@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-end">
-    <v-tooltip bottom>
+    <v-tooltip bottom v-if="loggedin">
       <template v-slot:activator="{ on }">
         <v-btn v-on="on" icon @click="starClick">
           <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
@@ -49,6 +49,9 @@ export default {
     paperURL() {
       // TODO: change this to correct address
       return `https://pubpap.com/paper/${this.$route.params.id}`;
+    },
+    loggedin() {
+      return this.$fireAuth.currentUser != null;
     }
   },
 
