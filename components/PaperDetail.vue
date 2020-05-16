@@ -7,7 +7,7 @@
           <v-card-subtitle>{{ paper.authors }}</v-card-subtitle>
         </v-col>
       </v-row>
-      <v-row v-if="paper.hasImg & !images.loadingErr" no-gutters>
+      <v-row v-if="showImage" no-gutters>
         <v-col class="d-md-flex justify-space-between">
           <div>
             <v-card-text class="pt-0">{{ paper.summary }}</v-card-text>
@@ -17,7 +17,7 @@
               contain
               max-width="350px"
               max-height="500px"
-              :src="images.paper"
+              :src="imgUrl"
               style="margin: 0 auto"
             >
               <template v-slot:placeholder>
@@ -44,9 +44,30 @@
       <v-row no-gutters>
         <v-col>
           <v-card-actions class="px-4 py-0">
-            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none my-2" :href="paper.arxLink" target="_blank">arXiv</v-btn>
-            <v-btn v-if="paper.arxLink != ''" depressed color="#b31b1b" class="white--text text-none my-2" :href="arxivPDF" target="_blank">arXiv PDF</v-btn>
-            <v-btn v-if="paper.githublink != ''" depressed color="#24292e" class="white--text my-2" :href="paper.githublink" target="_blank">
+            <v-btn
+              v-if="paper.arxLink != ''"
+              depressed
+              color="#b31b1b"
+              class="white--text text-none my-2"
+              :href="paper.arxLink"
+              target="_blank"
+            >arXiv</v-btn>
+            <v-btn
+              v-if="paper.arxLink != ''"
+              depressed
+              color="#b31b1b"
+              class="white--text text-none my-2"
+              :href="arxivPDF"
+              target="_blank"
+            >arXiv PDF</v-btn>
+            <v-btn
+              v-if="paper.githublink != ''"
+              depressed
+              color="#24292e"
+              class="white--text my-2"
+              :href="paper.githublink"
+              target="_blank"
+            >
               <v-icon>mdi-github</v-icon>
             </v-btn>
           </v-card-actions>
@@ -62,45 +83,33 @@ import { mapGetters } from "vuex";
 export default {
   data() {
     return {
-      images: {
-        loadingErr: false,
-        paper: ""
-      }
+      showImage: true
     };
   },
 
   created() {
-    if (this.$route.params.id) {
+    if (this.paper.hasImg) {
+      // load image if the paper has it
       this.$store
-        .dispatch("paper/loadPaper", this.$route.params.id)
-        .then(() => {
-          if (this.paper.hasImg) {
-            // load image if the paper has it
-            const imgName = "paper_thumbnails/" + this.$route.params.id;
-            this.$fireStorage
-              .ref(imgName)
-              .getDownloadURL()
-              .then(url => {
-                this.images.paper = url;
-                console.log(url);
-              })
-              .catch(err => {
-                console.log("Error loading image.");
-                this.images.loadingErr = true;
-                throw err;
-              });
-          }
+        .dispatch("paper/loadImgUrl", this.$route.params.id)
+        .catch(err => {
+          console.log("Error loading image.");
+          this.showImage = false;
+          throw err;
         });
+    } else {
+      this.showImage = false;
     }
   },
 
   computed: {
     ...mapGetters({
-      paper: "paper/paper"
+      paper: "paper/paper",
+      imgUrl: "paper/imgUrl"
     }),
-    arxivPDF(){
+    arxivPDF() {
       const paperId = /[^/]*$/.exec(this.paper.arxLink)[0];
-      return `https://arxiv.org/pdf/${paperId}`
+      return `https://arxiv.org/pdf/${paperId}`;
     }
   }
 };

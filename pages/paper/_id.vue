@@ -25,21 +25,15 @@
 </template>
 
 <script>
-import PaperTopBar from "~/components/PaperTopBar.vue"
+import PaperTopBar from "~/components/PaperTopBar.vue";
 import PaperDetail from "~/components/PaperDetail.vue";
 import RequestPresentation from "~/components/RequestPresentation.vue";
 import ForumQuestions from "~/components/ForumQuestions.vue";
 import Vue from "vue";
 
-
 export default {
-  async validate({ params, store }) {
-    try {
-      let resp = await store.dispatch("paper/loadPaper", params.id);
-    } catch (error) {
-      return false;
-    }
-    return true;
+  validate({ params, store }) {
+    return store.dispatch("paper/loadPaper", params.id);
   },
 
   components: {

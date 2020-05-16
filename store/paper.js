@@ -1,12 +1,14 @@
 import { firestoreAction } from "vuexfire";
 
 export const state = () => ({
-  paper: {}
+  paper: {},
+  imgUrl: ""
 });
 
 export const getters = {
   paper: state => state.paper,
-  requestPresentation: state => state.paper.requestPresentation,
+  imgUrl: state => state.imgUrl,
+  requestPresentation: state => state.paper.requestPresentation
 };
 
 export const mutations = {
@@ -14,32 +16,43 @@ export const mutations = {
     // console.log(paper);
     state.paper = paper;
   },
-  addUserToFav: function(state, uid){
+  setImgUrl: function(state, url) {
+    state.imgUrl = url;
+  },
+  addUserToFav: function(state, uid) {
     state.paper.favs.push(uid);
   },
-  rmUserFromFav: function(state, uid){
-    state.paper.favs = state.paper.favs.filter(function(e){ return e != uid });
+  rmUserFromFav: function(state, uid) {
+    state.paper.favs = state.paper.favs.filter(function(e) {
+      return e != uid;
+    });
   }
-
 };
 
 export const actions = {
   loadPaper: async function(ctx, paperId) {
-    console.log("LOAD PAPER DISPATCH");
+    console.log("LOAD PAPER DISPATCHED");
     let p;
-    try {
-      let pRef = this.$fireStore.collection("papers").doc(paperId);
-      p = await pRef.get();
-      if (!p.exists) {
-        throw "paper does not exist";
-      }
-    } catch (error) {
-      throw error;
+
+    let pRef = this.$fireStore.collection("papers").doc(paperId);
+    p = await pRef.get();
+    if (!p.exists) {
+      return false;
     }
+
     ctx.commit("loadPaper", p.data());
+    return true; // HAS TO RETURN TRUE for nuxt validate in pages/paper/_id.vue
   },
 
-  editFavorites: async function({commit, state}, paperId) {
+  loadImgUrl: async function(ctx, paperId) {
+    const imgName = "paper_thumbnails/" + paperId;
+    let url;
+    url = await this.$fireStorage.ref(imgName).getDownloadURL();
+
+    ctx.commit("setImgUrl", url);
+  },
+
+  editFavorites: async function({ commit, state }, paperId) {
     let pRef = this.$fireStore.collection("papers").doc(paperId);
     const uid = this.$fireAuth.currentUser.uid;
 
@@ -53,11 +66,11 @@ export const actions = {
     }
     // store the change on Firestore
     await pRef.update({ favs: setter });
-    
+
     // commit locally
-    if(added){
+    if (added) {
       commit("addUserToFav", uid);
-    }else{
+    } else {
       commit("rmUserFromFav", uid);
     }
   },
