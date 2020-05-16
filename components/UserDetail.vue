@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title>Tomas Novak @ CMP Prague</v-card-title>
-    <v-card-subtitle>{{ user.email }}</v-card-subtitle>
+    <v-card-title>{{ displayNameDb }}</v-card-title>
+    <v-card-subtitle>{{this.$fireAuth.currentUser.email }}</v-card-subtitle>
     <v-card-actions class="px-4 pb-4">
       <v-btn @click="openDiag" color="primary">Change name</v-btn>
     </v-card-actions>
@@ -24,7 +24,12 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn text @click="diag.active = false">Cancel</v-btn>
-            <v-btn color="primary" :disabled="!valid" :loading="diag.loading" @click="submitChange">Submit</v-btn>
+            <v-btn
+              color="primary"
+              :disabled="!valid"
+              :loading="diag.loading"
+              @click="submitChange"
+            >Submit</v-btn>
           </v-card-actions>
         </v-form>
       </v-card>
@@ -40,7 +45,7 @@
 import { mapGetters } from "vuex";
 
 export default {
-  middleware: "auth",
+  // middleware: "auth",
 
   data() {
     return {
@@ -63,22 +68,61 @@ export default {
   },
 
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters({
+      name_get: "userinfo/name",
+      affil_get: "userinfo/affil"
+    }),
     displayName() {
-      if (this.affil.length > 0) {
-        return `${this.name} @ ${this.affil}`;
-      } else {
-        return this.name;
-      }
+      return this.makeDispName(this.name, this.affil);
+    },
+    displayNameDb() {
+      return this.makeDispName(this.name_get, this.affil_get);
+    }
+  },
+
+  created() {
+    this.$store.dispatch(
+      "userinfo/loadUserInfo",
+      this.$fireAuth.currentUser.uid
+    );
+  },
+
+  watch: {
+    name_get: function(val) {
+      this.name = val;
+    },
+    affil_get: function(val) {
+      this.affil = val;
     }
   },
 
   methods: {
-    openDiag(){
+    openDiag() {
       this.diag.active = true;
     },
     submitChange() {
-      this.diag.active = false;
+      if (!this.name) {
+        return;
+      }
+
+      this.diag.loading = true;
+      this.$store
+        .dispatch("userinfo/setUserInfo", {
+          userId: this.$fireAuth.currentUser.uid,
+          name: this.name,
+          affil: this.affil
+        })
+        .then(() => {
+          this.diag.loading = false;
+          this.diag.active = false;
+        });
+    },
+    makeDispName(name, affil) {
+      if (affil) {
+        return `${name} @ ${affil}`;
+      } else {
+        return name;
+      }
     }
   }
 };
