@@ -18,9 +18,24 @@
 
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <v-card flat>
-          <v-card-text>Favs</v-card-text>
-        </v-card>
+        <v-list class="py-0">
+          <!-- Loading spinner -->
+          <v-list-item two-line v-if="showLoading.favs">
+            <v-list-item-content>
+              <LoadingSpinner />
+            </v-list-item-content>
+          </v-list-item>
+          <!-- Empty placeholder -->
+          <v-list-item two-line v-if="showEmpty.favs">
+            <v-list-item-content>
+              <v-list-item-title class="text-center">No favorite papers <v-icon>mdi-star-off</v-icon></v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+
+          <template v-for="(p, index) in sortPaps(favpapers)">
+            <PaperListItem :paper="p" :key="index" />
+          </template>
+        </v-list>
       </v-tab-item>
 
       <v-tab-item>
@@ -114,12 +129,21 @@ export default {
           this.showEmpty.ticks = true;
         }
       });
+    this.$store
+      .dispatch("paperlist/loadFavPapers", this.$fireAuth.currentUser.uid)
+      .then(() => {
+        this.showLoading.favs = false;
+        if(this.favpapers.length == 0){
+          this.showEmpty.favs = true;
+        }
+      });
   },
 
   computed: {
     ...mapGetters({
       mypapers: "paperlist/mypapers",
-      subpapers: "paperlist/subpapers"
+      subpapers: "paperlist/subpapers",
+      favpapers: "paperlist/favpapers"
     })
   },
 
