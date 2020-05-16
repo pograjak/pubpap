@@ -2,11 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col>
-        <v-card>
-          <v-card-text>
-            <UserDetail />
-          </v-card-text>
-        </v-card>
+        <UserDetail />
       </v-col>
     </v-row>
     <br />
