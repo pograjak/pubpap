@@ -18,7 +18,7 @@
       </v-col>
 
       <v-col>
-        <ForumQuestions />
+        <ThreadsMain />
       </v-col>
     </v-row>
   </v-container>
@@ -28,7 +28,7 @@
 import PaperTopBar from "~/components/PaperTopBar.vue";
 import PaperDetail from "~/components/PaperDetail.vue";
 import RequestPresentation from "~/components/RequestPresentation.vue";
-import ForumQuestions from "~/components/ForumQuestions.vue";
+import ThreadsMain from "~/components/ThreadsMain.vue";
 import Vue from "vue";
 
 export default {
@@ -40,7 +40,7 @@ export default {
     PaperTopBar,
     PaperDetail,
     RequestPresentation,
-    ForumQuestions
+    ThreadsMain
   }
 };
 </script>
