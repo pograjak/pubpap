@@ -75,7 +75,7 @@
           </v-list-item>
 
           <template v-for="(p, index) in sortPaps(mypapers)">
-            <PaperListItem :paper="p" :key="index" />
+            <PaperListItem showEditIcons :paper="p" :key="index" />
           </template>
         </v-list>
       </v-tab-item>

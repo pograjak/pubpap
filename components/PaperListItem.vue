@@ -19,7 +19,7 @@
         </span>
       </v-progress-linear>
     </v-list-item-content>
-    <v-list-item-action class="d-inline" v-if="isAuthor">
+    <v-list-item-action class="d-inline" v-if="isAuthor && showEditIcons">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn
@@ -119,7 +119,8 @@ Vue.use(require("vue-moment"));
 
 export default {
   props: {
-    paper: Object
+    paper: Object,
+    showEditIcons: Boolean
   },
 
   data() {
