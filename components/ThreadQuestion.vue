@@ -10,9 +10,9 @@
           </div>
           <div v-else>
             <v-btn
-              :disabled="votingDisabled || votingPause"
+              :disabled="votingDisabled"
               depressed
-              :class="{'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
+              :class="{'disable-events': votingPause, 'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
               icon
               @click="upvote"
             >
@@ -21,9 +21,9 @@
             <br />
             <p class="my-1">{{ votes_internal }}</p>
             <v-btn
-              :disabled="votingDisabled || votingPause"
+              :disabled="votingDisabled"
               depressed
-              :class="{'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
+              :class="{'disable-events': votingPause, 'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
               icon
               @click="downvote"
             >
@@ -157,5 +157,8 @@ export default {
 }
 .novotecol {
   color: #b4b4b4 !important;
+}
+.disable-events {
+  pointer-events: none
 }
 </style>

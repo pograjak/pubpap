@@ -2,7 +2,7 @@
   <div class="d-flex justify-end">
     <v-tooltip bottom v-if="loggedin">
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on" icon @click="starClick" :disabled="clickChangeRunning">
+        <v-btn v-on="on" icon @click="starClick" :class="{'disable-events': clickChangeRunning}">
           <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
           <v-icon v-else class="nostar">mdi-star-outline</v-icon>
         </v-btn>
@@ -79,7 +79,7 @@ export default {
       this.$store
         .dispatch("paper/editFavorites", this.$route.params.id)
         .then(() => {
-          new Promise(r => setTimeout(r, 200)).then(() => {
+          new Promise(r => setTimeout(r, 500)).then(() => {
             // alow changes after a delay
             this.clickChangeRunning = false;
           });
@@ -129,5 +129,8 @@ export default {
     color: #777777;
     transform: scale(1);
   }
+}
+.disable-events {
+  pointer-events: none
 }
 </style>
