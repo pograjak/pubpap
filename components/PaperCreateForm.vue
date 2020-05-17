@@ -370,6 +370,7 @@ export default {
         .collection("papers")
         .add({
           authorId: this.$fireAuth.currentUser.uid,
+          authorName: this.$fireAuth.currentUser.displayName,
           createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
           title: this.title,
           authors: this.authors,
