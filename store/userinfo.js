@@ -24,7 +24,7 @@ export const actions = {
     if (!p.exists) {
       return false;
     }
-    console.log(p.data());
+    // console.log(p.data());
 
     ctx.commit("loadUserInfo", p.data());
     return true;

@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title>{{ displayNameDb }}</v-card-title>
+    <v-card-title>{{ this.$fireAuth.currentUser.displayName }}</v-card-title>
     <v-card-subtitle>{{this.$fireAuth.currentUser.email }}</v-card-subtitle>
     <v-card-actions class="px-4 pb-4">
       <v-btn @click="openDiag" color="primary">Change name</v-btn>
@@ -11,14 +11,19 @@
         <v-card-title>Change name</v-card-title>
         <v-form ref="form" v-model="valid" lazy-validation>
           <v-card-text>
-            <v-text-field :rules="nameRules" label="Name" placeholder="Mary Smith" v-model="name"></v-text-field>
+            <v-text-field
+              :rules="nameRules"
+              label="Name"
+              placeholder="Mary Smith"
+              v-model="name_diag"
+            ></v-text-field>
             <v-text-field
               :rules="affilRules"
               label="Affiliation"
               placeholder="CMP, Prague"
-              v-model="affil"
+              v-model="affil_diag"
             ></v-text-field>
-            <p class="text-center subtitle-1">Name: {{ displayName }}</p>
+            <p class="text-center subtitle-1">Name: {{ makeDispName(name_diag, affil_diag) }}</p>
           </v-card-text>
 
           <v-card-actions>
@@ -54,8 +59,8 @@ export default {
         loading: false
       },
       valid: false,
-      name: "",
-      affil: "",
+      name_diag: "",
+      affil_diag: "",
       nameRules: [
         v => !!v || "Name is required",
         v => (v && v.length <= 40) || "Name must be less than 40 characters"
@@ -69,15 +74,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      name_get: "userinfo/name",
-      affil_get: "userinfo/affil"
+      name: "userinfo/name",
+      affil: "userinfo/affil"
     }),
-    displayName() {
-      return this.makeDispName(this.name, this.affil);
-    },
-    displayNameDb() {
-      return this.makeDispName(this.name_get, this.affil_get);
-    }
   },
 
   created() {
@@ -87,35 +86,33 @@ export default {
     );
   },
 
-  watch: {
-    name_get: function(val) {
-      this.name = val;
-    },
-    affil_get: function(val) {
-      this.affil = val;
-    }
-  },
-
   methods: {
     openDiag() {
+      if (this.name) {        
+        this.name_diag = this.name;
+        this.affil_diag = this.affil;
+      }
       this.diag.active = true;
     },
-    submitChange() {
-      if (!this.name) {
+    async submitChange() {
+      if (!this.$refs.form.validate()) {
         return;
       }
 
       this.diag.loading = true;
-      this.$store
-        .dispatch("userinfo/setUserInfo", {
-          userId: this.$fireAuth.currentUser.uid,
-          name: this.name,
-          affil: this.affil
-        })
-        .then(() => {
-          this.diag.loading = false;
-          this.diag.active = false;
-        });
+
+      await this.$fireAuth.currentUser.updateProfile({
+        displayName: this.makeDispName(this.name_diag, this.affil_diag)
+      });
+
+      await this.$store.dispatch("userinfo/setUserInfo", {
+        userId: this.$fireAuth.currentUser.uid,
+        name: this.name_diag,
+        affil: this.affil_diag
+      });
+
+      this.diag.loading = false;
+      this.diag.active = false;
     },
     makeDispName(name, affil) {
       if (affil) {
