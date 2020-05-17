@@ -7,9 +7,7 @@
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
         <v-col>
-          <p
-            class="text-right pa-0 ma-0 caption grey--text text--darken-1"
-          >{{ get_deco_username() }}</p>
+          <p class="text-right pa-0 ma-0 caption grey--text text--darken-1">{{ decoratedUsername }}</p>
         </v-col>
       </v-row>
 
@@ -38,7 +36,11 @@
       <!-- Textarea -->
       <v-row no-gutters>
         <v-col>
-          <p v-if="textEmptyError" style="margin-top: -20px !important" class="error--text caption ma-0 pa-0">Add text</p>
+          <p
+            v-if="textEmptyError"
+            style="margin-top: -20px !important"
+            class="error--text caption ma-0 pa-0"
+          >Add text</p>
           <div style="position: relative">
             <div :style="{visibility: isDisabled ? 'hidden' : 'visible'}" class="markdown-body">
               <textarea :id="'textarea_'+this._uid"></textarea>
@@ -72,10 +74,7 @@
         <v-col class="text-right pt-2">
           <v-btn
             v-if="showCancelButton"
-            :class="{
-              'primary': isDisabled,
-              'secondary': !isDisabled
-            }"
+            text
             @click="cancel_click"
           >Cancel</v-btn>
           <v-btn
@@ -106,7 +105,6 @@ import "~/assets/own-github-markdown.css";
 export default {
   props: {
     title: String,
-    user: Object,
     isDisabled: Boolean,
     showTitleField: Boolean,
     showCancelButton: Boolean,
@@ -217,6 +215,16 @@ export default {
     });
   },
 
+  computed: {
+    decoratedUsername() {
+      if (this.$fireAuth.currentUser) {
+        return `Submitting as ${this.$fireAuth.currentUser.displayName}`;
+      } else {
+        return "Not logged in";
+      }
+    }
+  },
+
   methods: {
     cancel_click() {
       this.$emit("cancel");
@@ -245,13 +253,6 @@ export default {
     clear() {
       this.titleValue = "";
       this.easyMDE.value("");
-    },
-    get_deco_username() {
-      if (this.user.email == "") {
-        return "Not logged in";
-      } else {
-        return `Submitting as ${this.user.email}`;
-      }
     }
   }
 };

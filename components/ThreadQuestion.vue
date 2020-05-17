@@ -10,7 +10,7 @@
           </div>
           <div v-else>
             <v-btn
-              :disabled="votingDisabled || disable_voting"
+              :disabled="votingDisabled || votingPause"
               depressed
               :class="{'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
               icon
@@ -21,7 +21,7 @@
             <br />
             <p class="my-1">{{ votes_internal }}</p>
             <v-btn
-              :disabled="votingDisabled || disable_voting"
+              :disabled="votingDisabled || votingPause"
               depressed
               :class="{'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
               icon
@@ -71,22 +71,18 @@ export default {
   data() {
     return {
       votes_internal: 0,
-      disable_voting: false,
+      votingPause: false,
     };
   },
 
   created: function() {
     this.votes_internal = this.votes;
   },
-
-  computed: {
-    ...mapGetters(["user"])
-  },
-
+  
   watch: {
     votes: function(val) {
       this.votes_internal = this.votes;
-      this.disable_voting = false;
+      this.votingPause = false;
     }
   },
   methods: {
@@ -94,15 +90,15 @@ export default {
       this.$store.dispatch("threads/vote", {
         paperId: this.$route.params.id,
         threadId: this.threadId,
-        userId: this.user.id,
+        userId: this.$fireAuth.currentUser.uid,
         state: newState
       });
     },
     upvote() {
-      if(this.disable_voting){
+      if(this.votingPause){
         return;
       }
-      this.disable_voting = true;
+      this.votingPause = true;
       var newState = 1;
 
       if (this.voteUserState > 0) {
@@ -117,10 +113,10 @@ export default {
       this.updateStoreVote(newState);
     },
     downvote() {
-      if(this.disable_voting){
+      if(this.votingPause){
         return;
       }
-      this.disable_voting = true;
+      this.votingPause = true;
       var newState = -1;
 
       if (this.voteUserState > 0) {

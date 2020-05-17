@@ -52,7 +52,7 @@
                 :name="thread.userName"
                 :voteUserState="voteState"
                 :votes="thread.votes"
-                :votingDisabled="user.id == ''"
+                :votingDisabled="!this.$fireAuth.currentUser"
                 :votesShowLoading="votesShowLoading"
               />
 
@@ -75,8 +75,7 @@
               <ThreadTextarea
                 class="mt-8"
                 title="Add Comment"
-                :user="user"
-                :isDisabled="user.id == ''"
+                :isDisabled="!this.$fireAuth.currentUser"
                 @submit="textarea_sumbit"
                 disabledPlaceholder="Log in to add comments."
                 ref="threadTextarea"
@@ -127,8 +126,6 @@ export default {
       replies: "threads/replies"
     }),
 
-    ...mapGetters(["user"]),
-
     highlightingClasses: function() {
       return {
         success: this.thread.votes > 5,
@@ -172,14 +169,14 @@ export default {
       });
 
       // Load voting state
-      if (this.user.id != "") {
+      if (this.$fireAuth.currentUser) {
         this.votesShowLoading = true;
 
         this.$store
           .dispatch("threads/bindVoteState", {
             paperId: this.$route.params.id,
             threadId: this.thread.id,
-            userId: this.user.id
+            userId: this.$fireAuth.currentUser.uid
           })
           .then(() => {
             this.votesShowLoading = false;
@@ -197,8 +194,8 @@ export default {
             paperId: this.$route.params.id,
             threadId: this.thread.id,
             text: item.text,
-            userName: this.user.email,
-            userId: this.user.id
+            userName: this.$fireAuth.currentUser.displayName,
+            userId: this.$fireAuth.currentUser.uid
           })
           .then(() => {
             this.submitShowLoading = false;
