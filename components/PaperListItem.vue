@@ -28,7 +28,7 @@
         </span>
       </v-progress-linear>
     </v-list-item-content>
-    <v-list-item-action class="d-inline" v-if="isAuthor && showEditIcons">
+    <v-list-item-action class="d-inline my-0 align-self-center" v-if="isAuthor && showEditIcons">
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <v-btn
