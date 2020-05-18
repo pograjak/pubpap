@@ -63,7 +63,7 @@
       <!-- <v-btn color="primary" v-if="userLoggedIn.email != ''" text>Logout</v-btn> -->
     </v-toolbar>
     <v-content>
-      <v-container class="pa-0">
+      <v-container>
         <nuxt />
       </v-container>
     </v-content>
