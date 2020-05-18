@@ -3,7 +3,7 @@
   <v-list-item three-line @click.stop="openDiag" style="min-height:70px">
     <v-list-item-content class="pt-2">
       <v-list-item-title>{{ thread.title }}</v-list-item-title>
-      <v-container class="pa-0 pt-1 ma-0">
+      <v-container class="pa-0 ma-0">
         <v-row no-gutters>
           <User
             :date="thread.createdAt"

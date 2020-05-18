@@ -4,7 +4,7 @@
       <v-list-item-title>{{ paper.title }}</v-list-item-title>
       <!-- <v-list-item-subtitle class="caption">{{ paper.authors }}</v-list-item-subtitle> -->
       <!-- <v-list-item-subtitle class="caption">Created {{ paper.createdAt.toDate() | moment('lll') }}</v-list-item-subtitle> -->
-      <v-container class="pa-0 pt-1 ma-0">
+      <v-container class="pa-0 ma-0">
         <v-row no-gutters>
           <User
             :date="paper.createdAt"
