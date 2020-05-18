@@ -1,6 +1,5 @@
 <template>
   <v-list class="py-0">
-    <v-divider />
     <!-- Loading spinner -->
     <v-list-item two-line v-if="showLoading">
       <v-list-item-content>
@@ -12,9 +11,7 @@
       <v-list-item-content>
         <v-list-item-title class="text-center caption d-flex align-center justify-center">
           <v-icon>{{ emptyIcon }}</v-icon>
-          <span>
-          &nbsp;{{ emptyPlaceholder }}
-          </span>
+          <span>&nbsp;{{ emptyPlaceholder }}</span>
           <!-- No favorite papers -->
           <!-- <v-icon>mdi-star-off</v-icon> -->
         </v-list-item-title>
@@ -22,8 +19,17 @@
     </v-list-item>
 
     <template v-for="(p, index) in papers">
-      <PaperListItem :showEditIcons="showEditIcons" :paper="p" :key="index" />
       <v-divider :key="index+1000" />
+      <PaperListItem :showEditIcons="showEditIcons" :paper="p" :key="index" />
+    </template>
+
+    <template v-if="addPaperIcon">
+      <v-divider :key="index+1000" />
+      <v-list-item class="justify-end px-1">
+        <v-btn color="primary" text to="/profile">
+          <v-icon>mdi-plus-circle-outline</v-icon>&nbsp;Add paper
+        </v-btn>
+      </v-list-item>
     </template>
   </v-list>
 </template>
@@ -44,7 +50,8 @@ export default {
     storePapersGetter: String,
     emptyPlaceholder: String,
     emptyIcon: String,
-    showEditIcons: Boolean
+    showEditIcons: Boolean,
+    addPaperIcon: Boolean
   },
 
   data() {

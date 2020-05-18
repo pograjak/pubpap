@@ -56,6 +56,7 @@
             storePapersGetter="paperlist/mypapers"
             emptyPlaceholder="No papers added yet "
             emptyIcon="mdi-emoticon-sad-outline"
+            addPaperIcon
           />
         </v-tab-item>
       </template>
