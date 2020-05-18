@@ -52,17 +52,19 @@ export const mutations = {
 function loadPapsWithUsr(ctx, arr_name, uid) {
   let pRef = ctx.$fireStore
     .collection("papers")
-    .where(arr_name, "array-contains", uid);
+    .where(arr_name, "array-contains", uid)
+    .orderBy("createdAt", "desc");
   return pRef.get();
 }
 
 export const actions = {
-  loadMyPapers: async function(ctx, userId) {
+  loadMyPapers: async function(ctx, { userId }) {
     ctx.commit("resetList", "my");
 
     let pRef = this.$fireStore
       .collection("papers")
-      .where("authorId", "==", userId);
+      .where("authorId", "==", userId)
+      .orderBy("createdAt", "desc");
     let p = await pRef.get();
     p.forEach(function(doc) {
       const dat = doc.data();
@@ -71,7 +73,7 @@ export const actions = {
     });
   },
 
-  loadSubsPapers: async function(ctx, userId) {
+  loadSubsPapers: async function(ctx, { userId }) {
     ctx.commit("resetList", "sub");
     let p = await loadPapsWithUsr(this, "requestPresentation.subsIds", userId);
     p.forEach(function(doc) {
@@ -81,7 +83,7 @@ export const actions = {
     });
   },
 
-  loadFavPapers: async function(ctx, userId) {
+  loadFavPapers: async function(ctx, { userId }) {
     ctx.commit("resetList", "fav");
     let p = await loadPapsWithUsr(this, "favs", userId);
     p.forEach(function(doc) {
@@ -91,7 +93,7 @@ export const actions = {
     });
   },
 
-  loadRecentPapers: async function(ctx) {
+  loadRecentPapers: async function(ctx, {}) {
     ctx.commit("resetList", "rec");
 
     let pRef = this.$fireStore

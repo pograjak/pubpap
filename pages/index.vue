@@ -1,15 +1,13 @@
 <template>
   <div>
-    <PaperList class="my-6" v-if="this.$fireAuth.currentUser" />
-    <RecentPapers class="mb-6 mt-12"/>
+    <PaperListContainer/>
   </div>
 </template>
 
 <script>
-import PaperList from "~/components/PaperList.vue";
-import RecentPapers from "~/components/RecentPapers.vue";
+import PaperListContainer from "~/components/PaperListContainer.vue";
 export default {
-  components: { PaperList, RecentPapers }
+  components: { PaperListContainer }
 };
 </script>
 
