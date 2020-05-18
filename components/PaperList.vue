@@ -24,7 +24,7 @@
     </template>
 
     <template v-if="addPaperIcon">
-      <v-divider :key="index+1000" />
+      <v-divider/>
       <v-list-item class="justify-end px-1">
         <v-btn color="primary" text to="/profile">
           <v-icon>mdi-plus-circle-outline</v-icon>&nbsp;Add paper
