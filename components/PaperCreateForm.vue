@@ -235,6 +235,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import Vue from "vue";
 import VueClipboard from "vue-clipboard2";
 
@@ -285,6 +286,7 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["user"]),
     newPaperURL() {
       return "http://" + this.currentUrl + "/paper/" + this.newPaperId;
     },
@@ -369,8 +371,8 @@ export default {
       this.$fireStore
         .collection("papers")
         .add({
-          authorId: this.$fireAuth.currentUser.uid,
-          authorName: this.$fireAuth.currentUser.displayName,
+          authorId: this.user.id,
+          authorName: this.user.displayName,
           createdAt: this.$fireStoreObj.FieldValue.serverTimestamp(),
           title: this.title,
           authors: this.authors,

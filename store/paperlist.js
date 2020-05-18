@@ -23,30 +23,6 @@ export const mutations = {
   resetList: function(state, l) {
     state.p[l] = [];
   }
-  // addToMypapers: function(state, pap) {
-  //   state.mypapers.push(pap);
-  // },
-  // resetMypapers: function(state) {
-  //   state.mypapers = [];
-  // },
-  // addToSubpapers: function(state, pap) {
-  //   state.subpapers.push(pap);
-  // },
-  // resetSubpapers: function(state) {
-  //   state.subpapers = [];
-  // },
-  // addToFavpapers: function(state, pap) {
-  //   state.favpapers.push(pap);
-  // },
-  // resetFavpapers: function(state) {
-  //   state.favpapers = [];
-  // },
-  // addToRecentpapers: function(state, pap) {
-  //   state.recentpapers.push(pap);
-  // },
-  // resetRecentpapers: function(state) {
-  //   state.recentpapers = [];
-  // }
 };
 
 function loadPapsWithUsr(ctx, arr_name, uid) {

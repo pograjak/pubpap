@@ -17,7 +17,7 @@
               showTitleField
               showCancelButton
               title="Add Thread"
-              :isDisabled="!this.$fireAuth.currentUser"
+              :isDisabled="!this.user.id"
               @submit="addThread"
               @cancel="dialog = false"
               :submitShowLoading="submitShowLoading"
@@ -76,6 +76,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      user: "user",
       threads: "threads/threads"
     })
   },
@@ -88,8 +89,8 @@ export default {
           paperId: this.$route.params.id,
           title: item.title,
           text: item.text,
-          userId: this.$fireAuth.currentUser.uid,
-          userName: this.$fireAuth.currentUser.displayName
+          userId: this.user.id,
+          userName: this.user.displayName
         }).then(() => {
           this.submitShowLoading = false;
           this.$refs.newthreadTextarea.clear();

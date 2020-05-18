@@ -4,7 +4,7 @@
       Created by: {{ paper.authorName ? paper.authorName : "dev" }}
     </div>
     <div>
-      <v-tooltip bottom v-if="loggedin">
+      <v-tooltip bottom v-if="user.id">
         <template v-slot:activator="{ on }">
           <v-btn v-on="on" icon @click="starClick" :class="{'disable-events': clickChangeRunning}">
             <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
@@ -52,18 +52,16 @@ export default {
 
   computed: {
     ...mapGetters({
-      paper: "paper/paper"
+      paper: "paper/paper",
+      user: "user"
     }),
     paperURL() {
       // TODO: change this to correct address
       return `https://pubpap.com/paper/${this.$route.params.id}`;
     },
-    loggedin() {
-      return this.$fireAuth.currentUser != null;
-    },
     stared() {
-      if (this.loggedin && Array.isArray(this.paper.favs)) {
-        return this.paper.favs.includes(this.$fireAuth.currentUser.uid);
+      if (this.user.id && Array.isArray(this.paper.favs)) {
+        return this.paper.favs.includes(this.user.id);
       }
     }
   },
@@ -97,7 +95,7 @@ export default {
 <style scoped>
 .yestar {
   animation: pulseStar 500ms ease-in-out;
-  z-index: 50;
+  /* z-index: 50; */
 }
 @keyframes pulseStar {
   0% {
@@ -116,7 +114,7 @@ export default {
 
 .nostar {
   animation: pulseUnstar 500ms ease-in-out 50ms;
-  z-index: 50;
+  /* z-index: 1; */
 }
 
 @keyframes pulseUnstar {

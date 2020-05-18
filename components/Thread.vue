@@ -51,7 +51,7 @@
                 :name="thread.userName"
                 :voteUserState="voteState"
                 :votes="thread.votes"
-                :votingDisabled="!this.$fireAuth.currentUser"
+                :votingDisabled="!user.id"
                 :votesShowLoading="votesShowLoading"
               />
 
@@ -74,7 +74,7 @@
               <ThreadTextarea
                 class="mt-8"
                 title="Add Comment"
-                :isDisabled="!this.$fireAuth.currentUser"
+                :isDisabled="!user.id"
                 @submit="textarea_sumbit"
                 disabledPlaceholder="Log in to add comments."
                 ref="threadTextarea"
@@ -122,6 +122,7 @@ export default {
 
   computed: {
     ...mapGetters({
+      user: "user",
       replies: "threads/replies"
     }),
 
@@ -168,14 +169,14 @@ export default {
       });
 
       // Load voting state
-      if (this.$fireAuth.currentUser) {
+      if (this.user.id) {
         this.votesShowLoading = true;
 
         this.$store
           .dispatch("threads/bindVoteState", {
             paperId: this.$route.params.id,
             threadId: this.thread.id,
-            userId: this.$fireAuth.currentUser.uid
+            userId: this.user.id
           })
           .then(() => {
             this.votesShowLoading = false;
@@ -193,8 +194,8 @@ export default {
             paperId: this.$route.params.id,
             threadId: this.thread.id,
             text: item.text,
-            userName: this.$fireAuth.currentUser.displayName,
-            userId: this.$fireAuth.currentUser.uid
+            userName: this.user.displayName,
+            userId: this.user.id
           })
           .then(() => {
             this.submitShowLoading = false;

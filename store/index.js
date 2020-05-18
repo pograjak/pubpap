@@ -28,7 +28,18 @@ export const mutations = {
       state.user.photoUrl = authUser.photoUrl;
       state.user.displayName = authUser.displayName;
     }
+  },
+  changeDisplayName(state, displayName) {
+    state.user.displayName = displayName;
   }
 };
 
-export const actions = {};
+export const actions = {
+  changeDisplayName: async function(ctx, displayName) {
+    await this.$fireAuth.currentUser.updateProfile({
+      displayName: displayName
+    });
+
+    ctx.commit("changeDisplayName", displayName);
+  }
+};

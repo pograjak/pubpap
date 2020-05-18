@@ -1,7 +1,7 @@
 <template>
   <v-card>
-    <v-card-title>{{ this.$fireAuth.currentUser.displayName }}</v-card-title>
-    <v-card-subtitle>{{this.$fireAuth.currentUser.email }}</v-card-subtitle>
+    <v-card-title>{{ user.displayName }}</v-card-title>
+    <v-card-subtitle>{{ user.email }}</v-card-subtitle>
     <v-card-actions class="px-4 pb-4">
       <v-btn @click="openDiag" color="primary">Change name</v-btn>
     </v-card-actions>
@@ -73,22 +73,20 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["user"]),
     ...mapGetters({
       name: "userinfo/name",
       affil: "userinfo/affil"
-    }),
+    })
   },
 
   created() {
-    this.$store.dispatch(
-      "userinfo/loadUserInfo",
-      this.$fireAuth.currentUser.uid
-    );
+    this.$store.dispatch("userinfo/loadUserInfo", this.user.id);
   },
 
   methods: {
     openDiag() {
-      if (this.name) {        
+      if (this.name) {
         this.name_diag = this.name;
         this.affil_diag = this.affil;
       }
@@ -101,12 +99,17 @@ export default {
 
       this.diag.loading = true;
 
-      await this.$fireAuth.currentUser.updateProfile({
-        displayName: this.makeDispName(this.name_diag, this.affil_diag)
-      });
+      await this.$store.dispatch(
+        "changeDisplayName",
+        this.makeDispName(this.name_diag, this.affil_diag)
+      );
+
+      // await this.$fireAuth.currentUser.updateProfile({
+      // displayName:
+      // });
 
       await this.$store.dispatch("userinfo/setUserInfo", {
-        userId: this.$fireAuth.currentUser.uid,
+        userId: this.user.id,
         name: this.name_diag,
         affil: this.affil_diag
       });

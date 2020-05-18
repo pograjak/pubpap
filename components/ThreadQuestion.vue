@@ -71,14 +71,17 @@ export default {
   data() {
     return {
       votes_internal: 0,
-      votingPause: false,
+      votingPause: false
     };
+  },
+  computed: {
+    ...mapGetters(["user"])
   },
 
   created: function() {
     this.votes_internal = this.votes;
   },
-  
+
   watch: {
     votes: function(val) {
       this.votes_internal = this.votes;
@@ -90,12 +93,12 @@ export default {
       this.$store.dispatch("threads/vote", {
         paperId: this.$route.params.id,
         threadId: this.threadId,
-        userId: this.$fireAuth.currentUser.uid,
+        userId: this.user.id,
         state: newState
       });
     },
     upvote() {
-      if(this.votingPause){
+      if (this.votingPause) {
         return;
       }
       this.votingPause = true;
@@ -113,7 +116,7 @@ export default {
       this.updateStoreVote(newState);
     },
     downvote() {
-      if(this.votingPause){
+      if (this.votingPause) {
         return;
       }
       this.votingPause = true;
@@ -159,6 +162,6 @@ export default {
   color: #b4b4b4 !important;
 }
 .disable-events {
-  pointer-events: none
+  pointer-events: none;
 }
 </style>

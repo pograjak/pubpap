@@ -96,7 +96,7 @@
 // import VueSimplemde from "vue-simplemde";
 // import "simplemde/dist/simplemde.min.css";
 // import "github-markdown-css";
-
+import { mapGetters } from "vuex";
 import EasyMDE from "easymde";
 import "easymde/dist/easymde.min.css";
 import { md } from "~/plugins/markdown_render.js";
@@ -216,9 +216,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["user"]),
     decoratedUsername() {
-      if (this.$fireAuth.currentUser) {
-        return `Submitting as ${this.$fireAuth.currentUser.displayName}`;
+      if (this.user.id) {
+        return `Submitting as ${this.user.displayName}`;
       } else {
         return "Not logged in";
       }

@@ -122,6 +122,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import ImageUpload from "~/components/ImageUpload.vue";
 import Vue from "vue";
 import User from "~/components/User.vue";
@@ -155,9 +156,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters(["user"]),
     isAuthor() {
-      if(this.$fireAuth.currentUser){
-        return this.$fireAuth.currentUser.uid == this.paper.authorId;
+      if(this.user.id){
+        return this.user.id == this.paper.authorId;
       }
       return false;
     }
