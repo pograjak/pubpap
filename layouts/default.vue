@@ -19,6 +19,17 @@
         <span class="caption">Home</span>
       </v-tooltip>
 
+      <!-- About button -->
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" text to="/about" color="primary">
+            <v-icon>mdi-information-variant</v-icon>
+            <!-- &nbsp;Home -->
+          </v-btn>
+        </template>
+        <span class="caption">About pubpap</span>
+      </v-tooltip>
+
       <!-- User Logged in  -->
       <template v-if="user.id">
         <!-- Profile button -->
