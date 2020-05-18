@@ -56,7 +56,7 @@ export default {
     this.showLoading = true;
     this.$store
       .dispatch(this.storeDispatchFcn, {
-        userId: this.$fireAuth.currentUser.uid
+        userId: this.$fireAuth.currentUser ? this.$fireAuth.currentUser.uid : undefined
       })
       .then(() => {
         this.showLoading = false;
@@ -68,7 +68,6 @@ export default {
 
   computed: {
     papers() {
-      return [];
       return this.$store.getters[this.storePapersGetter];
     }
   }
