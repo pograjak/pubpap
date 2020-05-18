@@ -16,7 +16,7 @@
             <!-- &nbsp;Home -->
           </v-btn>
         </template>
-        <span class="caption">Home page</span>
+        <span class="caption">Home</span>
       </v-tooltip>
 
       <!-- User Logged in  -->
@@ -37,7 +37,7 @@
               <!-- </div> -->
             </v-btn>
           </template>
-          <span class="caption">Profile page</span>
+          <span class="caption">Your account</span>
         </v-tooltip>
 
         <!-- Logout button -->
