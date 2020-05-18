@@ -1,8 +1,8 @@
 <template>
   <div class="d-flex justify-space-between">
-    <div class="caption grey--text align-self-end px-1">
-      Created by: {{ paper.authorName ? paper.authorName : "dev" }}
-    </div>
+    <div
+      class="caption grey--text align-self-end px-1"
+    >Created by: {{ paper.authorName ? paper.authorName : "dev" }}</div>
     <div>
       <v-tooltip bottom v-if="user.id">
         <template v-slot:activator="{ on }">
@@ -17,7 +17,15 @@
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon v-clipboard:copy="paperURL">
+          <v-btn
+            v-on="on"
+            icon
+            v-clipboard:copy="paperURL"
+            :loading="copyLoading"
+            @click="copyLoading = true"
+            :class="{'copySuccess': copySuccess}"
+            v-clipboard:success="copySuccessFcn"
+          >
             <v-icon>mdi-clipboard-text-outline</v-icon>
           </v-btn>
         </template>
@@ -46,7 +54,9 @@ Vue.use(VueClipboard);
 export default {
   data() {
     return {
-      clickChangeRunning: false
+      clickChangeRunning: false,
+      copyLoading: false,
+      copySuccess: false
     };
   },
 
@@ -67,6 +77,13 @@ export default {
   },
 
   methods: {
+    copySuccessFcn() {
+      this.copyLoading = false;
+      this.copySuccess = true;
+      new Promise(r => setTimeout(r, 1000)).then(() => {
+        this.copySuccess = false;
+      });
+    },
     sharePopUp(url) {
       window.open(url, "newwindow", "width=600, height=600");
       return false;
@@ -135,5 +152,24 @@ export default {
 }
 .disable-events {
   pointer-events: none;
+}
+
+.copySuccess {
+  color: #4caf50 !important;
+  animation: pulseCopy 500ms ease-in-out;
+}
+@keyframes pulseCopy {
+  0% {
+    color: #777777;
+    transform: scale(1);
+  }
+  50% {
+    color: #4caf50;
+    transform: scale(2);
+  }
+  100% {
+    color: #4caf50;
+    transform: scale(1);
+  }
 }
 </style>
