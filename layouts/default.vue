@@ -5,37 +5,62 @@
         <v-toolbar-title v-text="title" />
       </nuxt-link>
       <v-spacer />
-      <v-btn
-        color="primary"
-        text
-        v-show="userLoggedIn.email == ''"
-        :to="`/login?nextPage=${$route.fullPath}`"
-      >
-        Login
-      </v-btn>
-      <v-btn
-        color="red lighten-2"
-        dark
-        v-show="userLoggedIn.email == ''"
-        :to="`/register?nextPage=${$route.fullPath}`"
-      >
-        Sign Up
-      </v-btn>
 
-      <UserLoginForm />
+      <!-- <UserLoginForm /> -->
 
-      <v-btn color="primary" v-if="userLoggedIn.email != ''" to="/profile">
-        User profile
-      </v-btn>
+      <!-- Home button -->
+      <v-tooltip bottom>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on" text to="/" color="primary">
+            <v-icon>mdi-home</v-icon>
+            <!-- &nbsp;Home -->
+          </v-btn>
+        </template>
+        <span class="caption">Home page</span>
+      </v-tooltip>
 
-      <v-btn
-        color="primary"
-        v-if="userLoggedIn.email != ''"
-        text
-        @click="$fireAuth.signOut()"
-      >
-        Logout
-      </v-btn>
+      <!-- User Logged in  -->
+      <template v-if="$fireAuth.currentUser">
+        <!-- Profile button -->
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" text to="/profile" color="primary">
+              <!-- <div class="d-inline-flex align-right text-center mx-2"> -->
+              <v-icon>mdi-account</v-icon>&nbsp;
+              <div>
+                <div
+                  class="body-2"
+                  style="line-height: 100%; text-transform: none"
+                >{{ $fireAuth.currentUser.displayName }}</div>
+                <!-- <div class="caption" style="line-height: 100%; text-transform: none">{{ $fireAuth.currentUser.email }}</div> -->
+              </div>
+              <!-- </div> -->
+            </v-btn>
+          </template>
+          <span class="caption">Profile page</span>
+        </v-tooltip>
+
+        <!-- Logout button -->
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <v-btn v-on="on" text @click="$fireAuth.signOut()" color="primary" href="/">
+              <v-icon>mdi-logout</v-icon>
+            </v-btn>
+          </template>
+          <span class="caption">Logout</span>
+        </v-tooltip>
+      </template>
+      <!--No login -->
+      <template v-else>
+        <v-btn color="primary" text :to="`/login?nextPage=${$route.fullPath}`">
+          <v-icon>mdi-account</v-icon>&nbsp;Login
+        </v-btn>
+        <v-btn color="red lighten-2" dark :to="`/register?nextPage=${$route.fullPath}`">
+          <v-icon>mdi-file-account-outline</v-icon>&nbsp;Sign Up
+        </v-btn>
+      </template>
+
+      <!-- <v-btn color="primary" v-if="userLoggedIn.email != ''" text>Logout</v-btn> -->
     </v-toolbar>
     <v-content>
       <v-container class="pa-0">
@@ -44,24 +69,25 @@
     </v-content>
     <v-toolbar flat class="rcf">
       <span>
-        pubpap: Made with <v-icon>mdi-coffee-outline</v-icon> at
+        pubpap: Made with
+        <v-icon>mdi-coffee-outline</v-icon>at
         <a href="https://www.unihack.cz/" class="rc">Unihack</a>
-
         by
-        <a class="rc underline" href="https://redcute.cz"> RedCute</a> &copy;
-        {{ new Date().getFullYear() }}</span
-      >
+        <a class="rc underline" href="https://redcute.cz">RedCute</a>
+        &copy;
+        {{ new Date().getFullYear() }}
+      </span>
     </v-toolbar>
   </v-app>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
-import UserLoginForm from "@/components/UserLoginForm.vue";
+// import UserLoginForm from "@/components/UserLoginForm.vue";
 
 export default {
   components: {
-    UserLoginForm
+    // UserLoginForm
   },
 
   data() {
@@ -101,5 +127,9 @@ a.rc {
 .header-link {
   text-decoration: none;
   color: black;
+}
+
+.activeNav {
+  color: #5666be;
 }
 </style>

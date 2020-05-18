@@ -116,7 +116,7 @@ export default {
     },
     makeDispName(name, affil) {
       if (affil) {
-        return `${name} @ ${affil}`;
+        return `${name}@${affil}`;
       } else {
         return name;
       }
