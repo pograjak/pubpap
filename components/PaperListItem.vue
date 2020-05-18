@@ -1,8 +1,17 @@
 <template>
-  <v-list-item two-line link nuxt :to="`/paper/${paper.id}`">
-    <v-list-item-content>
+  <v-list-item three-line link nuxt :to="`/paper/${paper.id}`" style="min-height:70px">
+    <v-list-item-content class="pt-2">
       <v-list-item-title>{{ paper.title }}</v-list-item-title>
-      <v-list-item-subtitle class="caption">Created {{ paper.createdAt.toDate() | moment('lll') }}</v-list-item-subtitle>
+      <!-- <v-list-item-subtitle class="caption">{{ paper.authors }}</v-list-item-subtitle> -->
+      <!-- <v-list-item-subtitle class="caption">Created {{ paper.createdAt.toDate() | moment('lll') }}</v-list-item-subtitle> -->
+      <v-container class="pa-0 pt-1 ma-0">
+        <v-row no-gutters>
+          <User
+            :date="paper.createdAt"
+            :name="paper.authors"
+          />
+        </v-row>
+      </v-container>
     </v-list-item-content>
     <v-list-item-content v-if="paper.organizePresentation" class="justify-end mx-2" style="max-width:150px">
       <v-progress-linear
@@ -115,6 +124,8 @@
 <script>
 import ImageUpload from "~/components/ImageUpload.vue";
 import Vue from "vue";
+import User from "~/components/User.vue";
+
 Vue.use(require("vue-moment"));
 
 export default {
@@ -139,7 +150,8 @@ export default {
   },
 
   components: {
-    ImageUpload
+    ImageUpload,
+    User
   },
 
   computed: {

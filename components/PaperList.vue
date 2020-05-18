@@ -1,5 +1,6 @@
 <template>
   <v-list class="py-0">
+    <v-divider />
     <!-- Loading spinner -->
     <v-list-item two-line v-if="showLoading">
       <v-list-item-content>
@@ -22,6 +23,7 @@
 
     <template v-for="(p, index) in papers">
       <PaperListItem :showEditIcons="showEditIcons" :paper="p" :key="index" />
+      <v-divider :key="index+1000" />
     </template>
   </v-list>
 </template>

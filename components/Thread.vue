@@ -8,7 +8,6 @@
           <User
             :date="thread.createdAt"
             :name="thread.userName"
-            :rightAlign="false"
           />
         </v-row>
       </v-container>
