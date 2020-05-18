@@ -31,7 +31,7 @@ export const mutations = {
 
 export const actions = {
   loadPaper: async function(ctx, paperId) {
-    console.log("LOAD PAPER DISPATCHED");
+    // console.log("LOAD PAPER DISPATCHED");
     let p;
 
     let pRef = this.$fireStore.collection("papers").doc(paperId);

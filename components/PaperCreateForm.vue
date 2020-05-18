@@ -405,7 +405,7 @@ export default {
               .child(imgName)
               .putString(this.thumbnailObj.img, "data_url")
               .then(() => {
-                console.log("Image uploaded");
+                // console.log("Image uploaded");
                 this.stepper = 5;
                 this.submit_loading = false;
               })
