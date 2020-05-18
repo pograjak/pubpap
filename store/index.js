@@ -5,7 +5,8 @@ export const state = () => ({
   user: {
     email: "",
     id: "",
-    photoUrl: ""
+    photoUrl: "",
+    displayName: ""
   }
 });
 
@@ -20,10 +21,12 @@ export const mutations = {
       state.user.email = "";
       state.user.id = "";
       state.user.photoUrl = "";
+      state.user.displayName = "";
     } else {
       state.user.email = authUser.email;
       state.user.id = authUser.uid;
       state.user.photoUrl = authUser.photoUrl;
+      state.user.displayName = authUser.displayName;
     }
   }
 };

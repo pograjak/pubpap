@@ -7,15 +7,15 @@
         <v-icon left>mdi-party-popper</v-icon>New papers
       </v-tab>
 
-      <v-tab :disabled="!isLoggedIn">
+      <v-tab :disabled="!user.id">
         <v-icon left>mdi-star</v-icon>Favorites
       </v-tab>
 
-      <v-tab :disabled="!isLoggedIn">
+      <v-tab :disabled="!user.id">
         <v-icon left>mdi-card-text-outline</v-icon>My Tickets
       </v-tab>
 
-      <v-tab :disabled="!isLoggedIn">
+      <v-tab :disabled="!user.id">
         <v-icon left>mdi-account</v-icon>My Papers
       </v-tab>
     </v-tabs>
@@ -30,7 +30,7 @@
         />
       </v-tab-item>
 
-      <template v-if="this.$fireAuth.currentUser">
+      <template v-if="user.id">
         <v-tab-item>
           <PaperList
             storeDispatchFcn="paperlist/loadFavPapers"
@@ -78,44 +78,21 @@ export default {
     };
   },
 
-  computed: {
-    isLoggedIn() {
-      if(this.$fireAuth.currentUser){
-        return true;
+  watch: {
+    user: function(newuser) {
+      // on logout
+      if (!newuser.id) {
+        this.tab = 0;
       }
-      return false;
     }
-  }
+  },
 
-  // created() {
-  //   this.showLoading.ticks = true;
-  //   this.showLoading.mypaps = true;
-  //   this.showLoading.favs = true;
-  //   this.$store
-  //     .dispatch("paperlist/loadMyPapers", this.$fireAuth.currentUser.uid)
-  //     .then(() => {
-  //       this.showLoading.mypaps = false;
-  //       if (this.mypapers.length == 0) {
-  //         this.showEmpty.mypaps = true;
-  //       }
-  //     });
-  //   this.$store
-  //     .dispatch("paperlist/loadSubsPapers", this.$fireAuth.currentUser.uid)
-  //     .then(() => {
-  //       this.showLoading.ticks = false;
-  //       if (this.subpapers.length == 0) {
-  //         this.showEmpty.ticks = true;
-  //       }
-  //     });
-  //   this.$store
-  //     .dispatch("paperlist/loadFavPapers", this.$fireAuth.currentUser.uid)
-  //     .then(() => {
-  //       this.showLoading.favs = false;
-  //       if (this.favpapers.length == 0) {
-  //         this.showEmpty.favs = true;
-  //       }
-  //     });
-  // }
+  computed: {
+    user() {
+      return this.$store.getters.user;
+    }
+    // ...mapGetters(["user"])
+  }
 };
 </script>
 

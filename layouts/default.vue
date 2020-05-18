@@ -20,7 +20,7 @@
       </v-tooltip>
 
       <!-- User Logged in  -->
-      <template v-if="$fireAuth.currentUser">
+      <template v-if="user.id">
         <!-- Profile button -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
@@ -31,7 +31,7 @@
                 <div
                   class="body-2"
                   style="line-height: 100%; text-transform: none"
-                >{{ $fireAuth.currentUser.displayName }}</div>
+                >{{ user.displayName }}</div>
                 <!-- <div class="caption" style="line-height: 100%; text-transform: none">{{ $fireAuth.currentUser.email }}</div> -->
               </div>
               <!-- </div> -->
@@ -43,7 +43,7 @@
         <!-- Logout button -->
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
-            <v-btn v-on="on" text @click="$fireAuth.signOut()" color="primary" href="/">
+            <v-btn v-on="on" text @click="$fireAuth.signOut()" color="primary">
               <v-icon>mdi-logout</v-icon>
             </v-btn>
           </template>
@@ -98,7 +98,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters({ userLoggedIn: "user" })
+    ...mapGetters(["user"])
   },
 
   methods: {}
