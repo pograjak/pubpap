@@ -144,7 +144,10 @@ export default {
 
   computed: {
     isAuthor() {
-      return this.$fireAuth.currentUser.uid == this.paper.authorId;
+      if(this.$fireAuth.currentUser){
+        return this.$fireAuth.currentUser.uid == this.paper.authorId;
+      }
+      return false;
     }
   },
 

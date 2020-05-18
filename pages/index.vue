@@ -1,7 +1,7 @@
 <template>
   <div>
-    <PaperList />
-    <RecentPapers />
+    <PaperList class="my-6" v-if="this.$fireAuth.currentUser" />
+    <RecentPapers class="mb-6 mt-12"/>
   </div>
 </template>
 
