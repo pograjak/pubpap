@@ -1,72 +1,64 @@
 <template>
-  <div>
-    <v-list v-if="request">
-      <v-list-item style="min-height:80px">
-        <v-list-item-content>
-          <v-list-item-title class="display-1"
-            >Request online presentation</v-list-item-title
-          >
-        </v-list-item-content>
-      </v-list-item>
-      <v-divider></v-divider>
+  <v-list>
+    <v-list-item>
+      <v-list-item-content>
+        <v-list-item-title class="headline">Request online presentation</v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
+    <v-divider></v-divider>
 
-      <v-list-item>
+    <v-list-item>
+      <v-list-item-content>
+        <p class="body-1 mb-2">The author wants to present the paper online!</p>
+
         <v-progress-linear
           rounded
+          class="mb-4"
           color="#D4AF37"
           height="30"
           :value="(request.currentValue / request.goal) * 100"
           striped
         >
-          <strong>{{ request.currentValue }} / {{ request.goal }} Goal</strong>
+          <strong>{{ request.currentValue / request.bid }} / {{ request.goal / request.bid }} Tickets sold</strong>
         </v-progress-linear>
-      </v-list-item>
 
-      <v-list-item>
-        <v-list-item-title class="justify-center">
-          Let's chat over this paper online!
-          <br />Author will organize an online conference in case of interest.
-          <br />
-          To show you're for real, chip in a few coins for a beer to the author.
-        </v-list-item-title>
-      </v-list-item>
+        <p class="body-2 mb-4">
+          The presentation takes place once all tickets are sold.
+          <br />Show your interest by buying a ticket.
+        </p>
+        <p class="caption mb-4" style="line-height:100%">
+          The deal is
+          <strong>all or nothing</strong>. If the audience goal is not reached by 1st Aug 2020, we will return you money.
+        </p>
 
-      <v-list-item>
         <v-btn
-          color="success"
-          @click="$router.push(`/login/?nextPage=${$route.fullPath}`)"
-        >
-          Redirect to login with mem
-        </v-btn>
-        <v-spacer></v-spacer>
-        <v-btn
-          color="#D4AF37"
-          align-center
+          :class="{ btnSold : request.subsIds.includes(user.id), btnActive: !request.subsIds.includes(user.id) }"
           @click="payment()"
           :loading="loading"
-          :disable="loading"
-          >Buy a ticket ({{ request.bid }} Kč)</v-btn
+          :disabled="!user.id"
+          max-width="300px"
         >
-      </v-list-item>
+          <v-icon>{{ ticketButtonIcon }}</v-icon>&nbsp;
+          <strong>{{ ticketButtonText }}</strong>
+        </v-btn>
+      </v-list-item-content>
+    </v-list-item>
 
-      <v-list-item>
-        <v-list-item-title class="justify-center">
-          See the video summary:
-        </v-list-item-title>
-      </v-list-item>
-      <v-list-item class="mt-2">
-        <div class="video-container">
-          <iframe
-            class="video-video"
-            src="https://www.youtube.com/embed/MPdj8KGZHa0"
-            frameborder="0"
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          ></iframe>
-        </div>
-      </v-list-item>
-    </v-list>
-  </div>
+    <!-- <v-list-item>
+      <v-list-item-title class="justify-center">See the video summary:</v-list-item-title>
+    </v-list-item>
+    <v-list-item class="mt-2">
+      <div class="video-container">
+        <iframe
+          class="video-video"
+          src="https://www.youtube.com/embed/MPdj8KGZHa0"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </v-list-item>-->
+  </v-list>
 </template>
 
 <script>
@@ -103,9 +95,32 @@ export default {
   // },
 
   computed: {
+    ...mapGetters(["user"]),
     ...mapGetters({
       request: "paper/requestPresentation"
-    })
+    }),
+    ticketButtonIcon() {
+      if (!this.user.id) {
+        return "mdi-login";
+      } else {
+        if (this.request.subsIds.includes(this.user.id)) {
+          return "mdi-check-circle";
+        } else {
+          return "mdi-ticket";
+        }
+      }
+    },
+    ticketButtonText() {
+      if (!this.user.id) {
+        return `Log in to buy (USD ${this.request.bid})`;
+      } else {
+        if (this.request.subsIds.includes(this.user.id)) {
+          return "Ticket bought";
+        } else {
+          return `I am interested! (USD ${this.request.bid})`;
+        }
+      }
+    }
   },
 
   methods: {
@@ -146,5 +161,14 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+}
+.btnActive {
+  background-color: #d4af37 !important;
+  color: white;
+}
+.btnSold {
+  background-color: #4caf50 !important;
+  color: white;
+  pointer-events: none;
 }
 </style>

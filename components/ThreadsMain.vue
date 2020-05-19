@@ -1,16 +1,16 @@
 <template>
   <div>
     <v-list>
-      <v-list-item style="min-height:80px">
+      <v-list-item style="min-height:50px">
         <v-list-item-content>
-          <v-list-item-title class="display-1">Threads</v-list-item-title>
+          <v-list-item-title class="headline">Threads</v-list-item-title>
         </v-list-item-content>
 
-        <v-list-item-action>
+        <v-list-item-action class="ma-0">
           <!-- New Thread dialog -->
           <v-dialog v-model="dialog" max-width="800">
             <template v-slot:activator="{ on }">
-              <v-btn color="primary" large v-on="on">New Thread</v-btn>
+              <v-btn color="primary" v-on="on">New Thread</v-btn>
             </template>
 
             <ThreadTextarea
@@ -66,12 +66,15 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("threads/bindThreads", { paperId: this.$route.params.id }).then(() => {
-      this.showLoading = false;
-    }).catch((error) => {
-      this.showLoading = false;
-      throw(error);
-    });
+    this.$store
+      .dispatch("threads/bindThreads", { paperId: this.$route.params.id })
+      .then(() => {
+        this.showLoading = false;
+      })
+      .catch(error => {
+        this.showLoading = false;
+        throw error;
+      });
   },
 
   computed: {
@@ -85,18 +88,19 @@ export default {
     addThread(item) {
       if ((item.title.length > 0) & (item.text.length > 0)) {
         this.submitShowLoading = true;
-        this.$store.dispatch("threads/addThread", {
-          paperId: this.$route.params.id,
-          title: item.title,
-          text: item.text,
-          userId: this.user.id,
-          userName: this.user.displayName
-        }).then(() => {
-          this.submitShowLoading = false;
-          this.$refs.newthreadTextarea.clear();
-          this.dialog = false;
-        });
-        
+        this.$store
+          .dispatch("threads/addThread", {
+            paperId: this.$route.params.id,
+            title: item.title,
+            text: item.text,
+            userId: this.user.id,
+            userName: this.user.displayName
+          })
+          .then(() => {
+            this.submitShowLoading = false;
+            this.$refs.newthreadTextarea.clear();
+            this.dialog = false;
+          });
       }
     }
   }

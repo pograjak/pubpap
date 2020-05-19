@@ -2,7 +2,7 @@
   <div class="d-flex justify-space-between">
     <div
       class="caption grey--text align-self-end px-1"
-    >Created by: {{ paper.authorName ? paper.authorName : "dev" }}</div>
+    >Page created by: {{ paper.authorName ? paper.authorName : "dev" }}</div>
     <div>
       <v-tooltip bottom v-if="user.id">
         <template v-slot:activator="{ on }">
