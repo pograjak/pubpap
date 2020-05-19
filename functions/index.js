@@ -20,3 +20,6 @@ exports.countupvotesdelete = upvotes.countupvotesdelete;
 // const algolia = require("./algolia/one_time_upload");
 // exports.sendCollectionToAlgolia = algolia.sendCollectionToAlgolia; // just for one-time batch uploads of the whole firestore
 
+const algolia = require("./algolia/listeners");
+exports.algoliaCreatePaper = algolia.algoliaCreatePaper;
+exports.algoliaDeletePaper = algolia.algoliaDeletePaper;
