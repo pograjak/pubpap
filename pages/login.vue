@@ -38,6 +38,7 @@
           prepend-icon="mdi-lock"
           type="password"
           :error-messages="errorMsg"
+          @keydown.enter="login"
         />
         <v-btn
           color="primary"
