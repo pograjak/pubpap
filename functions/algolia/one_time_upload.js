@@ -35,6 +35,7 @@ exports.sendCollectionToAlgolia = functions.region("europe-west1").https.onReque
             authors: dat.authors,
             summary: dat.summary,
             arxLink: dat.arxLink,
+            createdAt: dat.createdAt.toDate().getTime() / 1000
         };
 
         algoliaRecords.push(record);
