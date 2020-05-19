@@ -10,6 +10,7 @@ yarn-error.log*
 yarn.lock 
 
 nuxt.config.js
+plugins/credentials.js
 
 firestore.rules
 
