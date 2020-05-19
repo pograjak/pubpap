@@ -25,11 +25,8 @@
           :disabled="disabled"
           :loading="arxiv_loading"
           @click="fetchArxiv"
-          >fetch</v-btn
-        >
-        <v-btn text :disabled="disabled" @click="stepper = 2"
-          >Fill manually</v-btn
-        >
+        >fetch</v-btn>
+        <v-btn text :disabled="disabled" @click="stepper = 2">Fill manually</v-btn>
       </v-stepper-content>
 
       <!-- Fill in fields -->
@@ -97,9 +94,11 @@
           @selected="imguploadBtnText = 'next'"
           @canceled="imguploadBtnText = 'skip'"
         />
-        <v-btn color="primary" @click="thumbnailSubmit">{{
+        <v-btn color="primary" @click="thumbnailSubmit">
+          {{
           imguploadBtnText
-        }}</v-btn>
+          }}
+        </v-btn>
         <v-btn text @click="stepper = 2">Back</v-btn>
       </v-stepper-content>
 
@@ -183,16 +182,13 @@
           with further details.
         </p>
 
-        <p v-if="submit_error" class="caption mb-0 error--text">
-          Error submitting paper.
-        </p>
+        <p v-if="submit_error" class="caption mb-0 error--text">Error submitting paper.</p>
         <v-btn
           :class="{ error: submit_error }"
           :loading="submit_loading"
           color="primary"
           @click="submitPaper"
-          >Submit paper</v-btn
-        >
+        >Submit paper</v-btn>
         <v-btn text @click="stepper = 3">Back</v-btn>
       </v-stepper-content>
 
@@ -205,9 +201,11 @@
         <h3 class="subtitle-1">Success!</h3>
         <p class="subtitle-2">
           Link to paper page:
-          <nuxt-link class="grey--text text--darken-1" :to="newPaperPage">{{
+          <nuxt-link class="grey--text text--darken-1" :to="newPaperPage">
+            {{
             newPaperURL
-          }}</nuxt-link>
+            }}
+          </nuxt-link>
           <!-- <a  :href=""></a> -->
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
@@ -368,6 +366,18 @@ export default {
     submitPaper() {
       this.submit_error = false;
       this.submit_loading = true;
+
+      let reqPresObj = {};
+      if(this.organizePresentation){
+        reqPresObj = {
+            goal: this.audienceGoal * this.bid,
+            bid: this.bid,
+            currentValue: 0,
+            // audienceGoal: this.audienceGoal,
+            subsIds: []
+          };
+      }
+
       this.$fireStore
         .collection("papers")
         .add({
@@ -379,18 +389,12 @@ export default {
           arxLink: this.arxLink,
           summary: this.summary,
           githublink: this.githublink,
-          organizePresentation: this.organizePresentation,
+          // organizePresentation: this.organizePresentation,
           //audienceGoal: this.audienceGoal,
           //bid: this.bid,
           favs: [],
           hasImg: this.thumbnailObj != null,
-          requestPresentation: {
-            goal: this.audienceGoal * this.bid,
-            bid: this.bid,
-            currentValue: 0,
-            // audienceGoal: this.audienceGoal,
-            subsIds: []
-          }
+          requestPresentation: reqPresObj
         })
         .then(docRef => {
           this.newPaperId = docRef.id;

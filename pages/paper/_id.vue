@@ -13,13 +13,20 @@
     </v-row>
 
     <v-row>
-      <v-col cols="12" md="6">
-        <RequestPresentation />
-      </v-col>
+      <template v-if="isPresentation">
+        <v-col cols="12" md="6">
+          <RequestPresentation />
+        </v-col>
 
-      <v-col cols="12" md="6">
-        <ThreadsMain />
-      </v-col>
+        <v-col cols="12" md="6">
+          <ThreadsMain />
+        </v-col>
+      </template>
+      <template v-else>
+        <v-col cols="12">
+          <ThreadsMain />
+        </v-col>
+      </template>
     </v-row>
   </v-container>
 </template>
@@ -30,10 +37,17 @@ import PaperDetail from "~/components/PaperDetail.vue";
 import RequestPresentation from "~/components/RequestPresentation.vue";
 import ThreadsMain from "~/components/ThreadsMain.vue";
 import Vue from "vue";
+import { mapGetters } from "vuex";
 
 export default {
   validate({ params, store }) {
     return store.dispatch("paper/loadPaper", params.id);
+  },
+
+  computed: {
+    ...mapGetters({
+      isPresentation: "paper/isPresentation"
+    })
   },
 
   components: {

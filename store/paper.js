@@ -8,7 +8,13 @@ export const state = () => ({
 export const getters = {
   paper: state => state.paper,
   imgUrl: state => state.imgUrl,
-  requestPresentation: state => state.paper.requestPresentation
+  requestPresentation: state => state.paper.requestPresentation,
+  isPresentation: state => {
+    if(state.paper && state.paper.requestPresentation.bid){
+      return true;
+    }
+    return false;
+  }
 };
 
 export const mutations = {
