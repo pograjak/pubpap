@@ -1,6 +1,6 @@
 <template>
-  <ais-instant-search index-name="papers" :search-client="searchClient" class="d-flex flex-grow-1">
-    <v-menu max-height="800px" transition="slide-y-transition" offset-y nudge-bottom="2">
+  <ais-instant-search index-name="papers" :search-client="searchClient" class="ml-7 d-flex flex-grow-1">
+    <v-menu centered max-height="800px" transition="slide-y-transition" offset-y nudge-bottom="2">
       <template v-slot:activator="{ on }">
         <ais-search-box class="d-flex flex-grow-1">
           <template slot="default" slot-scope="{ currentRefinement, isSearchStalled, refine }">
@@ -8,7 +8,7 @@
               :value="currentRefinement"
               v-model="textInput"
               v-on:input="refine(textInput)"
-              class="mx-7"
+              class="mr-3"
               v-on="on"
               placeholder="Search"
               single-line

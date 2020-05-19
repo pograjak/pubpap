@@ -4,10 +4,10 @@
       <nuxt-link class="header-link" to="/">
         <v-toolbar-title v-text="title" />
       </nuxt-link>
-      
+
+      <!-- <v-spacer /> -->
       <SearchBox />
-
-
+      <v-spacer />
 
       <!-- <UserLoginForm /> -->
 
@@ -100,7 +100,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import SearchBox from "@/components/SearchBox.vue"
+import SearchBox from "@/components/SearchBox.vue";
 // import UserLoginForm from "@/components/UserLoginForm.vue";
 
 export default {
