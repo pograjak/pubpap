@@ -36,6 +36,20 @@
         <v-divider />
       </template>
 
+      <template v-if="showEmpty">
+        <v-list-item two-line>
+          <v-list-item-content>
+            <v-list-item-title class="text-center caption d-flex align-center justify-center">
+              <v-icon>mdi-head-question-outline</v-icon>
+              <span>&nbsp;Be the first to ask!</span>
+              <!-- No favorite papers -->
+              <!-- <v-icon>mdi-star-off</v-icon> -->
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider />
+      </template>
+
       <div v-for="thread in threads" :key="thread.id">
         <Thread :thread="thread" />
         <v-divider></v-divider>
@@ -81,7 +95,10 @@ export default {
     ...mapGetters({
       user: "user",
       threads: "threads/threads"
-    })
+    }),
+    showEmpty() {
+      return this.threads.length == 0 && !this.showLoading;
+    }
   },
 
   methods: {
