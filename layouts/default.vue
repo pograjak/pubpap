@@ -88,7 +88,6 @@
         <a href="https://www.unihack.cz/" class="rc" target="_blank">Unihack</a>
         by
         <a class="rc underline" href="https://redcute.cz" target="_blank">RedCute</a>
-        .
         &copy;
         {{ new Date().getFullYear() }}
       </span>
