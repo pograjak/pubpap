@@ -13,6 +13,7 @@
   "dependencies": {
     "@nuxtjs/firebase": "^5.2.0",
     "@stripe/stripe-js": "^1.5.0",
+    "algoliasearch": "^4.2.0",
     "core-js": "2",
     "cropper": "^4.1.0",
     "easymde": "^2.10.1",

@@ -1,9 +1,6 @@
 const functions = require("firebase-functions");
 const stripe = require("stripe")("sk_test_QHUsLKmLDRAJbMTNtnhcmNV900HPnjSqdA");
 const admin = require("firebase-admin");
-
-admin.initializeApp(functions.config().firebase);
-
 const app = require("express")();
 
 // Find your endpoint's secret in your Dashboard's webhook settings
