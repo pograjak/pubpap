@@ -33,7 +33,7 @@
 
         <v-btn
           :class="{ btnSold : request.subsIds.includes(user.id), btnActive: !request.subsIds.includes(user.id) }"
-          @click="payment()"
+          @click="testDialog = true"
           :loading="loading"
           :disabled="!user.id"
           max-width="300px"
@@ -43,6 +43,41 @@
         </v-btn>
       </v-list-item-content>
     </v-list-item>
+
+    <!-- Test dialog -->
+    <v-dialog v-model="testDialog" max-width="600px">
+      <v-card>
+        <v-card-title class="title font-weight-bold">pubpap is in test mode</v-card-title>
+
+        <v-card-text class="text-center orange-text text--darken-4 orange lighten-4 py-4">
+          <p>To buy a test ticket, enter the following card number:</p>
+          <p>
+            <strong>4242 4242 4242 4242</strong>
+            <v-tooltip bottom>
+              <template v-slot:activator="{ on }">
+                <v-btn v-on="on" icon v-clipboard:copy="'4242424242424242'">
+                  <v-icon>mdi-clipboard-text-outline</v-icon>
+                </v-btn>
+              </template>
+              <span class="caption">Copy to clipboard</span>
+            </v-tooltip>
+          </p>
+          <p class="mb-0">
+            Expiry date, CVC and name can be random.
+            <br />You won't be charged anything.
+          </p>
+        </v-card-text>
+
+        <v-card-text class="body-2 py-4 text-right">Thank you for checking pubpap out!</v-card-text>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn text @click="testDialog = false">Cancel</v-btn>
+          <!-- TODO: Change to our email -->
+          <v-btn color="primary" @click="payment()" :loading="loading">Proceed</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- <v-list-item>
       <v-list-item-title class="justify-center">See the video summary:</v-list-item-title>
@@ -62,14 +97,21 @@
 </template>
 
 <script>
+import Vue from "vue";
+import VueClipboard from "vue-clipboard2";
 import { loadStripe } from "@stripe/stripe-js";
 import { mapGetters } from "vuex";
 import loginVue from "../pages/login.vue";
+
+VueClipboard.config.autoSetContainer = true // add this line
+Vue.use(VueClipboard);
+
 
 export default {
   data() {
     return {
       loading: false,
+      testDialog: false,
       // Array will be automatically processed with visualization.arrayToDataTable function
       chartData: [
         ["User type", "Votes"],
@@ -99,6 +141,10 @@ export default {
     ...mapGetters({
       request: "paper/requestPresentation"
     }),
+    paperURL() {
+      // TODO: change this to correct address
+      return `https://pubpap.com/paper/${this.$route.params.id}`;
+    },
     ticketButtonIcon() {
       if (!this.user.id) {
         return "mdi-login";
