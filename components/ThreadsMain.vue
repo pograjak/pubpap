@@ -42,8 +42,6 @@
             <v-list-item-title class="text-center caption d-flex align-center justify-center">
               <v-icon>mdi-head-question-outline</v-icon>
               <span>&nbsp;Be the first to ask!</span>
-              <!-- No favorite papers -->
-              <!-- <v-icon>mdi-star-off</v-icon> -->
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
