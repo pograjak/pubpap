@@ -80,11 +80,15 @@
     </v-content>
     <v-toolbar flat class="rcf">
       <span>
+        <a href="https://github.com/pograjak/pubpap" target="_blank">
+          <v-icon>mdi-github</v-icon>
+        </a>
         pubpap: Made with
         <v-icon>mdi-coffee-outline</v-icon>at
-        <a href="https://www.unihack.cz/" class="rc">Unihack</a>
+        <a href="https://www.unihack.cz/" class="rc" target="_blank">Unihack</a>
         by
-        <a class="rc underline" href="https://redcute.cz">RedCute</a>
+        <a class="rc underline" href="https://redcute.cz" target="_blank">RedCute</a>
+        .
         &copy;
         {{ new Date().getFullYear() }}
       </span>
