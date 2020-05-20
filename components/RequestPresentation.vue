@@ -2,9 +2,7 @@
   <v-list>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="headline"
-          >Request online presentation</v-list-item-title
-        >
+        <v-list-item-title class="headline">Request online presentation</v-list-item-title>
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
@@ -21,10 +19,10 @@
           :value="(request.currentValue / request.goal) * 100"
           striped
         >
-          <strong
-            >{{ request.currentValue / request.bid }} /
-            {{ request.goal / request.bid }} Tickets sold</strong
-          >
+          <strong>
+            {{ request.currentValue / request.bid }} /
+            {{ request.goal / request.bid }} Tickets sold
+          </strong>
         </v-progress-linear>
 
         <p class="body-2 mb-4">
@@ -47,8 +45,7 @@
           :disabled="!user.id"
           max-width="300px"
         >
-          <v-icon>{{ ticketButtonIcon }}</v-icon
-          >&nbsp;
+          <v-icon>{{ ticketButtonIcon }}</v-icon>&nbsp;
           <strong>{{ ticketButtonText }}</strong>
         </v-btn>
       </v-list-item-content>
@@ -57,13 +54,9 @@
     <!-- Test dialog -->
     <v-dialog v-model="testDialog" max-width="600px">
       <v-card>
-        <v-card-title class="title font-weight-bold"
-          >pubpap is in test mode</v-card-title
-        >
+        <v-card-title class="title font-weight-bold">pubpap is in test mode</v-card-title>
 
-        <v-card-text
-          class="text-center orange-text text--darken-4 orange lighten-4 py-4"
-        >
+        <v-card-text class="text-center orange-text text--darken-4 orange lighten-4 py-4">
           <p>Currently we are testing application. Thus everything is free.</p>
           <p>To buy a test ticket, enter the following card number:</p>
           <p>
@@ -83,17 +76,13 @@
           </p>
         </v-card-text>
 
-        <v-card-text class="body-2 py-4 text-right"
-          >Thank you for checking pubpap out!</v-card-text
-        >
+        <v-card-text class="body-2 py-4 text-right">Thank you for checking pubpap out!</v-card-text>
 
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="testDialog = false">Cancel</v-btn>
           <!-- TODO: Change to our email -->
-          <v-btn color="primary" @click="payment()" :loading="loading"
-            >Proceed</v-btn
-          >
+          <v-btn color="primary" @click="payment()" :loading="loading">Proceed</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -191,8 +180,35 @@ export default {
   methods: {
     async payment() {
       this.loading = true;
+      
+      try {
+        // Callable function
+        var paymentFcn = this.$fireFunc.httpsCallable("paymentFcn");
+        const result = await paymentFcn({ paperId: this.paper.paperId });
 
-      const payload = {
+        console.log("Result:");
+        console.log(result.data);
+
+        const sessionIdc = result.data;
+
+        const stripe = await loadStripe(
+          "pk_test_WNZA8yZsjGbAEFC0pDAb1UrF00BJUKByPR"
+        );
+
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: sessionIdc.id
+        });
+
+        this.loading = false;
+      } catch (error) {
+        console.log(error);
+        // TODO: change to valid email address
+        alert("Error loading payment request! Please try later or contact support: support@pubpap.com");
+        this.loading = false;
+      }
+
+     /* HTTPS request call
+     const payload = {
         uid: this.user.id,
         userEmail: this.user.email,
         paperId: this.$route.params.id
@@ -224,6 +240,7 @@ export default {
       } catch (error) {
         console.log(error);
       }
+      */
     }
   }
 };

@@ -22,3 +22,6 @@ exports.countupvotesdelete = upvotes.countupvotesdelete;
 const algolia = require("./algolia/listeners");
 exports.algoliaCreatePaper = algolia.algoliaCreatePaper;
 exports.algoliaDeletePaper = algolia.algoliaDeletePaper;
+
+const paymentFcn = require("./payment/paymentFcn")
+exports.paymentFcn = paymentFcn.paymentFcn;
