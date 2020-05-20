@@ -189,6 +189,12 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: 'About'
+    };
+  },
+
   data() {
     return {
       tomas: require("assets/tomas.jpg"),

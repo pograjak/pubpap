@@ -73,6 +73,13 @@
 <script>
 export default {
   layout: "signup",
+
+  head() {
+    return {
+      title: 'Login'
+    };
+  },
+
   data() {
     return {
       validForm: true,

@@ -44,9 +44,16 @@ export default {
     return store.dispatch("paper/loadPaper", params.id);
   },
 
+  head() {
+    return {
+      title: this.paper.title
+    };
+  },
+
   computed: {
     ...mapGetters({
-      isPresentation: "paper/isPresentation"
+      isPresentation: "paper/isPresentation",
+      paper: "paper/paper"
     })
   },
 

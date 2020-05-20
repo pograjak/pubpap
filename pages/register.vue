@@ -69,6 +69,12 @@
 
 <script>
 export default {
+  head() {
+    return {
+      title: 'Sign up'
+    };
+  },
+
   data() {
     return {
       validForm: true,

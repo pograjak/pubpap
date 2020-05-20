@@ -52,6 +52,12 @@ export default {
     };
   },
 
+  head() {
+    return {
+      title: 'Forgot password'
+    };
+  },
+
   methods: {
     async resetPassword() {
       if (!this.btnSuccess && !this.btnError && this.$refs.form.validate()) {

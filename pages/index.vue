@@ -14,6 +14,12 @@ import { mapGetters } from "vuex";
 import PaperListContainer from "~/components/PaperListContainer.vue";
 
 export default {
+  head() {
+    return {
+      title: 'Home'
+    };
+  },
+
   components: { PaperListContainer },
    computed: {
     ...mapGetters(["user"])
