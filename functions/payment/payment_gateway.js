@@ -1,7 +1,9 @@
 const functions = require("firebase-functions");
 const stripe = require("stripe")("sk_test_QHUsLKmLDRAJbMTNtnhcmNV900HPnjSqdA");
 const admin = require("firebase-admin");
-const app = require("express")();
+const express = require("express");
+var cors = require("cors");
+const app = express();
 
 // Find your endpoint's secret in your Dashboard's webhook settings
 const endpointSecret = "whsec_JkLqtUMl51RHJXQgOvZSksKQ6eI8F110";
@@ -9,6 +11,9 @@ const endpointSecret = "whsec_JkLqtUMl51RHJXQgOvZSksKQ6eI8F110";
 // Use body-parser to retrieve the raw body as a buffer
 const bodyParser = require("body-parser");
 
+//express setting
+app.use(express.json());
+app.use("*", cors());
 // Match the raw body to content type application/json
 app.post(
   "/webhook",
@@ -47,29 +52,54 @@ app.post(
   }
 );
 
-app.get("/", async (request, response) => {
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
+app.post("/", async (request, response) => {
+  //  const payload = {
+  //    uid: this.user.id,
+  //    userEmail: this.user.email,
+  //    paperId: this.paper.id
+  //  };
+  console.log(request.headers);
+  console.log(request.body);
 
-    customer_email: "test@test.unihack",
+  const payload = request.body;
 
-    line_items: [
-      {
-        name: "presentation request",
-        description: "request for XXX presentation",
-        amount: 1000,
-        currency: "czk",
-        quantity: 1
-      }
-    ],
+  const paperRef = await admin
+    .firestore()
+    .collection("papers")
+    .doc(payload.paperId)
+    .get();
 
-    success_url:
-      "https://pubpap-redcute.web.app/?session_id={CHECKOUT_SESSION_ID}",
-    cancel_url: "https://pubpap-redcute.web.app/"
-  });
+  const paper = paperRef.data();
+  console.log("paper: ", paper);
 
-  response.set("Access-Control-Allow-Origin", "*");
-  response.send(session);
+  if (paper.requestPresentation.subsIds.includes(payload.uid)) {
+    response.send(
+      "User already has a ticket. Can't buy more tickets from one account."
+    );
+  } else {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+
+      customer_email: payload.userEmail,
+
+      line_items: [
+        {
+          name: `Ticket for paper ${paper.title}`,
+          description: "Ticket requesting presentation",
+          amount: paper.requestPresentation.bid * 100,
+          currency: "czk",
+          quantity: 1
+        }
+      ],
+
+      success_url:
+        "https://pubpap-redcute.web.app/?session_id={CHECKOUT_SESSION_ID}",
+      cancel_url: "https://pubpap-redcute.web.app/"
+    });
+
+    response.set("Access-Control-Allow-Origin", "http://localhost");
+    response.send(session);
+  }
 });
 
 exports.payment = functions.region("europe-west1").https.onRequest(app);

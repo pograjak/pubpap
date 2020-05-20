@@ -2,7 +2,9 @@
   <v-list>
     <v-list-item>
       <v-list-item-content>
-        <v-list-item-title class="headline">Request online presentation</v-list-item-title>
+        <v-list-item-title class="headline"
+          >Request online presentation</v-list-item-title
+        >
       </v-list-item-content>
     </v-list-item>
     <v-divider></v-divider>
@@ -19,7 +21,10 @@
           :value="(request.currentValue / request.goal) * 100"
           striped
         >
-          <strong>{{ request.currentValue / request.bid }} / {{ request.goal / request.bid }} Tickets sold</strong>
+          <strong
+            >{{ request.currentValue / request.bid }} /
+            {{ request.goal / request.bid }} Tickets sold</strong
+          >
         </v-progress-linear>
 
         <p class="body-2 mb-4">
@@ -28,17 +33,22 @@
         </p>
         <p class="caption mb-4" style="line-height:100%">
           The deal is
-          <strong>all or nothing</strong>. If the audience goal is not reached by 1st Aug 2020, we will return you money.
+          <strong>all or nothing</strong>. If the audience goal is not reached
+          by 1st Aug 2020, we will return you money.
         </p>
 
         <v-btn
-          :class="{ btnSold : request.subsIds.includes(user.id), btnActive: !request.subsIds.includes(user.id) }"
+          :class="{
+            btnSold: request.subsIds.includes(user.id),
+            btnActive: !request.subsIds.includes(user.id)
+          }"
           @click="testDialog = true"
           :loading="loading"
           :disabled="!user.id"
           max-width="300px"
         >
-          <v-icon>{{ ticketButtonIcon }}</v-icon>&nbsp;
+          <v-icon>{{ ticketButtonIcon }}</v-icon
+          >&nbsp;
           <strong>{{ ticketButtonText }}</strong>
         </v-btn>
       </v-list-item-content>
@@ -47,9 +57,14 @@
     <!-- Test dialog -->
     <v-dialog v-model="testDialog" max-width="600px">
       <v-card>
-        <v-card-title class="title font-weight-bold">pubpap is in test mode</v-card-title>
+        <v-card-title class="title font-weight-bold"
+          >pubpap is in test mode</v-card-title
+        >
 
-        <v-card-text class="text-center orange-text text--darken-4 orange lighten-4 py-4">
+        <v-card-text
+          class="text-center orange-text text--darken-4 orange lighten-4 py-4"
+        >
+          <p>Currently we are testing application. Thus everything is free.</p>
           <p>To buy a test ticket, enter the following card number:</p>
           <p>
             <strong>4242 4242 4242 4242</strong>
@@ -68,13 +83,17 @@
           </p>
         </v-card-text>
 
-        <v-card-text class="body-2 py-4 text-right">Thank you for checking pubpap out!</v-card-text>
+        <v-card-text class="body-2 py-4 text-right"
+          >Thank you for checking pubpap out!</v-card-text
+        >
 
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="testDialog = false">Cancel</v-btn>
           <!-- TODO: Change to our email -->
-          <v-btn color="primary" @click="payment()" :loading="loading">Proceed</v-btn>
+          <v-btn color="primary" @click="payment()" :loading="loading"
+            >Proceed</v-btn
+          >
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -103,9 +122,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { mapGetters } from "vuex";
 import loginVue from "../pages/login.vue";
 
-VueClipboard.config.autoSetContainer = true // add this line
+VueClipboard.config.autoSetContainer = true; // add this line
 Vue.use(VueClipboard);
-
 
 export default {
   data() {
@@ -139,7 +157,8 @@ export default {
   computed: {
     ...mapGetters(["user"]),
     ...mapGetters({
-      request: "paper/requestPresentation"
+      request: "paper/requestPresentation",
+      paper: "paper/paper"
     }),
     paperURL() {
       // TODO: change this to correct address
@@ -172,18 +191,39 @@ export default {
   methods: {
     async payment() {
       this.loading = true;
-      const session = await fetch(
-        "https://europe-west1-pubpap-redcute.cloudfunctions.net/payment"
-      );
-      const sessionIdc = await session.json();
 
-      const stripe = await loadStripe(
-        "pk_test_WNZA8yZsjGbAEFC0pDAb1UrF00BJUKByPR"
-      );
+      const payload = {
+        uid: this.user.id,
+        userEmail: this.user.email,
+        paperId: this.$route.params.id
+      };
 
-      const { error } = await stripe.redirectToCheckout({
-        sessionId: sessionIdc.id
-      });
+      try {
+        // TODO: send uid paper id
+        const session = await fetch(
+          "https://europe-west1-pubpap-redcute.cloudfunctions.net/payment",
+          {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Access-Control-Allow-Origin": "*"
+            },
+            body: JSON.stringify(payload)
+          }
+        );
+
+        const sessionIdc = await session.json();
+
+        const stripe = await loadStripe(
+          "pk_test_WNZA8yZsjGbAEFC0pDAb1UrF00BJUKByPR"
+        );
+
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: sessionIdc.id
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 };
