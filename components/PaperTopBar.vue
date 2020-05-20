@@ -26,7 +26,7 @@
             :class="{'copySuccess': copySuccess}"
             v-clipboard:success="copySuccessFcn"
           >
-            <v-icon>mdi-clipboard-text-outline</v-icon>
+            <v-icon>mdi-link</v-icon>
           </v-btn>
         </template>
         <span class="caption">Copy URL to clipboard</span>
