@@ -13,7 +13,7 @@
               placeholder="Search"
               single-line
               hide-details
-              append-icon="mdi-text-box-search-outline"
+              append-icon="mdi-magnify"
             ></v-text-field>
           </template>
         </ais-search-box>
@@ -21,6 +21,18 @@
 
       <ais-hits>
         <v-list two-line class="py-0" slot-scope="{ items }">
+          <template v-if="items.length == 0">
+            <v-list-item
+              class="py-0"
+              style="min-height: 40px"
+            >
+              <v-list-item-content class="py-0 text-center">
+                <v-list-item-title>
+                  <v-icon>mdi-emoticon-sad-outline</v-icon>&nbsp;No results
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
           <template v-for="item in items">
             <v-list-item
               :key="item.objectID"
