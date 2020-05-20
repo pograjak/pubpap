@@ -4,10 +4,16 @@
     :search-client="searchClient"
     class="ml-7 d-flex flex-grow-1"
   >
-    <v-menu centered max-height="800px" transition="slide-y-transition" offset-y nudge-bottom="2">
+    <v-menu
+      v-model="openMenu"
+      centered
+      max-height="800px"
+      transition="slide-y-transition"
+      offset-y
+      nudge-bottom="2"
+    >
       <template v-slot:activator="{ on }">
         <ais-search-box class="d-flex flex-grow-1">
-          <!-- v-on:input="refine(textInput)" -->
           <template v-slot="item">
             <v-text-field
               :value="item.currentRefinement"
@@ -92,6 +98,7 @@ const algoliaClient = algoliasearch(algolia.appId, algolia.apiKey);
 export default {
   data() {
     return {
+      openMenu: false,
       searchClient: null,
       textInput: "",
       showSearching: false
@@ -105,10 +112,24 @@ export default {
   },
   methods: {
     async search(requests) {
-      // console.log("Search invoke");
-      let hits = await algoliaClient.search(requests);
-      this.showSearching = false;
-      return hits;
+      console.log(`Search invoke, menu: ${this.openMenu}`);
+      this.showSearching = true; // when invoked without typing
+
+      if (this.openMenu) {
+        // Prevent queries when menu is not open (happens on every page visit)
+        let hits = await algoliaClient.search(requests);
+        this.showSearching = false;
+        return hits;
+      } else {
+        return Promise.resolve({
+          results: requests.map(() => ({
+            hits: [],
+            nbHits: 0,
+            nbPages: 0,
+            processingTimeMS: 0
+          }))
+        });
+      }
     },
     debounceInput: debounce(
       function(refineFcn) {
