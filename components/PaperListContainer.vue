@@ -80,7 +80,9 @@ export default {
   },
 
   watch: {
-    user: function(newuser) {
+    userId: function(newuser) {
+      // switch to tab=0 on logout
+      // console.log("newuser_watch");
       // on logout
       if (!newuser.id) {
         this.tab = 0;
@@ -89,7 +91,12 @@ export default {
   },
 
   computed: {
+    userId() {  // need to follow the id explicitly, user object does not change, just it's insides
+      // console.log("newuserId");
+      return this.$store.getters.user.id;
+    },
     user() {
+      // console.log("newuser");
       return this.$store.getters.user;
     }
     // ...mapGetters(["user"])
