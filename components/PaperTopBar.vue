@@ -3,16 +3,25 @@
     <div
       class="caption grey--text align-self-end px-1"
     >Page created by: {{ paper.authorName ? paper.authorName : "dev" }}</div>
-    <div>
-      <v-tooltip bottom v-if="user.id">
+    <div class="d-flex">
+      <v-tooltip bottom>
         <template v-slot:activator="{ on }">
-          <v-btn v-on="on" icon @click="starClick" :class="{'disable-events': clickChangeRunning}">
-            <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
-            <v-icon v-else class="nostar">mdi-star-outline</v-icon>
-          </v-btn>
+          <div class="d-flex align-center">
+            <span class="caption my-0 py-0">{{ paper.favs.length }}</span>
+            <v-btn
+              v-on="on"
+              icon
+              @click="starClick"
+              :class="{'disable-events': (clickChangeRunning || !user.id )}"
+            >
+              <v-icon v-if="stared" color="#f1cf0c" class="yestar">mdi-star</v-icon>
+              <v-icon v-else class="nostar">mdi-star-outline</v-icon>
+            </v-btn>
+          </div>
         </template>
         <span v-if="stared" class="caption">Remove from favorites</span>
-        <span v-else class="caption">Add to favorites</span>
+        <span v-else-if="user.id" class="caption">Add to favorites</span>
+        <span v-else class="caption">Log in to add to favorites</span>
       </v-tooltip>
 
       <v-tooltip bottom>
@@ -26,7 +35,7 @@
             :class="{'copySuccess': copySuccess}"
             v-clipboard:success="copySuccessFcn"
           >
-            <v-icon>mdi-clipboard-text-outline</v-icon>
+            <v-icon>mdi-link</v-icon>
           </v-btn>
         </template>
         <span class="caption">Copy URL to clipboard</span>

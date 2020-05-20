@@ -40,7 +40,7 @@
 
                 <v-btn
                   color="black"
-                  class="align-self-end"
+                  class="align-self-end mt-8"
                   fab
                   outlined
                   @click="$vuetify.goTo('#about-me')"
@@ -72,18 +72,18 @@
         </v-responsive>
 
         <v-responsive class="mx-auto" max-width="900">
-          <div class="headline mb-6">free online platform for presenting & discussing research</div>
+          <div class="headline mb-8">free online platform for presenting & discussing research</div>
 
           <div class="title font-weight-black mb-0">Magnify impact</div>
           <div class="subtitle-1 align-center mb-4">by presenting online for everyone</div>
 
-          <div class="title font-weight-black mb-0">Collaborate</div>
+          <div class="title font-weight-black mb-0">Collaborate with the right people</div>
           <div
             class="subtitle-1 align-center mb-4"
           >by sharing questions, comments or additional results</div>
 
-          <div class="title font-weight-black mb-0">Get feedback</div>
-          <div class="subtitle-1 align-center">to your research</div>
+          <div class="title font-weight-black mb-0">Get relevant feedback</div>
+          <div class="subtitle-1 align-center">from across the academic community</div>
         </v-responsive>
       </v-container>
 
@@ -94,53 +94,40 @@
       <div class="py-12"></div>
 
       <v-container class="text-center">
-        <h2 class="display-2 font-weight-bold mb-3">What do I do?</h2>
+        <h2 class="display-2 font-weight-bold mb-3">How does it work?</h2>
 
-        <v-responsive class="mx-auto" max-width="900">
+        <v-responsive class="mx-auto" max-width="1000">
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
                 <div class="display-1 font-weight-black mb-6">As an author</div>
                 <ol class="headline px-0" style="list-style-position: inside">
-                  <li>
-                    Add your paper
-                    <p class="subtitle-1 mb-5">Create a page for your paper.</p>
+                  <li>Add your paper & set a goal<p
+                   class="subtitle-1 mb-5">Create a page for your paper. Set the goal size of the audience you'd like to present to. Add a moderate ticket price to make sure they will show up.</p>
                   </li>
-                  <li>
-                    Set goal
-                    <p
-                      class="subtitle-1 mb-5"
-                    >Set the minimal number of participants and the ticket price. The reason for ticket purchase is to show real interest.</p>
+                  <li>Present online<p
+                  class="subtitle-1 mb-5">Once all tickets are sold, you will get the chance to show your work to all researches tackling the same problem. Afterward, you get 90% of the collected money.</p>
                   </li>
-                  <li>
-                    Present
-                    <p
-                      class="subtitle-1 mb-5"
-                    >When enough people are gathered, an online presentation takes place. Afterwards, you get 90% of the collected money. Recording will be publicly available for free.</p>
+                  <li>Share<p
+                  class="subtitle-1 mb-5">A recording will be made publicly available for free. You will thus get a chance to promote your research even more.</p>
                   </li>
                 </ol>
               </v-col>
               <v-col cols="12" md="6">
                 <div class="display-1 font-weight-black mb-6">As a user</div>
                 <ol class="headline px-0" style="list-style-position: inside">
-                  <li>
-                    Show interest
-                    <p
-                      class="subtitle-1 mb-5"
-                    >Show the author you are interested in their research by purchasing a presentation ticket.</p>
+                  <li>Show interest<p 
+                  class="subtitle-1 mb-5">Show the author you are interested in their research by purchasing a ticket for their live presentation.</p>
                   </li>
-                  <li>
-                    Join the presentation
-                    <p
-                      class="subtitle-1 mb-5"
-                    >The author will present their work online once enough people gather. You will get the chance to join and talk with them. Should a paper not get enough interest, your money will be refunded.</p>
+                  <li>Join the presentation<p
+                  class="subtitle-1 mb-5">You will get the chance to join the presentation and talk to the author once enough people gather.<br/>If a paper does not get enough interest, your money will be refunded.</p>
                   </li>
                 </ol>
               </v-col>
             </v-row>
           </v-container>
-          <div class="display-1 mt-2">plus everyone: discuss!</div>
-          <div class="title mt-2">Join the discussions on papers.</div>
+          <div class="display-1 font-weight-black mt-3">plus everyone: discuss!</div>
+          <div class="title mt-2">Every paper page has discussion threads.</div>
         </v-responsive>
       </v-container>
 
@@ -151,28 +138,41 @@
       <div class="py-12"></div>
 
       <v-container class="text-center">
-        <h2 class="display-2 font-weight-bold mb-3">Our team</h2>
+        <h2 class="display-2 font-weight-bold mb-6">Our team</h2>
 
         <v-responsive class="mx-auto title font-weight-light mb-8" max-width="720">
           <v-container>
             <v-row>
+              
               <v-col>
-                <v-avatar class="elevation-12 mb-6" size="128">
-                  <v-img :src="tomas"></v-img>
-                </v-avatar>
+                <a href="https://www.linkedin.com/in/tomas-novak/" target="_blank">
+                  <v-avatar class="elevation-12 mb-6" size="128">
+                    <v-img :src="tomas"></v-img>
+                  </v-avatar>
+                </a>
                 <div class="headline font-weight-medium">Tomas Novak</div>
-                <div class="caption">Co-founder</div>
+                <!-- <div class="caption">Co-founder</div> -->
               </v-col>
+              
               <v-col>
-                <v-avatar class="elevation-12 mb-6" size="128">
-                  <v-img :src="jakub"></v-img>
-                </v-avatar>
+                <a href="https://www.linkedin.com/in/jakub-pogran/" target="_blank">
+                  <v-avatar class="elevation-12 mb-6" size="128">
+                    <v-img :src="jakub"></v-img>
+                  </v-avatar>
+                </a>
                 <div class="headline font-weight-medium">Jakub Pogran</div>
-                <div class="caption">Co-founder</div>
+                <!-- <div class="caption">Co-founder</div> -->
               </v-col>
             </v-row>
           </v-container>
-          <div class="headline mt-8">pubpap is <a class="black--text" href="https://github.com/pograjak/pubpap" target="_blank">open-source</a></div>
+          <div class="display-1 mt-12">
+            pubpap is
+            <a
+              class="black--text"
+              href="https://github.com/pograjak/pubpap"
+              target="_blank"
+            >open-source</a>
+          </div>
         </v-responsive>
 
         <!-- <div></div>
@@ -191,7 +191,7 @@
 export default {
   head() {
     return {
-      title: 'About'
+      title: "About"
     };
   },
 
