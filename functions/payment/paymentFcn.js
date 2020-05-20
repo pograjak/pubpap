@@ -68,6 +68,14 @@ exports.paymentFcn = functions
       );
     }
 
+    // Check if there is still room for one ticket
+    if(paper.requestPresentation.currentValue + paper.requestPresentation.bid > paper.requestPresentation.goal){
+      throw new functions.https.HttpsError(
+        "invalid-argument",
+        "All paper tickets are sold already."
+      );
+    }
+
     // Check double buy
     if (paper.requestPresentation.subsIds.includes(uid)) {
       throw new functions.https.HttpsError(
