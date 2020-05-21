@@ -1,10 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-const stripe = require("stripe")("sk_test_QHUsLKmLDRAJbMTNtnhcmNV900HPnjSqdA");
-
-// Find your endpoint's secret in your Dashboard's webhook settings
-// TODO: change this and save as firebase config
-const endpointSecret = "whsec_JkLqtUMl51RHJXQgOvZSksKQ6eI8F110";
+const stripe = require("stripe")(functions.config().stripe.secretkey);
 
 exports.paymentFcn = functions
   .region("europe-west1")
@@ -69,7 +65,10 @@ exports.paymentFcn = functions
     }
 
     // Check if there is still room for one ticket
-    if(paper.requestPresentation.currentValue + paper.requestPresentation.bid > paper.requestPresentation.goal){
+    if (
+      paper.requestPresentation.currentValue + paper.requestPresentation.bid >
+      paper.requestPresentation.goal
+    ) {
       throw new functions.https.HttpsError(
         "invalid-argument",
         "All paper tickets are sold already."
@@ -86,7 +85,11 @@ exports.paymentFcn = functions
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
+      client_reference_id: uid,
       customer_email: email,
+      metadata: {
+        paperId: paperId
+      },
       line_items: [
         {
           name: `Paper: ${paper.title}`,
@@ -96,7 +99,7 @@ exports.paymentFcn = functions
           quantity: 1
         }
       ],
-      success_url:`https://pubpap-redcute.web.app/paper/${paperId}?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `https://pubpap-redcute.web.app/paper/${paperId}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `https://pubpap-redcute.web.app/paper/${paperId}`
     });
 

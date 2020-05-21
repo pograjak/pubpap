@@ -4,13 +4,14 @@ const functions = require("firebase-functions");
 //functions.config().firebase
 admin.initializeApp();
 
-const upvotes = require("./firestore/upvotes");
-const payment = require("./payment/payment_gateway");
-
 // PAYMENT API
+const payment = require("./payment/payment_gateway");
 exports.payment = payment.payment;
+const paymentFcn = require("./payment/paymentFcn");
+exports.paymentFcn = paymentFcn.paymentFcn;
 
 // FIRESTORE FUNCTIONS
+const upvotes = require("./firestore/upvotes");
 exports.countupvotescreate = upvotes.countupvotescreate;
 exports.countupvotesupdate = upvotes.countupvotesupdate;
 exports.countupvotesdelete = upvotes.countupvotesdelete;
@@ -22,6 +23,3 @@ exports.countupvotesdelete = upvotes.countupvotesdelete;
 const algolia = require("./algolia/listeners");
 exports.algoliaCreatePaper = algolia.algoliaCreatePaper;
 exports.algoliaDeletePaper = algolia.algoliaDeletePaper;
-
-const paymentFcn = require("./payment/paymentFcn")
-exports.paymentFcn = paymentFcn.paymentFcn;
