@@ -71,7 +71,7 @@
 export default {
   head() {
     return {
-      title: 'Sign up'
+      title: "Sign up"
     };
   },
 
@@ -104,7 +104,9 @@ export default {
             this.email,
             this.password
           );
-          if (user) this.redirect();
+
+          this.$store.dispatch("changeDisplayName", this.email.split("@")[0]);
+          this.redirect();
         } catch (error) {
           console.log(error);
 
@@ -118,7 +120,7 @@ export default {
       let provider = new this.$fireAuthObj.GoogleAuthProvider();
       try {
         const user = await this.$fireAuth.signInWithPopup(provider);
-        if (user) this.redirect();
+        this.redirect();
       } catch (error) {
         console.log(error);
 
