@@ -76,7 +76,7 @@ export default {
 
   head() {
     return {
-      title: 'Login'
+      title: "Login"
     };
   },
 
@@ -127,7 +127,10 @@ export default {
     },
 
     redirect() {
-      if (this.$route.query.nextPage && !this.$route.query.nextPage.includes("/login")) {
+      if (
+        this.$route.query.nextPage &&
+        !this.$route.query.nextPage.includes("login")
+      ) {
         this.$router.push(this.$route.query.nextPage);
       } else {
         this.$router.push("/");
