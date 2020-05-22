@@ -14,6 +14,19 @@
       <v-icon>mdi-arrow-up</v-icon>
     </v-btn>
 
+    <v-btn 
+      v-scroll="onScroll"
+      v-show="showSignUpButton"
+      large
+      fixed
+      class="mb-2 title red lighten-2 text-center"
+      dark
+      bottom
+      style="left: 50%; transform: translateX(-50%); z-index:10"
+      to="/register?nextPage=/">
+      <v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up
+    </v-btn>
+
     <section>
       <v-row no-gutters>
         <div
@@ -78,8 +91,8 @@
     <section id="how">
       <div class="py-12"></div>
 
-      <v-container class="text-center">
-        <h2
+      <v-container class="text-center py-0">
+        <h2 
           class="font-weight-black mb-6"
           :class="[$vuetify.breakpoint.smAndDown ? 'display-1' : 'display-2']"
         >How does it work?</h2>
@@ -106,7 +119,7 @@
                   <li>
                     Share
                     <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
-                      class="mb-10"
+                      class="mb-0"
                     >A recording will be made publicly available for free. You will thus get a chance to promote your research even more.</p>
                   </li>
                 </ol>
@@ -131,7 +144,7 @@
               </v-col>
             </v-row>
           </v-container>
-          
+          <!-- <v-btn large class="mb-2 title red lighten-2" dark to="/register?nextPage=/"><v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up</v-btn> -->
           <!-- <div class="title mt-2">Every paper page has discussion threads.</div> -->
         </v-responsive>
       </v-container>
@@ -165,8 +178,9 @@
           <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Get relevant feedback</div>
           <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">from across the academic community</div>
         </v-responsive>
+        <!-- <v-btn large class="mb-2 mt-12 title red lighten-2" dark to="/register?nextPage=/"><v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up</v-btn> -->
       </v-container>
-
+      
       <div class="py-12"></div>
     </section>
 
@@ -234,7 +248,8 @@ export default {
     return {
       tomas: require("assets/tomas.jpg"),
       jakub: require("assets/jakub.jpg"),
-      showGoUpButton: false
+      showGoUpButton: false,
+      showSignUpButton: false
     };
   },
   methods: {
@@ -242,6 +257,12 @@ export default {
       if (typeof window === "undefined") return;
       const top = window.pageYOffset || e.target.scrollTop || 0;
       this.showGoUpButton = top > 20;
+
+      var elmnt = document.getElementById("how");
+      // var y = elmnt.scrollHeight;
+      // console.log( elmnt.offsetHeight);
+      let bot = top + window.innerHeight;
+      this.showSignUpButton = bot > (elmnt.offsetTop + elmnt.offsetHeight);
     },
     toTop() {
       this.$vuetify.goTo(0);
