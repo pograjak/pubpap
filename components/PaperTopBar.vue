@@ -76,7 +76,7 @@ export default {
     }),
     paperURL() {
       // TODO: change this to correct address
-      return `https://pubpap.com/paper/${this.$route.params.id}`;
+      return `https://${window.location.hostname}/paper/${this.$route.params.id}`;
     },
     stared() {
       if (this.user.id && Array.isArray(this.paper.favs)) {

@@ -139,10 +139,6 @@ export default {
       request: "paper/requestPresentation",
       paper: "paper/paper"
     }),
-    paperURL() {
-      // TODO: change this to correct address
-      return `https://pubpap.com/paper/${this.$route.params.id}`;
-    },
     ticketButtonIcon() {
       if (!this.user.id) {
         return "mdi-login";
