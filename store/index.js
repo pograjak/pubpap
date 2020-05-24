@@ -7,11 +7,13 @@ export const state = () => ({
     id: "",
     photoUrl: "",
     displayName: ""
-  }
+  },
+  homeTab: 0
 });
 
 export const getters = {
-  user: state => state.user
+  user: state => state.user,
+  homeTab: state => state.homeTab
 };
 
 export const mutations = {
@@ -22,12 +24,16 @@ export const mutations = {
       state.user.id = "";
       state.user.photoUrl = "";
       state.user.displayName = "";
+      state.homeTab = 0;
     } else {
       state.user.email = authUser.email;
       state.user.id = authUser.uid;
       state.user.photoUrl = authUser.photoUrl;
       state.user.displayName = authUser.displayName;
     }
+  },
+  changeHomeTab(state, tab){
+    state.homeTab = tab;
   },
   changeDisplayName(state, displayName) {
     state.user.displayName = displayName;
