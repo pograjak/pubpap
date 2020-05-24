@@ -10,7 +10,7 @@
     <p class="name grey--text text--darken-1" v-bind:class="{ 'text-right': rightAlign }">
       {{ name }}
       <br />
-      <small>Created {{ nonNullDate | moment('lll') }}</small>
+      <small>Added {{ nonNullDate | moment('lll') }}</small>
     </p>
     <!-- </v-col> -->
     <!-- </v-row> -->
