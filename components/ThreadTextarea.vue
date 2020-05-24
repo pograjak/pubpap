@@ -126,9 +126,9 @@ export default {
         return md.render(plainText); // Returns HTML from a custom parser
       },
       autoDownloadFontAwesome: false,
-      hideIcons: ["image", "side-by-side", "fullscreen"],
+      hideIcons: ["side-by-side", "fullscreen"],
       indentWithTabs: false,
-      lineWrapping: false,
+      lineWrapping: true,
       placeholder: this.showTitleField ? "" : this.title + "...",
       spellChecker: false,
       status: false,
@@ -186,6 +186,12 @@ export default {
           action: EasyMDE.drawLink,
           className: "v-icon mdi mdi-link",
           title: "Create Link"
+        },
+        {
+          name: "link",
+          action: EasyMDE.drawImage,
+          className: "v-icon mdi mdi-image",
+          title: "Insert image"
         },
         "|",
         {

@@ -31,4 +31,4 @@ export const md = require('markdown-it')({
 
         return ''; // use external default escaping
     }
-}).disable('image')
+})
