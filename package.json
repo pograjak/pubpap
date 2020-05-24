@@ -1,7 +1,7 @@
 {
   "name": "pubpap",
   "version": "1.0.0",
-  "description": "Platform for showing published papers",
+  "description": "present & discuss research papers",
   "author": "pograjak",
   "private": true,
   "scripts": {

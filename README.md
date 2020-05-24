@@ -1,6 +1,6 @@
 # pubpap
 
-> Platform for showing published papers
+> Platform for presenting & discussing research papers
 
 ## Build Setup
 
