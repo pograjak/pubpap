@@ -157,7 +157,7 @@ export default {
         if (this.request.subsIds.includes(this.user.id)) {
           return "Ticket bought";
         } else {
-          return `I am interested! (USD ${this.request.bid})`;
+          return `Buy a ticket! (USD ${this.request.bid})`;
         }
       }
     }
