@@ -111,8 +111,6 @@ export default {
     },
     debounceUpdateStoreVote: debounce(
       function(newState) {
-        console.log('Debounce fn');
-        // console.log(`Search: ${this.textInput}`);
         this.updateStoreVote(newState);
       },
       500,
