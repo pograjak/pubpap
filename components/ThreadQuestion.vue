@@ -52,6 +52,7 @@ import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import "~/assets/own-github-markdown.css";
 import { mapGetters } from "vuex";
 import { md } from "~/plugins/markdown_render.js";
+import debounce from "lodash/debounce";
 
 export default {
   components: {
@@ -108,19 +109,31 @@ export default {
         state: newState
       });
     },
+    debounceUpdateStoreVote: debounce(
+      function(newState) {
+        console.log('Debounce fn');
+        // console.log(`Search: ${this.textInput}`);
+        this.updateStoreVote(newState);
+      },
+      500,
+      {
+        'leading': true,
+        'trailing': false
+      }
+    ),
     upvote() {
       let newState = 1;
       if (this.voteState > 0) {
         newState = 0;
       }
-      this.updateStoreVote(newState);
+      this.debounceUpdateStoreVote(newState);
     },
     downvote() {
       let newState = -1;
       if (this.voteState < 0) {
         newState = 0;
       }
-      this.updateStoreVote(newState);
+      this.debounceUpdateStoreVote(newState);
     }
   }
 };
