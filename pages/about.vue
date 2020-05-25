@@ -19,10 +19,11 @@
       v-show="showSignUpButton"
       large
       fixed
-      class="mb-2 title red lighten-2 text-center"
+      class="mt-6 mr-6 title red lighten-2 text-center"
       dark
-      bottom
-      style="left: 50%; transform: translateX(-50%); z-index:10"
+      top
+      right
+      style="z-index: 50"
       to="/register?nextPage=/">
       <v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up
     </v-btn>
