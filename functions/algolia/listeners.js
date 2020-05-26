@@ -25,9 +25,9 @@ exports.algoliaCreatePaper = functions
       objectID: context.params.paperId,
       title: dat.title,
       authors: dat.authors,
-      summary: dat.summary,
+      // summary: dat.summary,
       arxLink: dat.arxLink,
-      createdAt: dat.createdAt.toDate().getTime() / 1000
+      createdAt: dat.createdAt.toDate().getTime() / 1000  // algolia only accepts numbers -> seconds from epoch
     };
 
     await collectionIndex.saveObject(record);

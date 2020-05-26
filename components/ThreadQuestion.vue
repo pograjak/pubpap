@@ -10,20 +10,20 @@
           </div>
           <div v-else>
             <v-btn
-              :disabled="votingDisabled"
+              :disabled="!user.id"
               depressed
-              :class="{'disable-events': votingPause, 'upvotecol': voteUserState>0, 'anim': voteUserState>0, 'novotecol': voteUserState<=0}"
+              :class="{'upvotecol': voteState>0, 'anim': voteState>0}"
               icon
               @click="upvote"
             >
               <v-icon>mdi-arrow-up-thick</v-icon>
             </v-btn>
             <br />
-            <p class="my-1">{{ votes_internal }}</p>
+            <p class="my-1">{{ thread.votes }}</p>
             <v-btn
-              :disabled="votingDisabled"
+              :disabled="!user.id"
               depressed
-              :class="{'disable-events': votingPause, 'downvotecol': voteUserState<0, 'anim': voteUserState<0, 'novotecol': voteUserState>=0}"
+              :class="{'downvotecol': voteState<0, 'anim': voteState<0}"
               icon
               @click="downvote"
             >
@@ -33,11 +33,11 @@
         </v-col>
 
         <v-col>
-          <v-card-title class="pt-0 pb-2 title font-weight-bold">{{ title }}</v-card-title>
-          <v-card-text class="markdown-body" v-html="text_html"></v-card-text>
+          <v-card-title class="pt-0 pb-2 title font-weight-bold">{{ thread.title }}</v-card-title>
+          <v-card-text class="markdown-body" v-html="renderMarkdown(thread.text)"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
-            <User :date="date" :name="name" :rightAlign="true" />
+            <User :date="thread.createdAt" :name="thread.uaserName" :rightAlign="true" />
           </v-row>
         </v-col>
       </v-row>
@@ -51,87 +51,87 @@ import User from "~/components/User.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 import "~/assets/own-github-markdown.css";
 import { mapGetters } from "vuex";
+import { md } from "~/plugins/markdown_render.js";
+import debounce from "lodash/debounce";
 
 export default {
   components: {
     User,
     LoadingSpinner
   },
-  props: {
-    threadId: String,
-    title: String,
-    text_html: String,
-    date: Object,
-    name: String,
-    votes: Number,
-    votingDisabled: Boolean,
-    voteUserState: Number,
-    votesShowLoading: Boolean
-  },
+
   data() {
     return {
-      votes_internal: 0,
-      votingPause: false
+      votesShowLoading: false
     };
   },
+
   computed: {
-    ...mapGetters(["user"])
+    ...mapGetters({
+      user: "user",
+      thread: "thread/thread",
+      voteState: "thread/voteState"
+    }),
+    paperId() {
+      return this.$route.params.paperid;
+    },
+    threadId() {
+      return this.$route.params.threadid;
+    }
   },
 
   created: function() {
-    this.votes_internal = this.votes;
-  },
+        // Load voting state
+    if (this.$fireAuth.currentUser) {
+      this.votesShowLoading = true;
 
-  watch: {
-    votes: function(val) {
-      this.votes_internal = this.votes;
-      this.votingPause = false;
+      this.$store
+        .dispatch("thread/bindVoteState", {
+          paperId: this.paperId,
+          threadId: this.threadId,
+          userId: this.$fireAuth.currentUser.uid
+        })
+        .then(() => {
+          this.votesShowLoading = false;
+        });
     }
   },
+
   methods: {
+    renderMarkdown(text){
+      return md.render(text);
+    },
     updateStoreVote(newState) {
-      this.$store.dispatch("threads/vote", {
-        paperId: this.$route.params.id,
+      this.$store.dispatch("thread/vote", {
+        paperId: this.paperId,
         threadId: this.threadId,
         userId: this.user.id,
         state: newState
       });
     },
+    debounceUpdateStoreVote: debounce(
+      function(newState) {
+        this.updateStoreVote(newState);
+      },
+      500,
+      {
+        'leading': true,
+        'trailing': false
+      }
+    ),
     upvote() {
-      if (this.votingPause) {
-        return;
-      }
-      this.votingPause = true;
-      var newState = 1;
-
-      if (this.voteUserState > 0) {
+      let newState = 1;
+      if (this.voteState > 0) {
         newState = 0;
-        this.votes_internal -= 1;
-      } else if (this.voteUserState == 0) {
-        this.votes_internal += 1;
-      } else {
-        this.votes_internal += 2;
       }
-
-      this.updateStoreVote(newState);
+      this.debounceUpdateStoreVote(newState);
     },
     downvote() {
-      if (this.votingPause) {
-        return;
-      }
-      this.votingPause = true;
-      var newState = -1;
-
-      if (this.voteUserState > 0) {
-        this.votes_internal -= 2;
-      } else if (this.voteUserState == 0) {
-        this.votes_internal -= 1;
-      } else {
+      let newState = -1;
+      if (this.voteState < 0) {
         newState = 0;
-        this.votes_internal += 1;
       }
-
-      this.updateStoreVote(newState);
+      this.debounceUpdateStoreVote(newState);
     }
   }
 };
@@ -157,11 +157,5 @@ export default {
 .upvotecol {
   /* color: #3f51b5 !important; */
   color: #4caf50 !important;
-}
-.novotecol {
-  color: #b4b4b4 !important;
-}
-.disable-events {
-  pointer-events: none;
 }
 </style>

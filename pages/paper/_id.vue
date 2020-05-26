@@ -28,6 +28,8 @@
         </v-col>
       </template>
     </v-row>
+    <RequestPresentationBoughtDialog />
+    <SnackbarTestNotice />
   </v-container>
 </template>
 
@@ -36,6 +38,8 @@ import PaperTopBar from "~/components/PaperTopBar.vue";
 import PaperDetail from "~/components/PaperDetail.vue";
 import RequestPresentation from "~/components/RequestPresentation.vue";
 import ThreadsMain from "~/components/ThreadsMain.vue";
+import SnackbarTestNotice from "~/components/SnackbarTestNotice.vue"
+import RequestPresentationBoughtDialog from "~/components/RequestPresentationBoughtDialog.vue"
 import Vue from "vue";
 import { mapGetters } from "vuex";
 
@@ -58,6 +62,8 @@ export default {
   },
 
   components: {
+    RequestPresentationBoughtDialog,
+    SnackbarTestNotice,
     PaperTopBar,
     PaperDetail,
     RequestPresentation,

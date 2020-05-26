@@ -76,11 +76,11 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="deleteDialog = false">Cancel</v-btn>
-          <!-- TODO: Change to our email -->
+          <!-- TODO: Change to the support email -->
           <v-btn
             color="error"
             error
-            :href="`mailto:delete@pubpap.com?subject=Please delete paper ID \'${paper.id}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.id}\' because of the following reasons:%0D%0A%0D%0A`"
+            :href="`mailto:tomas@redcute.cz, jakub@redcute.cz?subject=[pubpap] Please delete paper ID \'${paper.id}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.id}\' because of the following reasons:%0D%0A%0D%0A`"
             @click="deleteDialog = false"
           >Delete</v-btn>
         </v-card-actions>

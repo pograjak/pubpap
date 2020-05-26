@@ -48,8 +48,22 @@
         <v-divider />
       </template>
 
+      <!-- List of threads -->
       <div v-for="thread in threads" :key="thread.id">
-        <Thread :thread="thread" />
+        <v-list-item three-line style="min-height:70px" :to="`/thread/${paperId}/${thread.id}`">
+          <v-list-item-content class="pt-2">
+            <v-list-item-title>{{ thread.title }}</v-list-item-title>
+            <v-container class="pa-0 ma-0">
+              <v-row no-gutters>
+                <User :date="thread.createdAt" :name="thread.userName" />
+              </v-row>
+            </v-container>
+          </v-list-item-content>
+
+          <v-list-item-icon right class="pt-2 mt-0">
+            <div class="ratingicon caption" v-bind:class="highlightingClasses(thread.votes)">{{ thread.votes }}</div>
+          </v-list-item-icon>
+        </v-list-item>
         <v-divider></v-divider>
       </div>
     </v-list>
@@ -59,8 +73,8 @@
 <script>
 import { mapGetters } from "vuex";
 
-import Thread from "~/components/Thread.vue";
 import ThreadTextarea from "~/components/ThreadTextarea.vue";
+import User from "~/components/User.vue";
 import LoadingSpinner from "~/components/LoadingSpinner.vue";
 
 export default {
@@ -72,14 +86,14 @@ export default {
     };
   },
   components: {
-    Thread,
+    User,
     ThreadTextarea,
     LoadingSpinner
   },
 
   created() {
     this.$store
-      .dispatch("threads/bindThreads", { paperId: this.$route.params.id })
+      .dispatch("threadlist/bindThreads", { paperId: this.paperId })
       .then(() => {
         this.showLoading = false;
       })
@@ -92,10 +106,13 @@ export default {
   computed: {
     ...mapGetters({
       user: "user",
-      threads: "threads/threads"
+      threads: "threadlist/threads"
     }),
     showEmpty() {
       return this.threads.length == 0 && !this.showLoading;
+    },
+    paperId() {
+      return this.$route.params.id;
     }
   },
 
@@ -104,8 +121,8 @@ export default {
       if ((item.title.length > 0) & (item.text.length > 0)) {
         this.submitShowLoading = true;
         this.$store
-          .dispatch("threads/addThread", {
-            paperId: this.$route.params.id,
+          .dispatch("threadlist/addThread", {
+            paperId: this.paperId,
             title: item.title,
             text: item.text,
             userId: this.user.id,
@@ -117,9 +134,24 @@ export default {
             this.dialog = false;
           });
       }
-    }
+    },
+    highlightingClasses(votes) {
+      return {
+        success: votes > 5,
+        "grey lighten-2": (votes <= 5) & (votes >= -1),
+        error: votes < -1,
+        "white--text": (votes < -1) | (votes > 5)
+      };
+    },
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+div.ratingicon {
+  width: 40px;
+  height: 25px;
+  line-height: 25px;
+  text-align: center;
+}
+</style>

@@ -11,18 +11,21 @@
         <PaperCreateForm />
       </v-col>
     </v-row>
+    <SnackbarTestNotice/>
   </v-container>
 </template>
 
 <script>
 import PaperCreateForm from "@/components/PaperCreateForm.vue";
 import UserDetail from "@/components/UserDetail.vue";
+import SnackbarTestNotice from "~/components/SnackbarTestNotice.vue"
 
 export default {
   middleware: "auth",
   components: {
     PaperCreateForm,
-    UserDetail
+    UserDetail,
+    SnackbarTestNotice
   }
 };
 </script>

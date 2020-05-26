@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-tabs v-model="tab">
+    <v-tabs v-model="homeTab">
       <v-tabs-slider></v-tabs-slider>
 
       <v-tab>
@@ -20,7 +20,7 @@
       </v-tab>
     </v-tabs>
 
-    <v-tabs-items v-model="tab">
+    <v-tabs-items :value="homeTab">
       <v-tab-item>
         <PaperList
           storeDispatchFcn="paperlist/loadRecentPapers"
@@ -73,33 +73,41 @@ export default {
     PaperList
   },
 
-  data() {
-    return {
-      tab: 0
-    };
-  },
-
   watch: {
     userId: function(newuser) {
       // switch to tab=0 on logout
       // console.log("newuser_watch");
       // on logout
       if (!newuser.id) {
-        this.tab = 0;
+        this.$store.commit("changeHomeTab", 0);
       }
     }
   },
 
   computed: {
-    userId() {  // need to follow the id explicitly, user object does not change, just it's insides
+    userId() {
+      // need to follow the id explicitly, user object does not change, just it's insides
       // console.log("newuserId");
       return this.$store.getters.user.id;
     },
     user() {
       // console.log("newuser");
       return this.$store.getters.user;
+    },
+    homeTab: {
+      get: function() {
+        return this.$store.getters.homeTab;
+      },
+      set: function(newVal) {
+        this.$store.commit("changeHomeTab", newVal);
+      }
     }
-    // ...mapGetters(["user"])
+  },
+
+  methods: {
+    changeTab(tab) {
+      console.log(tab);
+    }
   }
 };
 </script>

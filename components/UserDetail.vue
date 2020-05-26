@@ -81,7 +81,7 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("userinfo/loadUserInfo", this.user.id);
+    this.$store.dispatch("userinfo/loadUserInfo", this.$fireAuth.currentUser.uid);
   },
 
   methods: {

@@ -65,7 +65,7 @@ export default {
     this.showLoading = true;
     this.$store
       .dispatch(this.storeDispatchFcn, {
-        userId: this.user.id ? this.user.id : undefined
+        userId: this.$fireAuth.currentUser ? this.$fireAuth.currentUser.uid : undefined
       })
       .then(() => {
         this.showLoading = false;
