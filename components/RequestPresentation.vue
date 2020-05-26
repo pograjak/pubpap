@@ -90,7 +90,6 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn text @click="testDialog = false">Cancel</v-btn>
-          <!-- TODO: Change to our email -->
           <v-btn color="primary" @click="payment()" :loading="loading"
             >Proceed</v-btn
           >
@@ -188,9 +187,9 @@ export default {
         this.loading = false;
       } catch (error) {
         console.log(error);
-        // TODO: change to valid email address
+        // TODO: change to the support email address
         alert(
-          "Error loading payment request! Please try later or contact support: support@pubpap.com"
+          "Error loading payment request! Please try later or contact support: tomas@redcute.cz"
         );
         this.loading = false;
       }

@@ -14,7 +14,7 @@
       <v-icon>mdi-arrow-up</v-icon>
     </v-btn>
 
-    <v-btn 
+    <v-btn
       v-scroll="onScroll"
       v-show="showSignUpButton"
       large
@@ -24,7 +24,8 @@
       top
       right
       style="z-index: 50"
-      to="/register?nextPage=/">
+      to="/register?nextPage=/"
+    >
       <v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up
     </v-btn>
 
@@ -78,11 +79,23 @@
         </v-responsive>
 
         <v-responsive class="mx-auto" max-width="900">
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Present your publications</div>
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">easily set-up online presentations to relevant audience</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+            class="font-weight-bold mb-3"
+          >Present your publications</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+            class="font-weight-light align-center mb-10"
+          >easily set-up online presentations to relevant audience</div>
 
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Discuss with others</div>
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">publicly share ideas, questions or additional results</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+            class="font-weight-bold mb-3"
+          >Discuss with others</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+            class="font-weight-light align-center mb-10"
+          >publicly share ideas, questions or additional results</div>
         </v-responsive>
       </v-container>
 
@@ -93,7 +106,7 @@
       <div class="py-12"></div>
 
       <v-container class="text-center py-0">
-        <h2 
+        <h2
           class="font-weight-black mb-6"
           :class="[$vuetify.breakpoint.smAndDown ? 'display-1' : 'display-2']"
         >How does it work?</h2>
@@ -102,46 +115,67 @@
           <v-container>
             <v-row>
               <v-col cols="12" md="6">
-                <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-6">As an author</div>
-                <ol :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="px-0  font-weight-bold" style="list-style-position: inside">
+                <div
+                  :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+                  class="font-weight-bold mb-6"
+                >As an author</div>
+                <ol
+                  :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+                  class="px-0 font-weight-bold"
+                  style="list-style-position: inside"
+                >
                   <li>
                     Add your paper
-                    <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
+                    <p
+                      :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
                       class="mb-10"
-                    >
-                    Create a page for your paper on pubpap. Set the minimal size of the audience you'd like to present to. Add a moderate ticket price to prove they are interested.</p>
+                    >Create a page for your paper on pubpap. Set the minimal size of the audience you'd like to present to. Add a moderate ticket price to prove they are interested.</p>
                   </li>
                   <li>
                     Present
-                    <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
+                    <p
+                      :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
                       class="mb-10"
                     >Once all tickets are sold, you will get the chance to show your work to all researches tackling the same problem. Afterward, you get 90% of the collected money.</p>
                   </li>
                   <li>
                     Share
-                    <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
+                    <p
+                      :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
                       class="mb-0"
                     >A recording will be made publicly available for free. You will thus get a chance to promote your research even more.</p>
                   </li>
                 </ol>
               </v-col>
               <v-col cols="12" md="6">
-                 <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-6">As a user</div>
-                <ol :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="px-0  font-weight-bold" style="list-style-position: inside">
+                <div
+                  :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+                  class="font-weight-bold mb-6"
+                >As a user</div>
+                <ol
+                  :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+                  class="px-0 font-weight-bold"
+                  style="list-style-position: inside"
+                >
                   <li>
                     Show interest
-                    <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']" class="mb-10">
-                      Show the author you are interested in their publication by purchasing a ticket for their live presentation.</p>
+                    <p
+                      :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
+                      class="mb-10"
+                    >Show the author you are interested in their publication by purchasing a ticket for their live presentation.</p>
                   </li>
                   <li>
                     Join the presentation
-                    <p :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']" class="mb-10">
-                      You will get the chance to join the presentation and talk to the author once enough people gather*.
-                    </p>
+                    <p
+                      :class="[$vuetify.breakpoint.smAndDown ? 'subtitle-1 ' : 'title']"
+                      class="mb-10"
+                    >You will get the chance to join the presentation and talk to the author once enough people gather*.</p>
                   </li>
                 </ol>
-                
-                <div class="text-center subtitle-2 mt-12">*Don't worry, if a paper does not get enough interest, your money will be refunded.</div>
+
+                <div
+                  class="text-center subtitle-2 mt-12"
+                >*Don't worry, if a paper does not get enough interest, your money will be refunded.</div>
               </v-col>
             </v-row>
           </v-container>
@@ -152,7 +186,6 @@
 
       <div class="py-12"></div>
     </section>
-
 
     <section id="why">
       <div class="py-12"></div>
@@ -170,18 +203,36 @@
         </v-responsive>
 
         <v-responsive class="mx-auto" max-width="900">
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Magnify impact</div>
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">by presenting online for everyone</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+            class="font-weight-bold mb-3"
+          >Magnify impact</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+            class="font-weight-light align-center mb-10"
+          >by presenting online for everyone</div>
 
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Collaborate with the whole community</div>
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">by sharing questions, comments or additional results</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+            class="font-weight-bold mb-3"
+          >Collaborate with the whole community</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+            class="font-weight-light align-center mb-10"
+          >by sharing questions, comments or additional results</div>
 
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']" class="font-weight-bold mb-3">Get relevant feedback</div>
-          <div :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']" class="font-weight-light align-center mb-10">from across the academic community</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'headline' : 'display-1']"
+            class="font-weight-bold mb-3"
+          >Get relevant feedback</div>
+          <div
+            :class="[$vuetify.breakpoint.smAndDown ? 'title' : 'headline']"
+            class="font-weight-light align-center mb-10"
+          >from across the academic community</div>
         </v-responsive>
         <!-- <v-btn large class="mb-2 mt-12 title red lighten-2" dark to="/register?nextPage=/"><v-icon large>mdi-file-account-outline</v-icon>&nbsp;Sign Up</v-btn> -->
       </v-container>
-      
+
       <div class="py-12"></div>
     </section>
 
@@ -223,6 +274,10 @@
               target="_blank"
             >open-source</a>
           </div>
+          <v-btn
+            class="mt-12 mb-2 title"
+            href="mailto:tomas@redcute.cz, jakub@redcute.cz?subject=[pubpap] Hi there!&body=Dear pubpap team,%0D%0A%0D%0A"
+          >Contact us</v-btn>
         </v-responsive>
 
         <!-- <div></div>
@@ -263,7 +318,7 @@ export default {
       // var y = elmnt.scrollHeight;
       // console.log( elmnt.offsetHeight);
       let bot = top + window.innerHeight;
-      this.showSignUpButton = bot > (elmnt.offsetTop + elmnt.offsetHeight);
+      this.showSignUpButton = bot > elmnt.offsetTop + elmnt.offsetHeight;
     },
     toTop() {
       this.$vuetify.goTo(0);

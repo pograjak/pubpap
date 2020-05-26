@@ -75,7 +75,6 @@ export default {
       user: "user"
     }),
     paperURL() {
-      // TODO: change this to correct address
       return `https://${window.location.hostname}/paper/${this.$route.params.id}`;
     },
     stared() {
