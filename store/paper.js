@@ -37,6 +37,9 @@ export const mutations = {
 };
 
 export const actions = {
+  addPaper: async function(ctx, pap) {
+    return await this.$fireStore.collection("papers").add(pap);
+  },
   loadPaper: async function(ctx, paperId) {
     // console.log("LOAD PAPER DISPATCHED");
     let p;
@@ -87,11 +90,17 @@ export const actions = {
 
   updateHasImg: async function(ctx, item) {
     let pRef = this.$fireStore.collection("papers").doc(item.paperId);
+    console.log("Has IMG update");
     await pRef.set({ hasImg: item.hasImg }, { merge: true });
   },
 
   uploadThumbnail: async function(ctx, item) {
-    await ctx.dispatch("updateHasImg", { paperId: item.paperId, hasImg: true });
+    if (!item.skipHasImgUpdate) {
+      await ctx.dispatch("updateHasImg", {
+        paperId: item.paperId,
+        hasImg: true
+      });
+    }
 
     const imgName = "paper_thumbnails/" + item.paperId;
     await this.$fireStorage
