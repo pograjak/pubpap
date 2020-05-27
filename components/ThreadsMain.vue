@@ -39,8 +39,8 @@
       <template v-if="showEmpty">
         <v-list-item two-line>
           <v-list-item-content>
-            <v-list-item-title class="text-center caption d-flex align-center justify-center">
-              <v-icon>mdi-head-question-outline</v-icon>
+            <v-list-item-title class="text-center body-2 d-flex align-center justify-center">
+              <v-icon>mdi-comment-question-outline</v-icon>
               <span>&nbsp;Be the first to ask!</span>
             </v-list-item-title>
           </v-list-item-content>

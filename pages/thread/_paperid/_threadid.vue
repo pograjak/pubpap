@@ -33,18 +33,28 @@
 
           <v-spacer />
 
-          <p class="pa-3 ma-0 subtitle-1">Answers</p>
+          <p class="px-3 pt-2 pb-1 ma-0 subtitle-1">Comments</p>
 
-          <v-card v-if="repliesShowLoading">
+          <v-card v-if="repliesShowLoading" outlined>
             <LoadingSpinner />
           </v-card>
 
-          <div v-else v-for="r in replies" :key="r.id">
-            <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
-          </div>
+          <template v-else>
+            <div v-for="r in replies" :key="r.id">
+              <ThreadComment :text="r.text" :date="r.createdAt" :name="r.userName" />
+            </div>
+            <div v-if="replies && replies.length == 0">
+              <v-card outlined>
+                <v-card-title class="text-center body-2 d-flex align-center justify-center">
+                  <v-icon>mdi-comment-processing-outline</v-icon>
+                  <span>&nbsp;No comments yet.</span>
+                </v-card-title>
+              </v-card>
+            </div>
+          </template>
 
           <ThreadTextarea
-            class="mt-8"
+            class="mt-4"
             title="Add Comment"
             :isDisabled="!user.id"
             @submit="textarea_sumbit"
@@ -109,6 +119,7 @@ export default {
       })
       .then(() => {
         this.repliesShowLoading = false;
+        console.log(this.replies);
       });
   },
 
