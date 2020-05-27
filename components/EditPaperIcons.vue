@@ -6,6 +6,22 @@
           icon
           large
           v-on="on"
+          @click.prevent="openEditDialog"
+          @mousedown.stop
+          @touchstart.native.stop
+        >
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+      </template>
+      <span>Edit basic information</span>
+    </v-tooltip>
+
+    <v-tooltip bottom>
+      <template v-slot:activator="{ on }">
+        <v-btn
+          icon
+          large
+          v-on="on"
           @click.prevent="openThumbDiag"
           @mousedown.stop
           @touchstart.native.stop
@@ -22,7 +38,7 @@
           v-on="on"
           icon
           large
-          @click.prevent="deleteDialog = true"
+          @click.prevent="deleteDiag = true"
           @mousedown.stop
           @touchstart.native.stop
         >
@@ -32,8 +48,23 @@
       <span>Request removal</span>
     </v-tooltip>
 
+    <!-- edit Dialog -->
+    <v-dialog v-model="editDiag" max-width="1200px">
+      <v-card>
+        <v-card-title>Change basic information</v-card-title>
+        <v-card-text>
+          <PaperCreateFormBasicInfo ref="formBasicInfo"/>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="editDiag = false">Cancel</v-btn>
+          <v-btn color="primary" @click="editDiag = false">Upload</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
     <!-- Delete dialog -->
-    <v-dialog v-model="deleteDialog" max-width="400px">
+    <v-dialog v-model="deleteDiag" max-width="400px">
       <v-card>
         <v-card-title class="title font-weight-bold">Delete Paper</v-card-title>
 
@@ -45,29 +76,29 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text @click="deleteDialog = false">Cancel</v-btn>
+          <v-btn text @click="deleteDiag = false">Cancel</v-btn>
           <!-- TODO: Change to the support email -->
           <v-btn
             color="error"
             error
             :href="`mailto:tomas@redcute.cz, jakub@redcute.cz?subject=[pubpap] Please delete paper ID \'${paper.id}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.id}\' because of the following reasons:%0D%0A%0D%0A`"
-            @click="deleteDialog = false"
+            @click="deleteDiag = false"
           >Delete</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
     <!-- Change Thumbnail dialog -->
-    <v-dialog v-model="thumbnailDialog" max-width="800px">
+    <v-dialog v-model="thumbDiag" max-width="800px">
       <v-card>
         <v-card-title>Change thumbnail</v-card-title>
         <div class="px-6">
           <ImageUpload
             ref="imageUploader"
             :paperId="paper.id"
-            @selected="thumbnailDiagDisable.upload = false"
-            @canceled="thumbnailDiagDisable.upload = true"
-            @loadedRemote="thumbnailDiagDisable.delete = false"
+            @selected="thumbDiagDisable.upload = false"
+            @canceled="thumbDiagDisable.upload = true"
+            @loadedRemote="thumbDiagDisable.delete = false"
           />
         </div>
         <v-card-actions>
@@ -75,14 +106,14 @@
           <v-btn text @click="cancelThumbDiag">Cancel</v-btn>
           <v-btn
             text
-            :loading="thumbnailDiagLoading.delete"
-            :disabled="thumbnailDiagDisable.delete"
+            :loading="thumbDiagLoading.delete"
+            :disabled="thumbDiagDisable.delete"
             @click="deleteThumbDiag"
           >Delete current</v-btn>
           <v-btn
             color="primary"
-            :disabled="thumbnailDiagDisable.upload"
-            :loading="thumbnailDiagLoading.upload"
+            :disabled="thumbDiagDisable.upload"
+            :loading="thumbDiagLoading.upload"
             @click="uploadThumbDiag"
           >Upload</v-btn>
         </v-card-actions>
@@ -93,23 +124,26 @@
 
 <script>
 import ImageUpload from "~/components/ImageUpload.vue";
+import PaperCreateFormBasicInfo from "~/components/PaperCreateFormBasicInfo.vue";
 
 export default {
   props: {
     paper: Object
   },
   components: {
-    ImageUpload
+    ImageUpload,
+    PaperCreateFormBasicInfo
   },
   data() {
     return {
-      deleteDialog: false,
-      thumbnailDialog: false,
-      thumbnailDiagLoading: {
+      editDiag: false,
+      deleteDiag: false,
+      thumbDiag: false,
+      thumbDiagLoading: {
         upload: false,
         delete: false
       },
-      thumbnailDiagDisable: {
+      thumbDiagDisable: {
         upload: true,
         delete: true
       }
@@ -118,28 +152,28 @@ export default {
 
   methods: {
     openThumbDiag() {
-      this.thumbnailDialog = true;
-      this.thumbnailDiagDisable.upload = true;
-      this.thumbnailDiagDisable.delete = true;
+      this.thumbDiag = true;
+      this.thumbDiagDisable.upload = true;
+      this.thumbDiagDisable.delete = true;
       if (this.$refs.imageUploader) {
         this.$refs.imageUploader.reloadRemoteImg();
       }
     },
     cancelThumbDiag() {
       this.$refs.imageUploader.setupCropper(null);
-      this.thumbnailDialog = false;
+      this.thumbDiag = false;
     },
     deleteThumbDiag() {
-      this.thumbnailDiagLoading.delete = true;
+      this.thumbDiagLoading.delete = true;
       this.$store.dispatch("paper/deleteThumbnail", this.paper.id).then(() => {
-        this.thumbnailDiagLoading.delete = false;
-        // this.thumbnailDiagDisable.delete = true;
-        this.thumbnailDialog = false;
+        this.thumbDiagLoading.delete = false;
+        // this.thumbDiagDisable.delete = true;
+        this.thumbDiag = false;
         this.$refs.imageUploader.setupCropper(null);
       });
     },
     uploadThumbDiag() {
-      this.thumbnailDiagLoading.upload = true;
+      this.thumbDiagLoading.upload = true;
 
       // Retrieve image
       const imgobj = this.$refs.imageUploader.getImage();
@@ -150,10 +184,15 @@ export default {
           img: imgobj.img
         })
         .then(() => {
-          this.thumbnailDiagLoading.upload = false;
-          this.thumbnailDialog = false;
+          this.thumbDiagLoading.upload = false;
+          this.thumbDiag = false;
           this.$refs.imageUploader.setupCropper(null);
         });
+    },
+    async openEditDialog() {
+      this.editDiag = true;
+      await this.$nextTick();
+      this.$refs.formBasicInfo.push(this.paper);
     }
   }
 };
