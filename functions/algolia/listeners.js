@@ -27,7 +27,29 @@ exports.algoliaCreatePaper = functions
       authors: dat.authors,
       // summary: dat.summary,
       arxLink: dat.arxLink,
-      createdAt: dat.createdAt.toDate().getTime() / 1000  // algolia only accepts numbers -> seconds from epoch
+      createdAt: dat.createdAt.toDate().getTime() / 1000 // algolia only accepts numbers -> seconds from epoch
+    };
+
+    await collectionIndex.saveObject(record);
+  });
+
+exports.algoliaEditPaper = functions
+  .region("europe-west1")
+  .firestore.document("/papers/{paperId}")
+  .onUpdate(async (change, context) => {
+    const dat = change.after.data();
+
+    console.log(
+      "Paper changed - id: " + context.params.paperId + " title: " + dat.title
+    );
+
+    const record = {
+      objectID: context.params.paperId,
+      title: dat.title,
+      authors: dat.authors,
+      // summary: dat.summary,
+      arxLink: dat.arxLink,
+      createdAt: dat.createdAt.toDate().getTime() / 1000 // algolia only accepts numbers -> seconds from epoch
     };
 
     await collectionIndex.saveObject(record);

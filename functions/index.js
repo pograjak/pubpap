@@ -22,4 +22,5 @@ exports.countupvotesdelete = upvotes.countupvotesdelete;
 
 const algolia = require("./algolia/listeners");
 exports.algoliaCreatePaper = algolia.algoliaCreatePaper;
+exports.algoliaEditPaper = algolia.algoliaEditPaper;
 exports.algoliaDeletePaper = algolia.algoliaDeletePaper;
