@@ -1,8 +1,8 @@
 <template>
-  <v-card class="pt-3 pb-4 px-4">
+  <v-card class="pt-2 pb-3 px-4" outlined>
     <v-container class="px-4 pt-3 pb-0">
       <!-- Title -->
-      <v-row class="pb-4" no-gutters justify="space-between" align="baseline">
+      <v-row class="pb-2" no-gutters justify="space-between" align="baseline">
         <v-col>
           <p class="pa-0 ma-0 subtitle-1" style="line-height: 100%">{{ title }}</p>
         </v-col>
@@ -12,7 +12,7 @@
       </v-row>
 
       <!-- Title field -->
-      <v-row v-if="showTitleField" no-gutters>
+      <v-row class="my-0" v-if="showTitleField" no-gutters>
         <v-col>
           <!-- <input
             v-model="titleValue"
@@ -24,6 +24,7 @@
           <v-text-field
             outlined
             v-model="titleValue"
+            class="mb-n4 mt-2"
             label="Title"
             :disabled="isDisabled"
             :error-messages="titleError"
