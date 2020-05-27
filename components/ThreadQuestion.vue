@@ -37,7 +37,7 @@
           <v-card-text class="markdown-body" v-html="renderMarkdown(thread.text)"></v-card-text>
           <v-row no-gutters>
             <v-col></v-col>
-            <User :date="thread.createdAt" :name="thread.uaserName" :rightAlign="true" />
+            <User :date="thread.createdAt" :name="thread.userName" :rightAlign="true" />
           </v-row>
         </v-col>
       </v-row>
