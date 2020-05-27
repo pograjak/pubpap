@@ -22,6 +22,13 @@ export const mutations = {
   },
   resetList: function(state, l) {
     state.p[l] = [];
+  },
+  editPaper: function(state, {paperId, changes}){
+    for (let list in state.p){ // change paperId in all lists in state.p
+      for(let paper of state.p[list].filter(pap => pap.id == paperId)){ // find object with given paperId
+        for (let attr in changes) { paper[attr] = changes[attr]; }
+      }
+    }
   }
 };
 
@@ -82,5 +89,12 @@ export const actions = {
       dat.id = doc.id;
       ctx.commit("addToList", { l: "rec", pap: dat });
     });
-  }
+  },
+
+  editPaper: async function(ctx, {paperId, changes}){
+    let pRef = this.$fireStore.collection("papers").doc(paperId);
+    await pRef.update(changes);
+    ctx.commit("editPaper", { paperId: paperId, changes: changes });
+  },
+
 };

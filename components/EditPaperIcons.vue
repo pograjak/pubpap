@@ -52,13 +52,13 @@
     <v-dialog v-model="editDiag" max-width="1200px">
       <v-card>
         <v-card-title>Change basic information</v-card-title>
-        <v-card-text>
-          <PaperCreateFormBasicInfo ref="formBasicInfo"/>
+        <v-card-text class="py-0">
+          <PaperCreateFormBasicInfo ref="formBasicInfo" />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
           <v-btn text @click="editDiag = false">Cancel</v-btn>
-          <v-btn color="primary" @click="editDiag = false">Upload</v-btn>
+          <v-btn color="primary" :loading="editDiagLoading" @click="submitPaperEdit">Submit</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -139,6 +139,7 @@ export default {
       editDiag: false,
       deleteDiag: false,
       thumbDiag: false,
+      editDiagLoading: false,
       thumbDiagLoading: {
         upload: false,
         delete: false
@@ -193,6 +194,18 @@ export default {
       this.editDiag = true;
       await this.$nextTick();
       this.$refs.formBasicInfo.push(this.paper);
+    },
+    async submitPaperEdit() {
+      if (!this.$refs.formBasicInfo.validate()) {
+        return;
+      }
+      this.editDiagLoading = true;
+      await this.$store.dispatch("paperlist/editPaper", {
+        paperId: this.paper.id,
+        changes: this.$refs.formBasicInfo.fetch()
+      });
+      this.editDiagLoading = false;
+      this.editDiag = false;
     }
   }
 };

@@ -13,7 +13,7 @@
         </v-row>
       </v-container>
     </v-list-item-content>
-    <v-list-item-content v-if="paper.requestPresentation.bid" class="justify-end mx-2" style="max-width:150px">
+    <v-list-item-content v-if="paper.requestPresentation.bid" class="justify-end mx-0" style="max-width:150px">
       <v-progress-linear
         rounded
         height="20"
