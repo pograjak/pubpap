@@ -8,8 +8,8 @@ export async function fetchArxiv(paperUrl) {
   const paperId = /[^/]*$/.exec(paperUrl)[0];
   // console.log(paperId);
   const resp = await fetch(
-    // `http://export.arxiv.org/api/query?search_query=${paperId}&start=0&max_results=10`
-    `http://export.arxiv.org/api/query?id_list=${paperId}&sortBy=lastUpdatedDate&sortOrder=descending
+    // `https://export.arxiv.org/api/query?search_query=${paperId}&start=0&max_results=10`
+    `https://export.arxiv.org/api/query?id_list=${paperId}&sortBy=lastUpdatedDate&sortOrder=descending
 &start=0&max_results=1`
   );
 

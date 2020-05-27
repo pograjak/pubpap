@@ -13,6 +13,7 @@ nuxt.config.js
 plugins/credentials.js
 
 firestore.rules
+.firebase
 
 # Runtime data
 pids

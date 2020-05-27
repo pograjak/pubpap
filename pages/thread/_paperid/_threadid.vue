@@ -1,6 +1,6 @@
 <template>
   <v-card flat>
-    <v-btn top left text class="mb-4" id="scrollAnchor" :to="`/paper/${paperId}`">
+    <v-btn top left depressed class="mb-4" id="scrollAnchor" :to="`/paper/${paperId}`">
       <v-icon>mdi-arrow-left</v-icon>&nbsp;Back to paper
     </v-btn>
 
@@ -82,6 +82,12 @@ export default {
       paperId: params.paperid,
       threadId: params.threadid
     });
+  },
+
+  head() {
+    return {
+      title: `Thread | ${this.thread.title}`
+    };
   },
 
   data() {
