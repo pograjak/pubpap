@@ -4,6 +4,12 @@
       class="caption grey--text align-self-end px-1"
     >Page created by: {{ paper.authorName ? paper.authorName : "dev" }}</div>
     <div class="d-flex">
+      
+      <template v-if="isAuthor">
+        <EditPaperIcons :paper="paper" />
+        <v-divider vertical inset class="ml-2 mr-4"></v-divider>
+      </template>
+
       <v-tooltip bottom>
         <template v-slot:activator="{ on }">
           <div class="d-flex align-center">
@@ -49,6 +55,7 @@
         </template>
         <span class="caption">Share page on Twitter</span>
       </v-tooltip>
+
     </div>
   </div>
 </template>
@@ -57,10 +64,14 @@
 import Vue from "vue";
 import VueClipboard from "vue-clipboard2";
 import { mapGetters } from "vuex";
+import EditPaperIcons from "~/components/EditPaperIcons.vue";
 
 Vue.use(VueClipboard);
 
 export default {
+  components: {
+    EditPaperIcons
+  },
   data() {
     return {
       clickChangeRunning: false,
@@ -81,6 +92,12 @@ export default {
       if (this.user.id && Array.isArray(this.paper.favs)) {
         return this.paper.favs.includes(this.user.id);
       }
+    },
+    isAuthor() {
+      if(this.user.id){
+        return this.user.id == this.paper.authorId;
+      }
+      return false;
     }
   },
 

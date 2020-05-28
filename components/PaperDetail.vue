@@ -7,7 +7,7 @@
           <v-card-subtitle>{{ paper.authors }}</v-card-subtitle>
         </v-col>
       </v-row>
-      <v-row v-if="showImage" no-gutters>
+      <v-row v-if="paper.hasImg" no-gutters>
         <v-col class="d-md-flex justify-space-between">
           <div>
             <v-card-text class="pt-0">{{ paper.summary }}</v-card-text>
@@ -81,12 +81,6 @@
 import { mapGetters } from "vuex";
 
 export default {
-  data() {
-    return {
-      showImage: true
-    };
-  },
-
   created() {
     if (this.paper.hasImg) {
       // load image if the paper has it
@@ -94,11 +88,8 @@ export default {
         .dispatch("paper/loadImgUrl", this.$route.params.id)
         .catch(err => {
           console.log("Error loading image.");
-          this.showImage = false;
           throw err;
         });
-    } else {
-      this.showImage = false;
     }
   },
 

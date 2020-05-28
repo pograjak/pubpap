@@ -1,5 +1,5 @@
 <template>
-  <v-list-item three-line link nuxt :to="`/paper/${paper.id}`" style="min-height:70px">
+  <v-list-item three-line link nuxt :to="`/paper/${paper.paperId}`" style="min-height:70px">
     <v-list-item-content class="pt-2">
       <v-list-item-title>{{ paper.title }}</v-list-item-title>
       <!-- <v-list-item-subtitle class="caption">{{ paper.authors }}</v-list-item-subtitle> -->
@@ -29,7 +29,7 @@
       </v-progress-linear>
     </v-list-item-content>
     <v-list-item-action class="d-inline my-0 align-self-center" v-if="isAuthor && showEditIcons">
-      <EditPaperIcons :paper="paper" />
+      <EditPaperIcons :paper="paper" usedInPaperList largeIcons />
     </v-list-item-action>
 
   </v-list-item>

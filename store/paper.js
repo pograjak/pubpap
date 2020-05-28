@@ -23,6 +23,9 @@ export const mutations = {
     state.paper = paper;
     state.paper["paperId"] = paperId;
   },
+  editPaper: function(state, { paperId, changes }){
+    for (let attr in changes) { state.paper[attr] = changes[attr]; }
+  },
   setImgUrl: function(state, url) {
     state.imgUrl = url;
   },
@@ -53,9 +56,15 @@ export const actions = {
     ctx.commit("loadPaper", { paper: p.data(), paperId: paperId });
     return true; // HAS TO RETURN TRUE for nuxt validate in pages/paper/_id.vue
   },
-
+  editPaper: async function(ctx, { paperId, changes }){
+    let pRef = this.$fireStore.collection("papers").doc(paperId);
+    await pRef.update(changes);
+    ctx.commit("editPaper", { paperId: paperId, changes: changes });
+  },
   loadImgUrl: async function(ctx, paperId) {
     const imgName = "paper_thumbnails/" + paperId;
+    ctx.commit("setImgUrl", "");
+
     let url;
     let meta;
     url = await this.$fireStorage.ref(imgName).getDownloadURL();
@@ -92,6 +101,7 @@ export const actions = {
     let pRef = this.$fireStore.collection("papers").doc(item.paperId);
     console.log("Has IMG update");
     await pRef.set({ hasImg: item.hasImg }, { merge: true });
+    ctx.commit("editPaper", { paperId: item.paperId, changes: { hasImg: item.hasImg }});
   },
 
   uploadThumbnail: async function(ctx, item) {
@@ -107,6 +117,8 @@ export const actions = {
       .ref()
       .child(imgName)
       .putString(item.img, "data_url");
+
+    await ctx.dispatch("loadImgUrl", item.paperId); // (re)load image url
   },
 
   deleteThumbnail: async function(ctx, paperId) {
@@ -123,5 +135,6 @@ export const actions = {
         }
       });
     await ctx.dispatch("updateHasImg", { paperId: paperId, hasImg: false });
+    ctx.commit("setImgUrl", "");
   }
 };

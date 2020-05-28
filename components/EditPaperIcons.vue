@@ -4,7 +4,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          large
+          :large="largeIcons"
           v-on="on"
           @click.prevent="openEditDialog"
           @mousedown.stop
@@ -20,7 +20,7 @@
       <template v-slot:activator="{ on }">
         <v-btn
           icon
-          large
+          :large="largeIcons"
           v-on="on"
           @click.prevent="openThumbDiag"
           @mousedown.stop
@@ -37,7 +37,7 @@
         <v-btn
           v-on="on"
           icon
-          large
+          :large="largeIcons"
           @click.prevent="deleteDiag = true"
           @mousedown.stop
           @touchstart.native.stop
@@ -81,7 +81,7 @@
           <v-btn
             color="error"
             error
-            :href="`mailto:tomas@redcute.cz, jakub@redcute.cz?subject=[pubpap] Please delete paper ID \'${paper.id}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.id}\' because of the following reasons:%0D%0A%0D%0A`"
+            :href="`mailto:tomas@redcute.cz, jakub@redcute.cz?subject=[pubpap] Please delete paper ID \'${paper.paperId}\'&body=Dear pubpap team,%0D%0A%0D%0AI would like to request a removal of paper \'${paper.title}\' - ID: \'${paper.paperId}\' because of the following reasons:%0D%0A%0D%0A`"
             @click="deleteDiag = false"
           >Delete</v-btn>
         </v-card-actions>
@@ -95,7 +95,7 @@
         <div class="px-6">
           <ImageUpload
             ref="imageUploader"
-            :paperId="paper.id"
+            :paperId="paper.paperId"
             @selected="thumbDiagDisable.upload = false"
             @canceled="thumbDiagDisable.upload = true"
             @loadedRemote="thumbDiagDisable.delete = false"
@@ -128,7 +128,11 @@ import PaperCreateFormBasicInfo from "~/components/PaperCreateFormBasicInfo.vue"
 
 export default {
   props: {
-    paper: Object
+    paper: Object,
+    // if the component is used in paper list, store action /paperlist/editPaper is used for editing (i.e. changes are made in all lists)
+    // if not - paper is edited with /paper/editPaper store action
+    usedInPaperList: Boolean,
+    largeIcons: Boolean
   },
   components: {
     ImageUpload,
@@ -166,7 +170,7 @@ export default {
     },
     deleteThumbDiag() {
       this.thumbDiagLoading.delete = true;
-      this.$store.dispatch("paper/deleteThumbnail", this.paper.id).then(() => {
+      this.$store.dispatch("paper/deleteThumbnail", this.paper.paperId).then(() => {
         this.thumbDiagLoading.delete = false;
         // this.thumbDiagDisable.delete = true;
         this.thumbDiag = false;
@@ -181,7 +185,7 @@ export default {
 
       this.$store
         .dispatch("paper/uploadThumbnail", {
-          paperId: this.paper.id,
+          paperId: this.paper.paperId,
           img: imgobj.img
         })
         .then(() => {
@@ -200,10 +204,17 @@ export default {
         return;
       }
       this.editDiagLoading = true;
-      await this.$store.dispatch("paperlist/editPaper", {
-        paperId: this.paper.id,
-        changes: this.$refs.formBasicInfo.fetch()
-      });
+      if (this.usedInPaperList) {
+        await this.$store.dispatch("paperlist/editPaper", {
+          paperId: this.paper.paperId,
+          changes: this.$refs.formBasicInfo.fetch()
+        });
+      } else {
+        await this.$store.dispatch("paper/editPaper", {
+          paperId: this.paper.paperId,
+          changes: this.$refs.formBasicInfo.fetch()
+        });
+      }
       this.editDiagLoading = false;
       this.editDiag = false;
     }
