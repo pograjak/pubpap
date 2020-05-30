@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Authors selection -->
     <v-autocomplete
       v-model="authorsSelection"
       :items="authors"
@@ -34,6 +35,7 @@
       </template>
     </v-autocomplete>
 
+    <!-- Cards grid -->
     <v-container fluid>
       <v-row dense>
         <v-col v-for="paper in papers" :key="paper.paperId" cols="12" sm="4" lg="3">
@@ -41,6 +43,11 @@
         </v-col>
       </v-row>
     </v-container>
+    <div class="d-flex justify-center mt-6">
+      <v-btn outlined :disabled="cardsLoading || noMoreCards" :loading="loadingMore" @click="loadMore">
+        <v-icon small>mdi-plus</v-icon>&nbsp;Load more
+      </v-btn>
+    </div>
   </div>
 </template>
 
@@ -53,6 +60,8 @@ export default {
   data() {
     return {
       cardsLoading: false,
+      loadingMore: false,
+      noMoreCards: false,
       authorsSelection: [],
       authors: [
         { name: "Vít Obrusník", uid: "HF1IevqZpMb5isaWIss2NzU2tL93" },
@@ -60,7 +69,9 @@ export default {
         { name: "Tomáš Novák", uid: "EOjs06yMEJavOIK4JhI9lJysq3O2" },
         { name: "Jordan Moravenov", uid: "iG4wCaJ2iPgtQF9DKZiX9ML40Dj1" }
       ],
-      papers: []
+      papers: [],
+      lastPaperObj: null,
+      currentQuery: null
     };
   },
   components: {
@@ -68,29 +79,55 @@ export default {
   },
   created() {
     this.cardsLoading = true;
-    this.papers = [{}, {}, {}, {}]; // show a few empty loading cards
+    this.papers = [{}, {}]; // show a few empty loading cards
     this.loadPapers();
   },
 
   methods: {
+    // TODO: move this to store
     async loadPapers() {
       this.cardsLoading = true;
+      this.noMoreCards = false;
 
-      let pRef = this.$fireStore.collection("papers"); // compose the query
-      if (this.authorsSelection.length > 0) { // if no authors are selected, all of them are
-        pRef = pRef.where("authorId", "in", this.authorsSelection);
+      this.currentQuery = this.$fireStore.collection("papers"); // compose the query
+      if (this.authorsSelection.length > 0) {
+        // if no authors are selected, all of them are
+        this.currentQuery = this.currentQuery.where("authorId", "in", this.authorsSelection);
       }
-      pRef = pRef.orderBy("createdAt", "desc").limit(10);
+      this.currentQuery = this.currentQuery.orderBy("createdAt", "desc").limit(2)
+      let p = await this.currentQuery.get();
 
-      let p = await pRef.get();
       this.papers = [];
       p.forEach(doc => {
         let dat = doc.data();
         dat.paperId = doc.id;
         this.papers.push(dat);
+        this.lastPaperObj = doc; // save last object for pagination
       });
 
       this.cardsLoading = false;
+    },
+    async loadMore() {
+      this.loadingMore = true;
+
+      let p = await this.currentQuery
+        .startAfter(this.lastPaperObj)
+        .limit(2)
+        .get();
+
+      p.forEach(doc => {
+        let dat = doc.data();
+        dat.paperId = doc.id;
+        this.papers.push(dat);
+        this.lastPaperObj = doc; // save last object for pagination
+      });
+
+      console.log(p);
+
+      if(p.empty){
+        this.noMoreCards = true;
+      }
+      this.loadingMore = false;
     },
     selectAuthors() {
       console.log(this.authorsSelection);
@@ -99,7 +136,7 @@ export default {
     remove(item) {
       const index = this.authorsSelection.indexOf(item.uid);
       if (index >= 0) this.authorsSelection.splice(index, 1);
-      this.selectAuthors();  // have to call this here, becase this does not induce @change event
+      this.selectAuthors(); // have to call this here, becase this does not induce @change event
     }
   }
 };
