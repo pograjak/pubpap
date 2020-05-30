@@ -65,12 +65,19 @@ export const actions = {
     const imgName = "paper_thumbnails/" + paperId;
     ctx.commit("setImgUrl", "");
 
-    let url;
-    let meta;
-    url = await this.$fireStorage.ref(imgName).getDownloadURL();
-    meta = await this.$fireStorage.ref(imgName).getMetadata();
+    let url = "";
+    let meta = {};
+    try{
+      url = await this.$fireStorage.ref(imgName).getDownloadURL();
+      meta = await this.$fireStorage.ref(imgName).getMetadata();
+      ctx.commit("setImgUrl", url);
+    }catch (err){
+      if( err.code != "storage/object-not-found"){ // making safe to call on papers without image
+        console.log(err);
+        throw err;
+      }
+    }
 
-    ctx.commit("setImgUrl", url);
     return { url: url, meta: meta };
   },
 
