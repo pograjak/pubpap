@@ -2,7 +2,6 @@
   <div>
     <v-autocomplete
       v-model="authorsSelection"
-      :disabled="isUpdating"
       :items="authors"
       chips
       label="Select authors"
@@ -38,7 +37,7 @@
     <v-container fluid>
       <v-row dense>
         <v-col v-for="paper in papers" :key="paper.paperId" cols="12" sm="4" lg="3">
-          <BrowsePaperCard :paper="paper" />
+          <BrowsePaperCard :paper="paper" :showLoading="cardsLoading" />
         </v-col>
       </v-row>
     </v-container>
@@ -53,7 +52,7 @@ import BrowsePaperCard from "~/components/BrowsePaperCard.vue";
 export default {
   data() {
     return {
-      isUpdating: false,
+      cardsLoading: false,
       authorsSelection: [],
       authors: [
         { name: "Vít Obrusník", uid: "HF1IevqZpMb5isaWIss2NzU2tL93" },
@@ -68,24 +67,30 @@ export default {
     BrowsePaperCard
   },
   created() {
-     this.loadPapers();
+    this.cardsLoading = true;
+    this.papers = [{}, {}, {}, {}]; // show a few empty loading cards
+    this.loadPapers();
   },
 
   methods: {
     async loadPapers() {
-      let pRef = this.$fireStore.collection("papers")
-      if(this.authorsSelection.length > 0){
-        pRef = pRef.where("authorId", "in", this.authorsSelection)
+      this.cardsLoading = true;
+
+      let pRef = this.$fireStore.collection("papers"); // compose the query
+      if (this.authorsSelection.length > 0) { // if no authors are selected, all of them are
+        pRef = pRef.where("authorId", "in", this.authorsSelection);
       }
       pRef = pRef.orderBy("createdAt", "desc").limit(10);
 
       let p = await pRef.get();
       this.papers = [];
-      p.forEach((doc) => {
+      p.forEach(doc => {
         let dat = doc.data();
         dat.paperId = doc.id;
         this.papers.push(dat);
       });
+
+      this.cardsLoading = false;
     },
     selectAuthors() {
       console.log(this.authorsSelection);
@@ -94,7 +99,7 @@ export default {
     remove(item) {
       const index = this.authorsSelection.indexOf(item.uid);
       if (index >= 0) this.authorsSelection.splice(index, 1);
-      this.selectAuthors();
+      this.selectAuthors();  // have to call this here, becase this does not induce @change event
     }
   }
 };
