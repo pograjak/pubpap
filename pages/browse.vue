@@ -38,13 +38,18 @@
     <!-- Cards grid -->
     <v-container fluid>
       <v-row dense>
-        <v-col v-for="paper in papers" :key="paper.paperId" cols="12" sm="4" lg="3">
+        <v-col v-for="paper in papers" :key="paper.paperId" cols="12" sm="6" md="4" lg="3" xl="2">
           <BrowsePaperCard :paper="paper" :showLoading="cardsLoading" />
         </v-col>
       </v-row>
     </v-container>
     <div class="d-flex justify-center mt-6">
-      <v-btn outlined :disabled="cardsLoading || noMoreCards" :loading="loadingMore" @click="loadMore">
+      <v-btn
+        outlined
+        :disabled="cardsLoading || noMoreCards"
+        :loading="loadingMore"
+        @click="loadMore"
+      >
         <v-icon small>mdi-plus</v-icon>&nbsp;Load more
       </v-btn>
     </div>
@@ -79,22 +84,48 @@ export default {
   },
   created() {
     this.cardsLoading = true;
-    this.papers = [{}, {}]; // show a few empty loading cards
+    this.papers = [];
     this.loadPapers();
+  },
+
+  computed: {
+    gridCols() {
+      // compute how many columns does the card grid have
+      if (this.$vuetify.breakpoint.xl) {
+        return 6;
+      }else if(this.$vuetify.breakpoint.lgAndUp){
+        return 4;
+      }else if(this.$vuetify.breakpoint.mdAndUp){
+        return 3;
+      }else if(this.$vuetify.breakpoint.smAndUp){
+        return 2;
+      }else{
+        return 1;
+      }
+    }
   },
 
   methods: {
     // TODO: move this to store
     async loadPapers() {
+      this.papers = Array(this.gridCols).fill({}); // show one row of empty loading cards
+
+      console.log(this.$vuetify.breakpoint);
       this.cardsLoading = true;
       this.noMoreCards = false;
 
       this.currentQuery = this.$fireStore.collection("papers"); // compose the query
       if (this.authorsSelection.length > 0) {
         // if no authors are selected, all of them are
-        this.currentQuery = this.currentQuery.where("authorId", "in", this.authorsSelection);
+        this.currentQuery = this.currentQuery.where(
+          "authorId",
+          "in",
+          this.authorsSelection
+        );
       }
-      this.currentQuery = this.currentQuery.orderBy("createdAt", "desc").limit(2)
+      this.currentQuery = this.currentQuery
+        .orderBy("createdAt", "desc")
+        .limit(this.gridCols);
       let p = await this.currentQuery.get();
 
       this.papers = [];
@@ -112,7 +143,7 @@ export default {
 
       let p = await this.currentQuery
         .startAfter(this.lastPaperObj)
-        .limit(2)
+        .limit(this.gridCols)
         .get();
 
       p.forEach(doc => {
@@ -124,11 +155,13 @@ export default {
 
       console.log(p);
 
-      if(p.empty){
+      if (p.size < this.gridCols) {
         this.noMoreCards = true;
       }
       this.loadingMore = false;
     },
+
+    // Authors selection
     selectAuthors() {
       console.log(this.authorsSelection);
       this.loadPapers();
