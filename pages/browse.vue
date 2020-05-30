@@ -93,13 +93,13 @@ export default {
       // compute how many columns does the card grid have
       if (this.$vuetify.breakpoint.xl) {
         return 6;
-      }else if(this.$vuetify.breakpoint.lgAndUp){
+      } else if (this.$vuetify.breakpoint.lgAndUp) {
         return 4;
-      }else if(this.$vuetify.breakpoint.mdAndUp){
+      } else if (this.$vuetify.breakpoint.mdAndUp) {
         return 3;
-      }else if(this.$vuetify.breakpoint.smAndUp){
+      } else if (this.$vuetify.breakpoint.smAndUp) {
         return 2;
-      }else{
+      } else {
         return 1;
       }
     }
@@ -108,9 +108,10 @@ export default {
   methods: {
     // TODO: move this to store
     async loadPapers() {
-      this.papers = Array(this.gridCols).fill({}); // show one row of empty loading cards
+      if (this.papers.length == 0) {
+        this.papers = Array(this.gridCols).fill({}); // show one row of empty loading cards
+      }
 
-      console.log(this.$vuetify.breakpoint);
       this.cardsLoading = true;
       this.noMoreCards = false;
 
@@ -136,8 +137,14 @@ export default {
         this.lastPaperObj = doc; // save last object for pagination
       });
 
+      if (p.size < this.gridCols) {
+        // disable "Load more" button if not returned queried size
+        this.noMoreCards = true;
+      }
+
       this.cardsLoading = false;
     },
+
     async loadMore() {
       this.loadingMore = true;
 
@@ -156,8 +163,10 @@ export default {
       console.log(p);
 
       if (p.size < this.gridCols) {
+        // disable "Load more" button if not returned queried size
         this.noMoreCards = true;
       }
+
       this.loadingMore = false;
     },
 
