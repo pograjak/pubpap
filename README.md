@@ -21,6 +21,6 @@ $ yarn generate
 
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
 
-##License
+## License
 
 The MIT License Copyright © 2020
